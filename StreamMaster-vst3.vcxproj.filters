@@ -41,6 +41,9 @@
     <ClCompile Include="..\..\WDL\IPlug\IPlugVST3.cpp">
       <Filter>vst3</Filter>
     </ClCompile>
+    <ClCompile Include="lib_chunkware\SimpleGate.cpp" />
+    <ClCompile Include="lib_chunkware\SimpleLimit.cpp" />
+    <ClCompile Include="lib_chunkware\SimpleEnvelope.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StreamMaster.h" />
@@ -141,6 +144,11 @@
     <ClInclude Include="..\..\WDL\IPlug\IPlugVST3.h">
       <Filter>vst3</Filter>
     </ClInclude>
+    <ClInclude Include="lib_chunkware\SimpleGate.h" />
+    <ClInclude Include="lib_chunkware\SimpleHeader.h" />
+    <ClInclude Include="lib_chunkware\SimpleLimit.h" />
+    <ClInclude Include="lib_chunkware\SimpleEnvelope.h" />
+    <ClInclude Include="lib_chunkware\SimpleGain.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="vst3">
@@ -176,5 +184,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="StreamMaster.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="lib_chunkware\SimpleGateProcess.inl" />
+    <None Include="lib_chunkware\SimpleLimitProcess.inl" />
   </ItemGroup>
 </Project>

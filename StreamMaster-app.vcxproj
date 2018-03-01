@@ -277,6 +277,8 @@
     <ClInclude Include="..\..\WDL\rtaudiomidi\RtMidi.h" />
     <ClInclude Include="app_wrapper\app_main.h" />
     <ClInclude Include="app_wrapper\app_resource.h" />
+    <ClInclude Include="lib_chunkware\SimpleGain.h" />
+    <ClInclude Include="lib_chunkware\SimpleLimit.h" />
     <ClInclude Include="StreamMaster.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
@@ -289,10 +291,15 @@
     <ClCompile Include="..\..\WDL\rtaudiomidi\RtMidi.cpp" />
     <ClCompile Include="app_wrapper\app_dialog.cpp" />
     <ClCompile Include="app_wrapper\app_main.cpp" />
+    <ClCompile Include="lib_chunkware\SimpleEnvelope.cpp" />
+    <ClCompile Include="lib_chunkware\SimpleLimit.cpp" />
     <ClCompile Include="StreamMaster.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="StreamMaster.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="lib_chunkware\SimpleLimitProcess.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

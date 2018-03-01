@@ -5,12 +5,42 @@
     <ClCompile Include="..\..\WDL\IPlug\IPlugVST.cpp">
       <Filter>vst2</Filter>
     </ClCompile>
+    <ClCompile Include="lib_chunkware\SimpleGate.cpp">
+      <Filter>Chunkware</Filter>
+    </ClCompile>
+    <ClCompile Include="lib_chunkware\SimpleLimit.cpp">
+      <Filter>Chunkware</Filter>
+    </ClCompile>
+    <ClCompile Include="lib_chunkware\SimpleComp.cpp">
+      <Filter>Chunkware</Filter>
+    </ClCompile>
+    <ClCompile Include="lib_chunkware\SimpleEnvelope.cpp">
+      <Filter>Chunkware</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StreamMaster.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="..\..\WDL\IPlug\IPlugVST.h">
       <Filter>vst2</Filter>
+    </ClInclude>
+    <ClInclude Include="lib_chunkware\SimpleGain.h">
+      <Filter>Chunkware</Filter>
+    </ClInclude>
+    <ClInclude Include="lib_chunkware\SimpleGate.h">
+      <Filter>Chunkware</Filter>
+    </ClInclude>
+    <ClInclude Include="lib_chunkware\SimpleHeader.h">
+      <Filter>Chunkware</Filter>
+    </ClInclude>
+    <ClInclude Include="lib_chunkware\SimpleLimit.h">
+      <Filter>Chunkware</Filter>
+    </ClInclude>
+    <ClInclude Include="lib_chunkware\SimpleComp.h">
+      <Filter>Chunkware</Filter>
+    </ClInclude>
+    <ClInclude Include="lib_chunkware\SimpleEnvelope.h">
+      <Filter>Chunkware</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -20,5 +50,19 @@
     <Filter Include="vst2">
       <UniqueIdentifier>{ea16de74-9d15-4c60-ba09-d0924088d3e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Chunkware">
+      <UniqueIdentifier>{a2d44576-4707-43d0-88c6-0a77f83aa8d1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="lib_chunkware\SimpleGateProcess.inl">
+      <Filter>Chunkware</Filter>
+    </None>
+    <None Include="lib_chunkware\SimpleLimitProcess.inl">
+      <Filter>Chunkware</Filter>
+    </None>
+    <None Include="lib_chunkware\SimpleCompProcess.inl">
+      <Filter>Chunkware</Filter>
+    </None>
   </ItemGroup>
 </Project>

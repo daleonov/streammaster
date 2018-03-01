@@ -2,8 +2,12 @@
 #include "IPlug_include_in_plug_src.h"
 #include "IControl.h"
 #include "resource.h"
+#include "lib_chunkware/SimpleLimit.h"
+
+//using namespace chunkware_simple;
 
 const int kNumPrograms = 1;
+chunkware_simple::SimpleLimit tLimiter;
 
 enum EParams
 {
@@ -31,13 +35,19 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   GetParam(kGain)->SetShape(2.);
 
   IGraphics* pGraphics = MakeGraphics(this, kWidth, kHeight);
-  pGraphics->AttachPanelBackground(&COLOR_RED);
+  IColor tBgColor = IColor(255, 128, 0, 0);
+  pGraphics->AttachPanelBackground(&tBgColor);
 
   IBitmap knob = pGraphics->LoadIBitmap(KNOB_ID, KNOB_FN, kKnobFrames);
 
   pGraphics->AttachControl(new IKnobMultiControl(this, kGainX, kGainY, kGain, &knob));
 
   AttachGraphics(pGraphics);
+
+  //Limiter 
+  tLimiter.setThresh(0.5);
+  tLimiter.setSampleRate(44100.);
+  tLimiter.initRuntime();
 
   //MakePreset("preset 1", ... );
   MakeDefaultPreset((char *) "-", kNumPrograms);
@@ -56,9 +66,12 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
 
   for (int s = 0; s < nFrames; ++s, ++in1, ++in2, ++out1, ++out2)
   {
-    *out1 = *in1 * mGain;
-    *out2 = *in2 * mGain;
+    *out1 = *in1;
+    *out2 = *in2;
   }
+
+  tLimiter.process(*out1, *out2);
+
 }
 
 void StreamMaster::Reset()

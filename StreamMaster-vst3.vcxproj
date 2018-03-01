@@ -210,9 +210,10 @@ if exist "%programfiles(x86)%" (copy /y "$(TargetPath)" "$(VST3_64_PATH)\StreamM
       <ModuleDefinitionFile>$(WDL_PATH)\IPlug\IPlugVST3.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>echo Post-Build: copy 32bit binary to 32bit VST3 Plugins folder ... ...
-copy /y "$(TargetPath)" "$(VST3_32_PATH)\StreamMaster.vst3"</Command>
-      <Message>Copy VST3 Binary to VST3 Plugins folder</Message>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -324,6 +325,11 @@ if exist "%programfiles(x86)%" (copy /y "$(TargetPath)" "$(VST3_64_PATH)\StreamM
     <ClInclude Include="..\..\VST3_SDK\public.sdk\source\vst\vstparameters.h" />
     <ClInclude Include="..\..\VST3_SDK\public.sdk\source\vst\vstsinglecomponenteffect.h" />
     <ClInclude Include="..\..\WDL\IPlug\IPlugVST3.h" />
+    <ClInclude Include="lib_chunkware\SimpleEnvelope.h" />
+    <ClInclude Include="lib_chunkware\SimpleGain.h" />
+    <ClInclude Include="lib_chunkware\SimpleGate.h" />
+    <ClInclude Include="lib_chunkware\SimpleHeader.h" />
+    <ClInclude Include="lib_chunkware\SimpleLimit.h" />
     <ClInclude Include="StreamMaster.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
@@ -341,10 +347,17 @@ if exist "%programfiles(x86)%" (copy /y "$(TargetPath)" "$(VST3_64_PATH)\StreamM
     <ClCompile Include="..\..\VST3_SDK\public.sdk\source\vst\vstparameters.cpp" />
     <ClCompile Include="..\..\VST3_SDK\public.sdk\source\vst\vstsinglecomponenteffect.cpp" />
     <ClCompile Include="..\..\WDL\IPlug\IPlugVST3.cpp" />
+    <ClCompile Include="lib_chunkware\SimpleEnvelope.cpp" />
+    <ClCompile Include="lib_chunkware\SimpleGate.cpp" />
+    <ClCompile Include="lib_chunkware\SimpleLimit.cpp" />
     <ClCompile Include="StreamMaster.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="StreamMaster.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="lib_chunkware\SimpleGateProcess.inl" />
+    <None Include="lib_chunkware\SimpleLimitProcess.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
