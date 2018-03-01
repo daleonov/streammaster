@@ -68,9 +68,9 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
   {
     *out1 = *in1;
     *out2 = *in2;
+    tLimiter.process(*out1, *out2);
   }
 
-  tLimiter.process(*out1, *out2);
 
 }
 
