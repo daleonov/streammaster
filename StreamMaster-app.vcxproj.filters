@@ -10,6 +10,9 @@
     <Filter Include="app\ASIO_SDK">
       <UniqueIdentifier>{b91b9db4-5584-4959-a395-7394ba3cf5a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Chunkware">
+      <UniqueIdentifier>{39061488-a8e6-4cef-ac24-73d53f43fb37}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\WDL\rtaudiomidi\RtAudio.h">
@@ -48,8 +51,24 @@
       <Filter>app</Filter>
     </ClInclude>
     <ClInclude Include="app_wrapper\app_resource.h" />
-    <ClInclude Include="lib_chunkware\SimpleLimit.h" />
-    <ClInclude Include="lib_chunkware\SimpleGain.h" />
+    <ClInclude Include="lib_chunkware\SimpleGain.h">
+      <Filter>Chunkware</Filter>
+    </ClInclude>
+    <ClInclude Include="lib_chunkware\SimpleGate.h">
+      <Filter>Chunkware</Filter>
+    </ClInclude>
+    <ClInclude Include="lib_chunkware\SimpleHeader.h">
+      <Filter>Chunkware</Filter>
+    </ClInclude>
+    <ClInclude Include="lib_chunkware\SimpleLimit.h">
+      <Filter>Chunkware</Filter>
+    </ClInclude>
+    <ClInclude Include="lib_chunkware\SimpleComp.h">
+      <Filter>Chunkware</Filter>
+    </ClInclude>
+    <ClInclude Include="lib_chunkware\SimpleEnvelope.h">
+      <Filter>Chunkware</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\WDL\rtaudiomidi\RtAudio.cpp">
@@ -77,13 +96,31 @@
     <ClCompile Include="..\..\WDL\IPlug\IPlugStandalone.cpp">
       <Filter>app</Filter>
     </ClCompile>
-    <ClCompile Include="lib_chunkware\SimpleEnvelope.cpp" />
-    <ClCompile Include="lib_chunkware\SimpleLimit.cpp" />
+    <ClCompile Include="lib_chunkware\SimpleGate.cpp">
+      <Filter>Chunkware</Filter>
+    </ClCompile>
+    <ClCompile Include="lib_chunkware\SimpleLimit.cpp">
+      <Filter>Chunkware</Filter>
+    </ClCompile>
+    <ClCompile Include="lib_chunkware\SimpleComp.cpp">
+      <Filter>Chunkware</Filter>
+    </ClCompile>
+    <ClCompile Include="lib_chunkware\SimpleEnvelope.cpp">
+      <Filter>Chunkware</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="StreamMaster.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="lib_chunkware\SimpleLimitProcess.inl" />
+    <None Include="lib_chunkware\SimpleGateProcess.inl">
+      <Filter>Chunkware</Filter>
+    </None>
+    <None Include="lib_chunkware\SimpleLimitProcess.inl">
+      <Filter>Chunkware</Filter>
+    </None>
+    <None Include="lib_chunkware\SimpleCompProcess.inl">
+      <Filter>Chunkware</Filter>
+    </None>
   </ItemGroup>
 </Project>

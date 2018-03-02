@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StreamMaster-app", "StreamMaster-app.vcxproj", "{41785AE4-5B70-4A75-880B-4B418B4E13C6}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -46,6 +46,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StreamMaster-rtas", "Stream
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PlugInLib", "..\..\PT9_SDK\AlturaPorts\TDMPlugIns\PlugInLibrary\WinBuild\PlugInLib.vcxproj", "{D2CE28FF-63B8-48BC-936D-33F365B4053F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "essentia", "..\..\..\..\essentia-2.1_beta3\essentia.vcxproj", "{02791F57-A813-4065-A3B5-1CB8D4A0573A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -171,8 +173,21 @@ Global
 		{D2CE28FF-63B8-48BC-936D-33F365B4053F}.Tracer|Win32.ActiveCfg = Release|Win32
 		{D2CE28FF-63B8-48BC-936D-33F365B4053F}.Tracer|Win32.Build.0 = Release|Win32
 		{D2CE28FF-63B8-48BC-936D-33F365B4053F}.Tracer|x64.ActiveCfg = Release|Win32
+		{02791F57-A813-4065-A3B5-1CB8D4A0573A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{02791F57-A813-4065-A3B5-1CB8D4A0573A}.Debug|Win32.Build.0 = Debug|Win32
+		{02791F57-A813-4065-A3B5-1CB8D4A0573A}.Debug|x64.ActiveCfg = Debug|Win32
+		{02791F57-A813-4065-A3B5-1CB8D4A0573A}.Release|Win32.ActiveCfg = Release|Win32
+		{02791F57-A813-4065-A3B5-1CB8D4A0573A}.Release|Win32.Build.0 = Release|Win32
+		{02791F57-A813-4065-A3B5-1CB8D4A0573A}.Release|x64.ActiveCfg = Release|Win32
+		{02791F57-A813-4065-A3B5-1CB8D4A0573A}.Tracer|Win32.ActiveCfg = Release|Win32
+		{02791F57-A813-4065-A3B5-1CB8D4A0573A}.Tracer|Win32.Build.0 = Release|Win32
+		{02791F57-A813-4065-A3B5-1CB8D4A0573A}.Tracer|x64.ActiveCfg = Release|Win32
+		{02791F57-A813-4065-A3B5-1CB8D4A0573A}.Tracer|x64.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {59565E81-8A19-42B7-82CB-F788468FA77B}
 	EndGlobalSection
 EndGlobal

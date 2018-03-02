@@ -277,7 +277,11 @@
     <ClInclude Include="..\..\WDL\rtaudiomidi\RtMidi.h" />
     <ClInclude Include="app_wrapper\app_main.h" />
     <ClInclude Include="app_wrapper\app_resource.h" />
+    <ClInclude Include="lib_chunkware\SimpleComp.h" />
+    <ClInclude Include="lib_chunkware\SimpleEnvelope.h" />
     <ClInclude Include="lib_chunkware\SimpleGain.h" />
+    <ClInclude Include="lib_chunkware\SimpleGate.h" />
+    <ClInclude Include="lib_chunkware\SimpleHeader.h" />
     <ClInclude Include="lib_chunkware\SimpleLimit.h" />
     <ClInclude Include="StreamMaster.h" />
     <ClInclude Include="resource.h" />
@@ -291,7 +295,9 @@
     <ClCompile Include="..\..\WDL\rtaudiomidi\RtMidi.cpp" />
     <ClCompile Include="app_wrapper\app_dialog.cpp" />
     <ClCompile Include="app_wrapper\app_main.cpp" />
+    <ClCompile Include="lib_chunkware\SimpleComp.cpp" />
     <ClCompile Include="lib_chunkware\SimpleEnvelope.cpp" />
+    <ClCompile Include="lib_chunkware\SimpleGate.cpp" />
     <ClCompile Include="lib_chunkware\SimpleLimit.cpp" />
     <ClCompile Include="StreamMaster.cpp" />
   </ItemGroup>
@@ -299,6 +305,8 @@
     <ResourceCompile Include="StreamMaster.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="lib_chunkware\SimpleCompProcess.inl" />
+    <None Include="lib_chunkware\SimpleGateProcess.inl" />
     <None Include="lib_chunkware\SimpleLimitProcess.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

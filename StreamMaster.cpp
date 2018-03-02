@@ -8,6 +8,7 @@
 
 const int kNumPrograms = 1;
 chunkware_simple::SimpleLimit tLimiter;
+const double fDefaultLimiterThreshold = 0.;
 
 enum EParams
 {
@@ -31,7 +32,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   TRACE;
 
   //arguments are: name, defaultVal, minVal, maxVal, step, label
-  GetParam(kGain)->InitDouble("Gain", 50., 0., 100.0, 0.01, "%");
+  GetParam(kGain)->InitDouble("Threshold", fDefaultLimiterThreshold, -60., 5.0, 0.1, "dB");
   GetParam(kGain)->SetShape(2.);
 
   IGraphics* pGraphics = MakeGraphics(this, kWidth, kHeight);
@@ -45,7 +46,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   AttachGraphics(pGraphics);
 
   //Limiter 
-  tLimiter.setThresh(0.5);
+  tLimiter.setThresh(fDefaultLimiterThreshold);
   tLimiter.setSampleRate(44100.);
   tLimiter.initRuntime();
 
@@ -87,7 +88,8 @@ void StreamMaster::OnParamChange(int paramIdx)
   switch (paramIdx)
   {
     case kGain:
-      mGain = GetParam(kGain)->Value() / 100.;
+      //mGain = GetParam(kGain)->Value() / 100.;
+      tLimiter.setThresh(GetParam(kGain)->Value());
       break;
 
     default:
