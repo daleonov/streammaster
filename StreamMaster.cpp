@@ -31,7 +31,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   // Limiter knob
   IBitmap tBmp = pGraphics->LoadIBitmap(KNOB_ID, KNOB_FN, kKnobFrames);
   pGraphics->AttachControl(new IKnobMultiControl(this, kGainX, kGainY, kGain, &tBmp));
-
+  
   // LUFS read button
   tBmp = pGraphics->LoadIBitmap(ICONTACTCONTROL_ID, ICONTACTCONTROL_FN, kIContactControl_N);
   pGraphics->AttachControl(new IContactControl(this, kIContactControl_X, kIContactControl_Y, kIContactControl, &tBmp));
@@ -47,7 +47,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
       (kILoudnessTextControl_Y + kILoudnessTextControl_H)
     ),
     &tDefaultLoudnessLabel,
-    "Display text strings");
+    "-");
   pGraphics->AttachControl(tLoudnessTextControl);
 
   AttachGraphics(pGraphics);
@@ -76,6 +76,7 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
   double* in2 = inputs[1];
   double* out1 = outputs[0];
   double* out2 = outputs[1];
+  static bs1770_f64_t buf[10] = {1,0,1,1,1,-1,0,0.5,0.1};
 
   for (int s = 0; s < nFrames; ++s, ++in1, ++in2, ++out1, ++out2)
   {
@@ -83,7 +84,6 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
     *out2 = *in2;
     tLimiter.process(*out1, *out2);
   }
-  tLoudnessMeter.AddSamples(in1, nFrames);
   tLoudnessMeter.AddSamples(in2, nFrames);
 
 }
@@ -112,6 +112,7 @@ void StreamMaster::OnParamChange(int paramIdx)
         fLufs = tLoudnessMeter.GetLufs();
         sprintf(sLoudnessString, "%4.2f dB LUFS", fLufs);
         tLoudnessTextControl->SetTextFromPlug(sLoudnessString);
+        tLoudnessTextControl->Redraw();
       }
       break;
 

@@ -6,15 +6,18 @@
 using namespace Plug;
 
 void LoudnessMeter::AddSamples(double* afBuffer, size_t nSamples){
+	for (int i = 0; i < nSamples; i++)
+	{
+    bs1770_sample_f64_t tSample = { afBuffer[i], afBuffer[i] };
+		bs1770_ctx_add_sample_f64(
+			this->_tCtx,
+			0,
+			this->_fSampleRate,
+			this->_nChannels,
+      		tSample
+			);
+	}
 
-	bs1770_ctx_add_samples_p_f64(
-		this->_tCtx,
-		0,
-		this->_fSampleRate,
-		this->_nChannels,
-    	&afBuffer,
-		nSamples
-		);
 }
 
 LoudnessMeter::LoudnessMeter(){

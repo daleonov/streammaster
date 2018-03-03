@@ -112,7 +112,7 @@
     <IntDir>build-win\vst2\$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>
     </LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);;$(ProjectDir)lib-1770\;$(ProjectDir)PLUG\</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>build-win\vst2\$(Platform)\$(Configuration)\</IntDir>
@@ -249,10 +249,58 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\WDL\IPlug\IPlugVST.cpp" />
+    <ClCompile Include="lib-1770\biquad.c" />
+    <ClCompile Include="lib-1770\bs1770.c" />
+    <ClCompile Include="lib-1770\bs1770_a85.c" />
+    <ClCompile Include="lib-1770\bs1770_add_samples_i_f32.c" />
+    <ClCompile Include="lib-1770\bs1770_add_samples_i_f64.c" />
+    <ClCompile Include="lib-1770\bs1770_add_samples_i_i16.c" />
+    <ClCompile Include="lib-1770\bs1770_add_samples_i_i32.c" />
+    <ClCompile Include="lib-1770\bs1770_add_samples_p_f32.c" />
+    <ClCompile Include="lib-1770\bs1770_add_samples_p_f64.c" />
+    <ClCompile Include="lib-1770\bs1770_add_samples_p_i16.c" />
+    <ClCompile Include="lib-1770\bs1770_add_samples_p_i32.c" />
+    <ClCompile Include="lib-1770\bs1770_add_sample_f32.c" />
+    <ClCompile Include="lib-1770\bs1770_add_sample_f64.c" />
+    <ClCompile Include="lib-1770\bs1770_add_sample_i16.c" />
+    <ClCompile Include="lib-1770\bs1770_add_sample_i32.c" />
+    <ClCompile Include="lib-1770\bs1770_aggr.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_i_f32.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_i_f64.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_i_i16.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_i_i32.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_p_f32.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_p_f64.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_p_i16.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_p_i32.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_sample_f32.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_sample_f64.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_sample_i16.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_sample_i32.c" />
+    <ClCompile Include="lib-1770\bs1770_default.c" />
+    <ClCompile Include="lib-1770\bs1770_hist.c" />
+    <ClCompile Include="lib-1770\bs1770_nd.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_i_f32.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_i_f64.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_i_i16.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_i_i32.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_p_f32.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_p_f64.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_p_i16.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_p_i32.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_sample_f32.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_sample_f64.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_sample_i16.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_sample_i32.c" />
+    <ClCompile Include="lib-1770\bs1770_r128.c" />
+    <ClCompile Include="lib-1770\bs1770_stats.c" />
+    <ClCompile Include="lib-1770\bs1770_version.c" />
     <ClCompile Include="lib_chunkware\SimpleComp.cpp" />
     <ClCompile Include="lib_chunkware\SimpleEnvelope.cpp" />
     <ClCompile Include="lib_chunkware\SimpleGate.cpp" />
     <ClCompile Include="lib_chunkware\SimpleLimit.cpp" />
+    <ClCompile Include="PLUG\PLUG_LoudnessMeter.cpp" />
     <ClCompile Include="StreamMaster.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -17,6 +17,148 @@
     <ClCompile Include="lib_chunkware\SimpleEnvelope.cpp">
       <Filter>Chunkware</Filter>
     </ClCompile>
+    <ClCompile Include="PLUG\PLUG_LoudnessMeter.cpp" />
+    <ClCompile Include="lib-1770\bs1770_add_sample_i32.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_add_samples_i_f32.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_add_samples_i_f64.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_add_samples_i_i16.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_add_samples_i_i32.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_add_samples_p_f32.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_add_samples_p_f64.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_add_samples_p_i16.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_add_samples_p_i32.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_aggr.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_ctx.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_ctx_add_sample_f32.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_ctx_add_sample_f64.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_ctx_add_sample_i16.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_ctx_add_sample_i32.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_i_f32.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_i_f64.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_i_i16.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_i_i32.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_p_f32.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_p_f64.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_p_i16.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_p_i32.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_default.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_hist.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_nd.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_nd_add_sample_f32.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_nd_add_sample_f64.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_nd_add_sample_i16.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_nd_add_sample_i32.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_i_f32.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_i_f64.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_i_i16.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_i_i32.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_p_f32.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_p_f64.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_p_i16.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_p_i32.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_r128.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_stats.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_version.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\biquad.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_a85.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_add_sample_f32.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_add_sample_f64.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-1770\bs1770_add_sample_i16.c">
+      <Filter>Lib1770</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StreamMaster.h" />
@@ -52,6 +194,9 @@
     </Filter>
     <Filter Include="Chunkware">
       <UniqueIdentifier>{a2d44576-4707-43d0-88c6-0a77f83aa8d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib1770">
+      <UniqueIdentifier>{e33de234-0fe4-462e-b1b8-062f059503df}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
