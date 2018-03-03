@@ -11,41 +11,44 @@ const int kNumPrograms = 1;
 chunkware_simple::SimpleLimit tLimiter;
 const double fDefaultLimiterThreshold = 0.;
 
-
 Plug::LoudnessMeter tLoudnessMeter;
-
-enum EParams
-{
-  kGain = 0,
-  kNumParams
-};
-
-enum ELayout
-{
-  kWidth = GUI_WIDTH,
-  kHeight = GUI_HEIGHT,
-
-  kGainX = 100,
-  kGainY = 100,
-  kKnobFrames = 60
-};
+ITextControl * tLoudnessTextControl;
 
 StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   :	IPLUG_CTOR(kNumParams, kNumPrograms, instanceInfo), mGain(1.)
 {
   TRACE;
-
   //arguments are: name, defaultVal, minVal, maxVal, step, label
   GetParam(kGain)->InitDouble("Threshold", fDefaultLimiterThreshold, -60., 5.0, 0.1, "dB");
   GetParam(kGain)->SetShape(2.);
+  GetParam(kIContactControl)->InitBool("IContactControl", 0, "");
 
   IGraphics* pGraphics = MakeGraphics(this, kWidth, kHeight);
+
   IColor tBgColor = IColor(255, 128, 0, 0);
   pGraphics->AttachPanelBackground(&tBgColor);
+  
+  // Limiter knob
+  IBitmap tBmp = pGraphics->LoadIBitmap(KNOB_ID, KNOB_FN, kKnobFrames);
+  pGraphics->AttachControl(new IKnobMultiControl(this, kGainX, kGainY, kGain, &tBmp));
 
-  IBitmap knob = pGraphics->LoadIBitmap(KNOB_ID, KNOB_FN, kKnobFrames);
+  // LUFS read button
+  tBmp = pGraphics->LoadIBitmap(ICONTACTCONTROL_ID, ICONTACTCONTROL_FN, kIContactControl_N);
+  pGraphics->AttachControl(new IContactControl(this, kIContactControl_X, kIContactControl_Y, kIContactControl, &tBmp));
 
-  pGraphics->AttachControl(new IKnobMultiControl(this, kGainX, kGainY, kGain, &knob));
+  // Text LUFS meter
+  IText tDefaultLoudnessLabel = IText(32);
+  tLoudnessTextControl = new ITextControl(
+    this,
+    IRECT(
+      kILoudnessTextControl_X,
+      kILoudnessTextControl_Y,
+      (kILoudnessTextControl_X + kILoudnessTextControl_W),
+      (kILoudnessTextControl_Y + kILoudnessTextControl_H)
+    ),
+    &tDefaultLoudnessLabel,
+    "Display text strings");
+  pGraphics->AttachControl(tLoudnessTextControl);
 
   AttachGraphics(pGraphics);
 
@@ -60,6 +63,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   //LUFS loudness meter 
   tLoudnessMeter.SetSampleRate(PLUG_DEFAULT_SAMPLERATE);
   tLoudnessMeter.SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER);  
+  
 }
 
 StreamMaster::~StreamMaster() {}
@@ -93,12 +97,22 @@ void StreamMaster::Reset()
 void StreamMaster::OnParamChange(int paramIdx)
 {
   IMutexLock lock(this);
+  double fLufs;
+  char sLoudnessString[64];
+
 
   switch (paramIdx)
   {
     case kGain:
       //mGain = GetParam(kGain)->Value() / 100.;
       tLimiter.setThresh(GetParam(kGain)->Value());
+      break;
+    case kIContactControl:
+      if (GetParam(kIContactControl)->Value()) {
+        fLufs = tLoudnessMeter.GetLufs();
+        sprintf(sLoudnessString, "%4.2f dB LUFS", fLufs);
+        tLoudnessTextControl->SetTextFromPlug(sLoudnessString);
+      }
       break;
 
     default:
