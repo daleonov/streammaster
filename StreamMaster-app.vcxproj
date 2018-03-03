@@ -111,7 +111,7 @@
     <IntDir>build-win\app\$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>
     </LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);$(ProjectDir)lib-1770\</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);$(ProjectDir)lib-1770\;$(ProjectDir)PLUG\</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>build-win\app\$(Platform)\$(Configuration)\</IntDir>
@@ -347,6 +347,7 @@
     <ClCompile Include="lib_chunkware\SimpleEnvelope.cpp" />
     <ClCompile Include="lib_chunkware\SimpleGate.cpp" />
     <ClCompile Include="lib_chunkware\SimpleLimit.cpp" />
+    <ClCompile Include="PLUG\PLUG_LoudnessMeter.cpp" />
     <ClCompile Include="StreamMaster.cpp" />
   </ItemGroup>
   <ItemGroup>

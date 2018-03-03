@@ -252,6 +252,7 @@
     <ClCompile Include="lib-1770\bs1770_add_sample_i32.c">
       <Filter>Lib1770</Filter>
     </ClCompile>
+    <ClCompile Include="PLUG\PLUG_LoudnessMeter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="StreamMaster.rc" />
