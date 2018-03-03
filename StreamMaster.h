@@ -3,6 +3,9 @@
 
 #include "IPlug_include_in_plug_hdr.h"
 
+#define PLUG_DEFAULT_SAMPLERATE 44100.
+#define PLUG_DEFAULT_CHANNEL_NUMBER 2
+
 class StreamMaster : public IPlug
 {
 public:

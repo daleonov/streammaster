@@ -1,7 +1,7 @@
 #include "PLUG_LoudnessMeter.h"
 
 #define _PLUG_PLANAR_MODE
-#define _PLUG_INTERLEAVED_MODE
+//#define _PLUG_INTERLEAVED_MODE
 
 using namespace Plug;
 
@@ -12,7 +12,7 @@ void LoudnessMeter::AddSamples(double* afBuffer, size_t nSamples){
 		0,
 		this->_fSampleRate,
 		this->_nChannels,
-    (bs1770_f64_t**)&afBuffer,
+    	&afBuffer,
 		nSamples
 		);
 }
@@ -31,3 +31,12 @@ double LoudnessMeter::GetLufs(){
 double LoudnessMeter::GetLra(){
 	return bs1770_ctx_track_lra_default(_tCtx,0);
 }
+
+void LoudnessMeter::SetSampleRate(double fRate){
+	this->_fSampleRate = fRate;
+}
+
+void LoudnessMeter::SetNumberOfChannels(int nChannels){
+	this->_nChannels = nChannels;
+}
+

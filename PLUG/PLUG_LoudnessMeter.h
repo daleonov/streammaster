@@ -49,9 +49,9 @@ public:
 private:
 	double _fSampleRate = 44100.;
 	int _nChannels = 2;
-	double _fLufs;
-	double _fLra;
-	bs1770_ctx_t *_tCtx;
+	double _fLufs = 0;
+	double _fLra = 0;
+	bs1770_ctx_t *_tCtx = NULL;
 }; //class LoudnessMeter
 
 } //namespace Plug

@@ -3,12 +3,16 @@
 #include "IControl.h"
 #include "resource.h"
 #include "lib_chunkware/SimpleLimit.h"
+#include "PLUG/PLUG_LoudnessMeter.h"
 
 //using namespace chunkware_simple;
 
 const int kNumPrograms = 1;
 chunkware_simple::SimpleLimit tLimiter;
 const double fDefaultLimiterThreshold = 0.;
+
+
+Plug::LoudnessMeter tLoudnessMeter;
 
 enum EParams
 {
@@ -47,11 +51,15 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
 
   //Limiter 
   tLimiter.setThresh(fDefaultLimiterThreshold);
-  tLimiter.setSampleRate(44100.);
+  tLimiter.setSampleRate(PLUG_DEFAULT_SAMPLERATE);
   tLimiter.initRuntime();
 
   //MakePreset("preset 1", ... );
   MakeDefaultPreset((char *) "-", kNumPrograms);
+
+  //LUFS loudness meter 
+  tLoudnessMeter.SetSampleRate(PLUG_DEFAULT_SAMPLERATE);
+  tLoudnessMeter.SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER);  
 }
 
 StreamMaster::~StreamMaster() {}
@@ -71,7 +79,8 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
     *out2 = *in2;
     tLimiter.process(*out1, *out2);
   }
-
+  tLoudnessMeter.AddSamples(in1, nFrames);
+  tLoudnessMeter.AddSamples(in2, nFrames);
 
 }
 
