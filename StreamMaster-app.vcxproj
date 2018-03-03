@@ -111,6 +111,7 @@
     <IntDir>build-win\app\$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>
     </LinkIncremental>
+    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);$(ProjectDir)lib_essentia\essentia;$(ProjectDir)lib_essentia\essentia\streaming\algorithms;$(ProjectDir)lib_essentia\essentia\streaming;$(ProjectDir)lib_essentia\essentia\utils\tnt;$(ProjectDir)lib_essentia\essentia\utils;$(ProjectDir)lib_essentia\essentia\scheduler</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>build-win\app\$(Platform)\$(Configuration)\</IntDir>

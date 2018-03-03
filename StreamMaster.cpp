@@ -3,6 +3,7 @@
 #include "IControl.h"
 #include "resource.h"
 #include "lib_chunkware/SimpleLimit.h"
+#include "lib_essentia/algorithms/temporal/loudnessebur128.h"
 
 //using namespace chunkware_simple;
 
