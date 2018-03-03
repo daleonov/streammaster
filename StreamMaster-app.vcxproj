@@ -111,7 +111,7 @@
     <IntDir>build-win\app\$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>
     </LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);$(ProjectDir)lib-klangfreund-lufsmeter\;$(ProjectDir)lib-klangfreund-lufsmeter\filters\;O:\Projects\VST\JUCE\extras\windows dll\JuceLibraryCode;O:\Projects\VST\JUCE\modules</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);$(ProjectDir)lib-1770\</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>build-win\app\$(Platform)\$(Configuration)\</IntDir>
@@ -296,8 +296,53 @@
     <ClCompile Include="..\..\WDL\rtaudiomidi\RtMidi.cpp" />
     <ClCompile Include="app_wrapper\app_dialog.cpp" />
     <ClCompile Include="app_wrapper\app_main.cpp" />
-    <ClCompile Include="lib-klangfreund-lufsmeter\Ebu128LoudnessMeter.cpp" />
-    <ClCompile Include="lib-klangfreund-lufsmeter\filters\SecondOrderIIRFilter.cpp" />
+    <ClCompile Include="lib-1770\biquad.c" />
+    <ClCompile Include="lib-1770\bs1770.c" />
+    <ClCompile Include="lib-1770\bs1770_a85.c" />
+    <ClCompile Include="lib-1770\bs1770_add_samples_i_f32.c" />
+    <ClCompile Include="lib-1770\bs1770_add_samples_i_f64.c" />
+    <ClCompile Include="lib-1770\bs1770_add_samples_i_i16.c" />
+    <ClCompile Include="lib-1770\bs1770_add_samples_i_i32.c" />
+    <ClCompile Include="lib-1770\bs1770_add_samples_p_f32.c" />
+    <ClCompile Include="lib-1770\bs1770_add_samples_p_f64.c" />
+    <ClCompile Include="lib-1770\bs1770_add_samples_p_i16.c" />
+    <ClCompile Include="lib-1770\bs1770_add_samples_p_i32.c" />
+    <ClCompile Include="lib-1770\bs1770_add_sample_f32.c" />
+    <ClCompile Include="lib-1770\bs1770_add_sample_f64.c" />
+    <ClCompile Include="lib-1770\bs1770_add_sample_i16.c" />
+    <ClCompile Include="lib-1770\bs1770_add_sample_i32.c" />
+    <ClCompile Include="lib-1770\bs1770_aggr.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_i_f32.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_i_f64.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_i_i16.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_i_i32.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_p_f32.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_p_f64.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_p_i16.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_samples_p_i32.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_sample_f32.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_sample_f64.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_sample_i16.c" />
+    <ClCompile Include="lib-1770\bs1770_ctx_add_sample_i32.c" />
+    <ClCompile Include="lib-1770\bs1770_default.c" />
+    <ClCompile Include="lib-1770\bs1770_hist.c" />
+    <ClCompile Include="lib-1770\bs1770_nd.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_i_f32.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_i_f64.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_i_i16.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_i_i32.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_p_f32.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_p_f64.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_p_i16.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_samples_p_i32.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_sample_f32.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_sample_f64.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_sample_i16.c" />
+    <ClCompile Include="lib-1770\bs1770_nd_add_sample_i32.c" />
+    <ClCompile Include="lib-1770\bs1770_r128.c" />
+    <ClCompile Include="lib-1770\bs1770_stats.c" />
+    <ClCompile Include="lib-1770\bs1770_version.c" />
     <ClCompile Include="lib_chunkware\SimpleComp.cpp" />
     <ClCompile Include="lib_chunkware\SimpleEnvelope.cpp" />
     <ClCompile Include="lib_chunkware\SimpleGate.cpp" />
