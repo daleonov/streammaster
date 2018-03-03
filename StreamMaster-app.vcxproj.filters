@@ -13,6 +13,9 @@
     <Filter Include="Chunkware">
       <UniqueIdentifier>{39061488-a8e6-4cef-ac24-73d53f43fb37}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LUFSMeter">
+      <UniqueIdentifier>{7b9cc948-d18b-47e0-b4d9-b3e43486deb2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\WDL\rtaudiomidi\RtAudio.h">
@@ -107,6 +110,12 @@
     </ClCompile>
     <ClCompile Include="lib_chunkware\SimpleEnvelope.cpp">
       <Filter>Chunkware</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-klangfreund-lufsmeter\Ebu128LoudnessMeter.cpp">
+      <Filter>LUFSMeter</Filter>
+    </ClCompile>
+    <ClCompile Include="lib-klangfreund-lufsmeter\filters\SecondOrderIIRFilter.cpp">
+      <Filter>LUFSMeter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

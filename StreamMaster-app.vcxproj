@@ -111,7 +111,7 @@
     <IntDir>build-win\app\$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>
     </LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);$(ProjectDir)lib_essentia\essentia;$(ProjectDir)lib_essentia\essentia\streaming\algorithms;$(ProjectDir)lib_essentia\essentia\streaming;$(ProjectDir)lib_essentia\essentia\utils\tnt;$(ProjectDir)lib_essentia\essentia\utils;$(ProjectDir)lib_essentia\essentia\scheduler</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);$(ProjectDir)lib-klangfreund-lufsmeter\;$(ProjectDir)lib-klangfreund-lufsmeter\filters\;O:\Projects\VST\JUCE\extras\windows dll\JuceLibraryCode;O:\Projects\VST\JUCE\modules</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>build-win\app\$(Platform)\$(Configuration)\</IntDir>
@@ -296,6 +296,8 @@
     <ClCompile Include="..\..\WDL\rtaudiomidi\RtMidi.cpp" />
     <ClCompile Include="app_wrapper\app_dialog.cpp" />
     <ClCompile Include="app_wrapper\app_main.cpp" />
+    <ClCompile Include="lib-klangfreund-lufsmeter\Ebu128LoudnessMeter.cpp" />
+    <ClCompile Include="lib-klangfreund-lufsmeter\filters\SecondOrderIIRFilter.cpp" />
     <ClCompile Include="lib_chunkware\SimpleComp.cpp" />
     <ClCompile Include="lib_chunkware\SimpleEnvelope.cpp" />
     <ClCompile Include="lib_chunkware\SimpleGate.cpp" />

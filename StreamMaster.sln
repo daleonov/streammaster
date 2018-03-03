@@ -7,6 +7,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StreamMaster-app", "StreamM
 	ProjectSection(ProjectDependencies) = postProject
 		{3059A12C-2A45-439B-81EC-201D8ED347A3} = {3059A12C-2A45-439B-81EC-201D8ED347A3}
 		{33958832-2FFD-49D8-9C13-5F0B26739E81} = {33958832-2FFD-49D8-9C13-5F0B26739E81}
+		{B636B53B-C44B-1E04-8668-D61B3900BAA4} = {B636B53B-C44B-1E04-8668-D61B3900BAA4}
 		{02791F57-A813-4065-A3B5-1CB8D4A0573A} = {02791F57-A813-4065-A3B5-1CB8D4A0573A}
 	EndProjectSection
 EndProject
@@ -49,6 +50,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PlugInLib", "..\..\PT9_SDK\AlturaPorts\TDMPlugIns\PlugInLibrary\WinBuild\PlugInLib.vcxproj", "{D2CE28FF-63B8-48BC-936D-33F365B4053F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "essentia", "..\..\..\..\essentia-2.1_beta3\essentia.vcxproj", "{02791F57-A813-4065-A3B5-1CB8D4A0573A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "juce_dll_StaticLibrary", "..\..\..\..\JUCE\extras\windows dll\Builds\VisualStudio2017\juce_dll_StaticLibrary.vcxproj", "{B636B53B-C44B-1E04-8668-D61B3900BAA4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -184,6 +187,16 @@ Global
 		{02791F57-A813-4065-A3B5-1CB8D4A0573A}.Tracer|Win32.Build.0 = Release|Win32
 		{02791F57-A813-4065-A3B5-1CB8D4A0573A}.Tracer|x64.ActiveCfg = Release|Win32
 		{02791F57-A813-4065-A3B5-1CB8D4A0573A}.Tracer|x64.Build.0 = Release|Win32
+		{B636B53B-C44B-1E04-8668-D61B3900BAA4}.Debug|Win32.ActiveCfg = Debug|x64
+		{B636B53B-C44B-1E04-8668-D61B3900BAA4}.Debug|x64.ActiveCfg = Debug|x64
+		{B636B53B-C44B-1E04-8668-D61B3900BAA4}.Debug|x64.Build.0 = Debug|x64
+		{B636B53B-C44B-1E04-8668-D61B3900BAA4}.Release|Win32.ActiveCfg = Release|x64
+		{B636B53B-C44B-1E04-8668-D61B3900BAA4}.Release|x64.ActiveCfg = Release|x64
+		{B636B53B-C44B-1E04-8668-D61B3900BAA4}.Release|x64.Build.0 = Release|x64
+		{B636B53B-C44B-1E04-8668-D61B3900BAA4}.Tracer|Win32.ActiveCfg = Release|x64
+		{B636B53B-C44B-1E04-8668-D61B3900BAA4}.Tracer|Win32.Build.0 = Release|x64
+		{B636B53B-C44B-1E04-8668-D61B3900BAA4}.Tracer|x64.ActiveCfg = Release|x64
+		{B636B53B-C44B-1E04-8668-D61B3900BAA4}.Tracer|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

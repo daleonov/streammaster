@@ -112,7 +112,7 @@
     <IntDir>build-win\vst2\$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>
     </LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)lib_essentia\essentia;</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>build-win\vst2\$(Platform)\$(Configuration)\</IntDir>
