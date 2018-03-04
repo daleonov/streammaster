@@ -66,8 +66,8 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   
 }
 
+double fSampleSample;
 StreamMaster::~StreamMaster() {}
-
 void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int nFrames)
 {
   // Mutex is already locked for us.
@@ -77,13 +77,35 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
   double* out1 = outputs[0];
   double* out2 = outputs[1];
 
-  for (int s = 0; s < nFrames; ++s, ++in1, ++in2, ++out1, ++out2)
+  double *afInterleavedSamples = new double[nFrames * 2];
+
+  for (int frame = 0, sample = 0; frame < nFrames; ++frame, ++in1, ++in2, ++out1, ++out2, sample += 2)
   {
     *out1 = *in1;
     *out2 = *in2;
     tLimiter.process(*out1, *out2);
+    fSampleSample = *in1;
+    afInterleavedSamples[sample]   = *in1;
+    afInterleavedSamples[sample+1] = *in2;
   }
-  tLoudnessMeter.AddSamples(in2, nFrames);
+
+
+  in1 = inputs[0];
+  in2 = inputs[1];
+
+  double fRandom;
+  // Creating an interleaved buffer
+  /*
+  for (int frame = 0, sample = 0; frame < nFrames; frame++, sample+=2) {
+    fRandom = -1. + static_cast <double> (rand()) / (static_cast <double> (RAND_MAX / (1. - (-1.))));
+    afInterleavedSamples[sample] = fRandom/2;
+    afInterleavedSamples[sample + 1] = fRandom/2;
+
+    //afInterleavedSamples[sample]   = in1[sample];
+    //afInterleavedSamples[sample+1] = in2[sample];
+  }*/
+  tLoudnessMeter.AddSamples(afInterleavedSamples, nFrames);
+  delete[] afInterleavedSamples;
 
 }
 
@@ -109,7 +131,12 @@ void StreamMaster::OnParamChange(int paramIdx)
     case kIContactControl:
       if (GetParam(kIContactControl)->Value()) {
         fLufs = tLoudnessMeter.GetLufs();
-        sprintf(sLoudnessString, "%4.2f dB LUFS", fLufs);
+        if (fabs(fLufs - HUGE_VAL) < std::numeric_limits<double>::epsilon()) {
+          sprintf(sLoudnessString, "-oo LUFS");
+        }
+        else {
+          sprintf(sLoudnessString, "%4.2f LUFS, %4.4f", fLufs, fSampleSample);
+        }
         tLoudnessTextControl->SetTextFromPlug(sLoudnessString);
         tLoudnessTextControl->Redraw();
       }

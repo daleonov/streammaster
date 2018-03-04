@@ -39,9 +39,9 @@ enum ELayout
   kGainY = 100,
   kKnobFrames = 60,
 
-  kILoudnessTextControl_X = 100,
+  kILoudnessTextControl_X = 10,
   kILoudnessTextControl_Y = 57,
-  kILoudnessTextControl_W = 200,
+  kILoudnessTextControl_W = 280,
   kILoudnessTextControl_H = 20,
 
   kIContactControl_N = 2,
