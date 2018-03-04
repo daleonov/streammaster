@@ -5,25 +5,40 @@
 #include "lib_chunkware/SimpleLimit.h"
 #include "PLUG/PLUG_LoudnessMeter.h"
 
-//using namespace chunkware_simple;
 
 const int kNumPrograms = 1;
 chunkware_simple::SimpleLimit tLimiter;
 const double fDefaultLimiterThreshold = 0.;
 
-Plug::LoudnessMeter tLoudnessMeter;
 ITextControl * tLoudnessTextControl;
+IGraphics* pGraphics;
+
+void StreamMaster::UpdateGui()
+{
+  char sLoudnessString[64];
+  double fLufs = tLoudnessMeter->GetLufs();
+    if (fabs(fLufs - HUGE_VAL) < std::numeric_limits<double>::epsilon()) {
+      sprintf(sLoudnessString, "-oo LUFS");
+    }
+    else {
+      sprintf(sLoudnessString, "%4.2f LUFS", fLufs);
+    }
+    tLoudnessTextControl->SetTextFromPlug(sLoudnessString);
+    //tLoudnessTextControl->Redraw();
+
+}
 
 StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   :	IPLUG_CTOR(kNumParams, kNumPrograms, instanceInfo), mGain(1.)
 {
+
   TRACE;
   //arguments are: name, defaultVal, minVal, maxVal, step, label
   GetParam(kGain)->InitDouble("Threshold", fDefaultLimiterThreshold, -60., 5.0, 0.1, "dB");
   GetParam(kGain)->SetShape(2.);
   GetParam(kIContactControl)->InitBool("IContactControl", 0, "");
 
-  IGraphics* pGraphics = MakeGraphics(this, kWidth, kHeight);
+  pGraphics = MakeGraphics(this, kWidth, kHeight);
 
   IColor tBgColor = IColor(255, 128, 0, 0);
   pGraphics->AttachPanelBackground(&tBgColor);
@@ -38,6 +53,9 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
 
   // Text LUFS meter
   IText tDefaultLoudnessLabel = IText(32);
+
+  tDefaultLoudnessLabel.mColor = IColor(255, 255, 255, 255);
+  tDefaultLoudnessLabel.mSize = 20;
   tLoudnessTextControl = new ITextControl(
     this,
     IRECT(
@@ -61,9 +79,9 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   MakeDefaultPreset((char *) "-", kNumPrograms);
 
   //LUFS loudness meter 
-  tLoudnessMeter.SetSampleRate(PLUG_DEFAULT_SAMPLERATE);
-  tLoudnessMeter.SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER);  
-  
+  tLoudnessMeter = new Plug::LoudnessMeter();
+  tLoudnessMeter->SetSampleRate(PLUG_DEFAULT_SAMPLERATE);
+  tLoudnessMeter->SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER);  
 }
 
 double fSampleSample;
@@ -104,8 +122,9 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
     //afInterleavedSamples[sample]   = in1[sample];
     //afInterleavedSamples[sample+1] = in2[sample];
   }*/
-  tLoudnessMeter.AddSamples(afInterleavedSamples, nFrames);
+  tLoudnessMeter->AddSamples(afInterleavedSamples, nFrames);
   delete[] afInterleavedSamples;
+  UpdateGui();
 
 }
 
@@ -130,7 +149,7 @@ void StreamMaster::OnParamChange(int paramIdx)
       break;
     case kIContactControl:
       if (GetParam(kIContactControl)->Value()) {
-        fLufs = tLoudnessMeter.GetLufs();
+        fLufs = tLoudnessMeter->GetLufs();
         if (fabs(fLufs - HUGE_VAL) < std::numeric_limits<double>::epsilon()) {
           sprintf(sLoudnessString, "-oo LUFS");
         }
