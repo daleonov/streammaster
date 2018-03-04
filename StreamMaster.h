@@ -41,7 +41,7 @@ enum ELayout
 
   kILoudnessTextControl_X = 100,
   kILoudnessTextControl_Y = 57,
-  kILoudnessTextControl_W = 100,
+  kILoudnessTextControl_W = 200,
   kILoudnessTextControl_H = 20,
 
   kIContactControl_N = 2,

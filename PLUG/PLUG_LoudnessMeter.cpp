@@ -24,7 +24,8 @@ LoudnessMeter::LoudnessMeter(){
 	this->_tCtx = bs1770_ctx_open_default(1);
 }
 
-LoudnessMeter::~LoudnessMeter(){
+LoudnessMeter::~LoudnessMeter(){	
+    bs1770_ctx_close(this->_tCtx);
 }
 
 double LoudnessMeter::GetLufs(){
