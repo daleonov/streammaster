@@ -3,36 +3,36 @@
 using namespace Plug;
 
 void LoudnessMeter::AddSamples(double* afBuffer, size_t nSamples){
-	/*for (int i = 0; i < nSamples; i++)
-	{
-    bs1770_sample_f64_t tSample = { afBuffer[i], afBuffer[i] };
-		bs1770_ctx_add_sample_f64(
-			this->_tCtx,
-			0,
-			this->_fSampleRate,
-			this->_nChannels,
-      		tSample
-			);
-	}*/
-
+	ebur128_add_frames_double(
+		this->_tLoudnessMeterEbur128,
+		afBuffer,
+		(size_t) nSamples
+		);
 }
 
 LoudnessMeter::LoudnessMeter(){
-	//this->_tCtx = bs1770_ctx_open_default(1);
+	this->_tLoudnessMeterEbur128 = ebur128_init(
+		(unsigned) this->_nChannels,
+		(unsigned) this->_fSampleRate,
+		EBUR128_MODE_I
+		);
+	ebur128_set_channel(this->_tLoudnessMeterEbur128, 0, EBUR128_LEFT);
+	ebur128_set_channel(this->_tLoudnessMeterEbur128, 1, EBUR128_RIGHT);
 }
 
 LoudnessMeter::~LoudnessMeter(){	
-    //bs1770_ctx_close(this->_tCtx);
+	ebur128_destroy(&this->_tLoudnessMeterEbur128);
 }
 
 double LoudnessMeter::GetLufs(){
-  return 0.;
-	//bs1770_ctx_track_lufs_r128(_tCtx,0);
+	double fLoudness;
+	ebur128_loudness_global(this->_tLoudnessMeterEbur128, &fLoudness);
+	// See also: ebur128_loudness_global_multiple() for multiple files
+	return fLoudness;
 }
 
 double LoudnessMeter::GetLra(){
-  return 0.;
-	//bs1770_ctx_track_lra_default(_tCtx,0);
+	return 0.;
 }
 
 void LoudnessMeter::SetSampleRate(double fRate){
