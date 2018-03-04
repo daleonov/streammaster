@@ -1,7 +1,6 @@
 #ifndef _PLUG_LOUDNESSMETER_H
 #define _PLUG_LOUDNESSMETER_H
 
-#include "bs1770_ctx.h"
 
 namespace Plug{
 
@@ -51,7 +50,7 @@ private:
 	int _nChannels = 2;
 	double _fLufs = 0;
 	double _fLra = 0;
-	bs1770_ctx_t *_tCtx = NULL;
+	//bs1770_ctx_t *_tCtx = NULL;
 }; //class LoudnessMeter
 
 } //namespace Plug

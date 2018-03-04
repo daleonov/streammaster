@@ -1,12 +1,9 @@
 #include "PLUG_LoudnessMeter.h"
 
-#define _PLUG_PLANAR_MODE
-//#define _PLUG_INTERLEAVED_MODE
-
 using namespace Plug;
 
 void LoudnessMeter::AddSamples(double* afBuffer, size_t nSamples){
-	for (int i = 0; i < nSamples; i++)
+	/*for (int i = 0; i < nSamples; i++)
 	{
     bs1770_sample_f64_t tSample = { afBuffer[i], afBuffer[i] };
 		bs1770_ctx_add_sample_f64(
@@ -16,24 +13,26 @@ void LoudnessMeter::AddSamples(double* afBuffer, size_t nSamples){
 			this->_nChannels,
       		tSample
 			);
-	}
+	}*/
 
 }
 
 LoudnessMeter::LoudnessMeter(){
-	this->_tCtx = bs1770_ctx_open_default(1);
+	//this->_tCtx = bs1770_ctx_open_default(1);
 }
 
 LoudnessMeter::~LoudnessMeter(){	
-    bs1770_ctx_close(this->_tCtx);
+    //bs1770_ctx_close(this->_tCtx);
 }
 
 double LoudnessMeter::GetLufs(){
-	return bs1770_ctx_track_lufs_r128(_tCtx,0);
+  return 0.;
+	//bs1770_ctx_track_lufs_r128(_tCtx,0);
 }
 
 double LoudnessMeter::GetLra(){
-	return bs1770_ctx_track_lra_default(_tCtx,0);
+  return 0.;
+	//bs1770_ctx_track_lra_default(_tCtx,0);
 }
 
 void LoudnessMeter::SetSampleRate(double fRate){

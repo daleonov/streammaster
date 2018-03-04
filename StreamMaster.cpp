@@ -76,7 +76,6 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
   double* in2 = inputs[1];
   double* out1 = outputs[0];
   double* out2 = outputs[1];
-  static bs1770_f64_t buf[10] = {1,0,1,1,1,-1,0,0.5,0.1};
 
   for (int s = 0; s < nFrames; ++s, ++in1, ++in2, ++out1, ++out2)
   {
