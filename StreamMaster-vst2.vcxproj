@@ -112,7 +112,7 @@
     <IntDir>build-win\vst2\$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>
     </LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);;$(ProjectDir)lib-1770\;$(ProjectDir)PLUG\</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)lib-jiixyj-ebur128\;$(ProjectDir)PLUG\;$(ProjectDir)lib-jiixyj-ebur128\queue</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>build-win\vst2\$(Platform)\$(Configuration)\</IntDir>
@@ -238,6 +238,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\WDL\IPlug\IPlugVST.h" />
+    <ClInclude Include="lib-jiixyj-ebur128\ebur128.h" />
     <ClInclude Include="lib_chunkware\SimpleComp.h" />
     <ClInclude Include="lib_chunkware\SimpleEnvelope.h" />
     <ClInclude Include="lib_chunkware\SimpleGain.h" />
@@ -249,6 +250,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\WDL\IPlug\IPlugVST.cpp" />
+    <ClCompile Include="lib-jiixyj-ebur128\ebur128.c" />
     <ClCompile Include="lib_chunkware\SimpleComp.cpp" />
     <ClCompile Include="lib_chunkware\SimpleEnvelope.cpp" />
     <ClCompile Include="lib_chunkware\SimpleGate.cpp" />

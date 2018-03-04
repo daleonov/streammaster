@@ -18,6 +18,9 @@
       <Filter>Chunkware</Filter>
     </ClCompile>
     <ClCompile Include="PLUG\PLUG_LoudnessMeter.cpp" />
+    <ClCompile Include="lib-jiixyj-ebur128\ebur128.c">
+      <Filter>lib-jiixyj-ebur128</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StreamMaster.h" />
@@ -43,6 +46,9 @@
     <ClInclude Include="lib_chunkware\SimpleEnvelope.h">
       <Filter>Chunkware</Filter>
     </ClInclude>
+    <ClInclude Include="lib-jiixyj-ebur128\ebur128.h">
+      <Filter>lib-jiixyj-ebur128</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="StreamMaster.rc" />
@@ -53,6 +59,9 @@
     </Filter>
     <Filter Include="Chunkware">
       <UniqueIdentifier>{a2d44576-4707-43d0-88c6-0a77f83aa8d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib-jiixyj-ebur128">
+      <UniqueIdentifier>{f74b83a6-d66b-4c56-931c-c02a15f01f68}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
