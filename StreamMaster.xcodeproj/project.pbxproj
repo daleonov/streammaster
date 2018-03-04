@@ -275,6 +275,76 @@
 		4FF016F8134E14E2001447BA /* ptrlist.h in Headers */ = {isa = PBXBuildFile; fileRef = 4FF016F5134E14E2001447BA /* ptrlist.h */; };
 		4FF016F9134E14E2001447BA /* wdlstring.h in Headers */ = {isa = PBXBuildFile; fileRef = 4FF016F6134E14E2001447BA /* wdlstring.h */; };
 		4FF0171A134E153A001447BA /* heapbuf.h in Headers */ = {isa = PBXBuildFile; fileRef = 4FF01719134E153A001447BA /* heapbuf.h */; };
+		CE397592204C709B008D8437 /* PLUG_LoudnessMeter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE397590204C709B008D8437 /* PLUG_LoudnessMeter.cpp */; };
+		CE397593204C709B008D8437 /* PLUG_LoudnessMeter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE397590204C709B008D8437 /* PLUG_LoudnessMeter.cpp */; };
+		CE397594204C709B008D8437 /* PLUG_LoudnessMeter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE397590204C709B008D8437 /* PLUG_LoudnessMeter.cpp */; };
+		CE397595204C709B008D8437 /* PLUG_LoudnessMeter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE397590204C709B008D8437 /* PLUG_LoudnessMeter.cpp */; };
+		CE397596204C709B008D8437 /* PLUG_LoudnessMeter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE397590204C709B008D8437 /* PLUG_LoudnessMeter.cpp */; };
+		CE397597204C709B008D8437 /* PLUG_LoudnessMeter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE397590204C709B008D8437 /* PLUG_LoudnessMeter.cpp */; };
+		CE397598204C709B008D8437 /* PLUG_LoudnessMeter.h in Headers */ = {isa = PBXBuildFile; fileRef = CE397591204C709B008D8437 /* PLUG_LoudnessMeter.h */; };
+		CE397599204C709B008D8437 /* PLUG_LoudnessMeter.h in Headers */ = {isa = PBXBuildFile; fileRef = CE397591204C709B008D8437 /* PLUG_LoudnessMeter.h */; };
+		CE4D3DBD204C6DF700326E42 /* ebur128.c in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DBB204C6DF700326E42 /* ebur128.c */; };
+		CE4D3DBE204C6DF700326E42 /* ebur128.c in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DBB204C6DF700326E42 /* ebur128.c */; };
+		CE4D3DBF204C6DF700326E42 /* ebur128.c in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DBB204C6DF700326E42 /* ebur128.c */; };
+		CE4D3DC0204C6DF700326E42 /* ebur128.c in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DBB204C6DF700326E42 /* ebur128.c */; };
+		CE4D3DC1204C6DF700326E42 /* ebur128.c in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DBB204C6DF700326E42 /* ebur128.c */; };
+		CE4D3DC2204C6DF700326E42 /* ebur128.c in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DBB204C6DF700326E42 /* ebur128.c */; };
+		CE4D3DC3204C6DF700326E42 /* ebur128.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4D3DBC204C6DF700326E42 /* ebur128.h */; };
+		CE4D3DC4204C6DF700326E42 /* ebur128.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4D3DBC204C6DF700326E42 /* ebur128.h */; };
+		CE4D3DDB204C6E5600326E42 /* SimpleComp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DCE204C6E5600326E42 /* SimpleComp.cpp */; };
+		CE4D3DDC204C6E5600326E42 /* SimpleComp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DCE204C6E5600326E42 /* SimpleComp.cpp */; };
+		CE4D3DDD204C6E5600326E42 /* SimpleComp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DCE204C6E5600326E42 /* SimpleComp.cpp */; };
+		CE4D3DDE204C6E5600326E42 /* SimpleComp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DCE204C6E5600326E42 /* SimpleComp.cpp */; };
+		CE4D3DDF204C6E5600326E42 /* SimpleComp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DCE204C6E5600326E42 /* SimpleComp.cpp */; };
+		CE4D3DE0204C6E5600326E42 /* SimpleComp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DCE204C6E5600326E42 /* SimpleComp.cpp */; };
+		CE4D3DE1204C6E5600326E42 /* SimpleComp.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4D3DCF204C6E5600326E42 /* SimpleComp.h */; };
+		CE4D3DE2204C6E5600326E42 /* SimpleComp.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4D3DCF204C6E5600326E42 /* SimpleComp.h */; };
+		CE4D3DE3204C6E5600326E42 /* SimpleCompProcess.inl in Resources */ = {isa = PBXBuildFile; fileRef = CE4D3DD0204C6E5600326E42 /* SimpleCompProcess.inl */; };
+		CE4D3DE4204C6E5600326E42 /* SimpleCompProcess.inl in Resources */ = {isa = PBXBuildFile; fileRef = CE4D3DD0204C6E5600326E42 /* SimpleCompProcess.inl */; };
+		CE4D3DE5204C6E5600326E42 /* SimpleCompProcess.inl in Resources */ = {isa = PBXBuildFile; fileRef = CE4D3DD0204C6E5600326E42 /* SimpleCompProcess.inl */; };
+		CE4D3DE6204C6E5600326E42 /* SimpleCompProcess.inl in Resources */ = {isa = PBXBuildFile; fileRef = CE4D3DD0204C6E5600326E42 /* SimpleCompProcess.inl */; };
+		CE4D3DE7204C6E5600326E42 /* SimpleCompProcess.inl in Resources */ = {isa = PBXBuildFile; fileRef = CE4D3DD0204C6E5600326E42 /* SimpleCompProcess.inl */; };
+		CE4D3DE8204C6E5600326E42 /* SimpleCompProcess.inl in Resources */ = {isa = PBXBuildFile; fileRef = CE4D3DD0204C6E5600326E42 /* SimpleCompProcess.inl */; };
+		CE4D3DE9204C6E5600326E42 /* SimpleEnvelope.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DD1204C6E5600326E42 /* SimpleEnvelope.cpp */; };
+		CE4D3DEA204C6E5600326E42 /* SimpleEnvelope.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DD1204C6E5600326E42 /* SimpleEnvelope.cpp */; };
+		CE4D3DEB204C6E5600326E42 /* SimpleEnvelope.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DD1204C6E5600326E42 /* SimpleEnvelope.cpp */; };
+		CE4D3DEC204C6E5600326E42 /* SimpleEnvelope.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DD1204C6E5600326E42 /* SimpleEnvelope.cpp */; };
+		CE4D3DED204C6E5600326E42 /* SimpleEnvelope.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DD1204C6E5600326E42 /* SimpleEnvelope.cpp */; };
+		CE4D3DEE204C6E5600326E42 /* SimpleEnvelope.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DD1204C6E5600326E42 /* SimpleEnvelope.cpp */; };
+		CE4D3DEF204C6E5600326E42 /* SimpleEnvelope.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4D3DD2204C6E5600326E42 /* SimpleEnvelope.h */; };
+		CE4D3DF0204C6E5600326E42 /* SimpleEnvelope.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4D3DD2204C6E5600326E42 /* SimpleEnvelope.h */; };
+		CE4D3DF1204C6E5600326E42 /* SimpleGain.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4D3DD3204C6E5600326E42 /* SimpleGain.h */; };
+		CE4D3DF2204C6E5600326E42 /* SimpleGain.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4D3DD3204C6E5600326E42 /* SimpleGain.h */; };
+		CE4D3DF3204C6E5600326E42 /* SimpleGate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DD4204C6E5600326E42 /* SimpleGate.cpp */; };
+		CE4D3DF4204C6E5600326E42 /* SimpleGate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DD4204C6E5600326E42 /* SimpleGate.cpp */; };
+		CE4D3DF5204C6E5600326E42 /* SimpleGate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DD4204C6E5600326E42 /* SimpleGate.cpp */; };
+		CE4D3DF6204C6E5600326E42 /* SimpleGate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DD4204C6E5600326E42 /* SimpleGate.cpp */; };
+		CE4D3DF7204C6E5600326E42 /* SimpleGate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DD4204C6E5600326E42 /* SimpleGate.cpp */; };
+		CE4D3DF8204C6E5600326E42 /* SimpleGate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DD4204C6E5600326E42 /* SimpleGate.cpp */; };
+		CE4D3DF9204C6E5600326E42 /* SimpleGate.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4D3DD5204C6E5600326E42 /* SimpleGate.h */; };
+		CE4D3DFA204C6E5600326E42 /* SimpleGate.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4D3DD5204C6E5600326E42 /* SimpleGate.h */; };
+		CE4D3DFB204C6E5600326E42 /* SimpleGateProcess.inl in Resources */ = {isa = PBXBuildFile; fileRef = CE4D3DD6204C6E5600326E42 /* SimpleGateProcess.inl */; };
+		CE4D3DFC204C6E5600326E42 /* SimpleGateProcess.inl in Resources */ = {isa = PBXBuildFile; fileRef = CE4D3DD6204C6E5600326E42 /* SimpleGateProcess.inl */; };
+		CE4D3DFD204C6E5600326E42 /* SimpleGateProcess.inl in Resources */ = {isa = PBXBuildFile; fileRef = CE4D3DD6204C6E5600326E42 /* SimpleGateProcess.inl */; };
+		CE4D3DFE204C6E5600326E42 /* SimpleGateProcess.inl in Resources */ = {isa = PBXBuildFile; fileRef = CE4D3DD6204C6E5600326E42 /* SimpleGateProcess.inl */; };
+		CE4D3DFF204C6E5600326E42 /* SimpleGateProcess.inl in Resources */ = {isa = PBXBuildFile; fileRef = CE4D3DD6204C6E5600326E42 /* SimpleGateProcess.inl */; };
+		CE4D3E00204C6E5600326E42 /* SimpleGateProcess.inl in Resources */ = {isa = PBXBuildFile; fileRef = CE4D3DD6204C6E5600326E42 /* SimpleGateProcess.inl */; };
+		CE4D3E01204C6E5600326E42 /* SimpleHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4D3DD7204C6E5600326E42 /* SimpleHeader.h */; };
+		CE4D3E02204C6E5600326E42 /* SimpleHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4D3DD7204C6E5600326E42 /* SimpleHeader.h */; };
+		CE4D3E03204C6E5600326E42 /* SimpleLimit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DD8204C6E5600326E42 /* SimpleLimit.cpp */; };
+		CE4D3E04204C6E5600326E42 /* SimpleLimit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DD8204C6E5600326E42 /* SimpleLimit.cpp */; };
+		CE4D3E05204C6E5600326E42 /* SimpleLimit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DD8204C6E5600326E42 /* SimpleLimit.cpp */; };
+		CE4D3E06204C6E5600326E42 /* SimpleLimit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DD8204C6E5600326E42 /* SimpleLimit.cpp */; };
+		CE4D3E07204C6E5600326E42 /* SimpleLimit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DD8204C6E5600326E42 /* SimpleLimit.cpp */; };
+		CE4D3E08204C6E5600326E42 /* SimpleLimit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE4D3DD8204C6E5600326E42 /* SimpleLimit.cpp */; };
+		CE4D3E09204C6E5600326E42 /* SimpleLimit.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4D3DD9204C6E5600326E42 /* SimpleLimit.h */; };
+		CE4D3E0A204C6E5600326E42 /* SimpleLimit.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4D3DD9204C6E5600326E42 /* SimpleLimit.h */; };
+		CE4D3E0B204C6E5600326E42 /* SimpleLimitProcess.inl in Resources */ = {isa = PBXBuildFile; fileRef = CE4D3DDA204C6E5600326E42 /* SimpleLimitProcess.inl */; };
+		CE4D3E0C204C6E5600326E42 /* SimpleLimitProcess.inl in Resources */ = {isa = PBXBuildFile; fileRef = CE4D3DDA204C6E5600326E42 /* SimpleLimitProcess.inl */; };
+		CE4D3E0D204C6E5600326E42 /* SimpleLimitProcess.inl in Resources */ = {isa = PBXBuildFile; fileRef = CE4D3DDA204C6E5600326E42 /* SimpleLimitProcess.inl */; };
+		CE4D3E0E204C6E5600326E42 /* SimpleLimitProcess.inl in Resources */ = {isa = PBXBuildFile; fileRef = CE4D3DDA204C6E5600326E42 /* SimpleLimitProcess.inl */; };
+		CE4D3E0F204C6E5600326E42 /* SimpleLimitProcess.inl in Resources */ = {isa = PBXBuildFile; fileRef = CE4D3DDA204C6E5600326E42 /* SimpleLimitProcess.inl */; };
+		CE4D3E10204C6E5600326E42 /* SimpleLimitProcess.inl in Resources */ = {isa = PBXBuildFile; fileRef = CE4D3DDA204C6E5600326E42 /* SimpleLimitProcess.inl */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -333,13 +403,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = D2AAC046055464E500DB518D;
 			remoteInfo = AAXLibrary;
-		};
-		4F8B6724158B4EB2002FC25B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4FF7B0F3156A831000E6CB12 /* AAXLibrary.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4B00D06910E022FD00816F7B;
-			remoteInfo = AAXLibrary_UnitTest;
 		};
 		4F8B674E158B4F53002FC25B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -431,6 +494,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = "lice_32&64_intel";
+		};
+		CE4D3DC6204C6DF700326E42 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4FF7B0F3156A831000E6CB12 /* AAXLibrary.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 842A79751A6098F400EC60F5;
+			remoteInfo = AAXLibrary_libcpp;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -649,6 +719,23 @@
 		52FBBED00D0CF139001C8B8A /* StreamMaster.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; path = StreamMaster.cpp; sourceTree = "<group>"; tabWidth = 2; usesTabs = 0; };
 		52FBBED20D0CF13D001C8B8A /* StreamMaster.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = StreamMaster.h; sourceTree = "<group>"; tabWidth = 2; usesTabs = 0; };
 		52FBBED30D0CF143001C8B8A /* resource.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = resource.h; sourceTree = "<group>"; tabWidth = 2; usesTabs = 0; };
+		CE397590204C709B008D8437 /* PLUG_LoudnessMeter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PLUG_LoudnessMeter.cpp; path = PLUG/PLUG_LoudnessMeter.cpp; sourceTree = "<group>"; };
+		CE397591204C709B008D8437 /* PLUG_LoudnessMeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLUG_LoudnessMeter.h; path = PLUG/PLUG_LoudnessMeter.h; sourceTree = "<group>"; };
+		CE4D3DBB204C6DF700326E42 /* ebur128.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ebur128.c; path = "lib-jiixyj-ebur128/ebur128.c"; sourceTree = "<group>"; };
+		CE4D3DBC204C6DF700326E42 /* ebur128.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ebur128.h; path = "lib-jiixyj-ebur128/ebur128.h"; sourceTree = "<group>"; };
+		CE4D3DCE204C6E5600326E42 /* SimpleComp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SimpleComp.cpp; path = lib_chunkware/SimpleComp.cpp; sourceTree = "<group>"; };
+		CE4D3DCF204C6E5600326E42 /* SimpleComp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleComp.h; path = lib_chunkware/SimpleComp.h; sourceTree = "<group>"; };
+		CE4D3DD0204C6E5600326E42 /* SimpleCompProcess.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleCompProcess.inl; path = lib_chunkware/SimpleCompProcess.inl; sourceTree = "<group>"; };
+		CE4D3DD1204C6E5600326E42 /* SimpleEnvelope.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SimpleEnvelope.cpp; path = lib_chunkware/SimpleEnvelope.cpp; sourceTree = "<group>"; };
+		CE4D3DD2204C6E5600326E42 /* SimpleEnvelope.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleEnvelope.h; path = lib_chunkware/SimpleEnvelope.h; sourceTree = "<group>"; };
+		CE4D3DD3204C6E5600326E42 /* SimpleGain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleGain.h; path = lib_chunkware/SimpleGain.h; sourceTree = "<group>"; };
+		CE4D3DD4204C6E5600326E42 /* SimpleGate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SimpleGate.cpp; path = lib_chunkware/SimpleGate.cpp; sourceTree = "<group>"; };
+		CE4D3DD5204C6E5600326E42 /* SimpleGate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleGate.h; path = lib_chunkware/SimpleGate.h; sourceTree = "<group>"; };
+		CE4D3DD6204C6E5600326E42 /* SimpleGateProcess.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleGateProcess.inl; path = lib_chunkware/SimpleGateProcess.inl; sourceTree = "<group>"; };
+		CE4D3DD7204C6E5600326E42 /* SimpleHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleHeader.h; path = lib_chunkware/SimpleHeader.h; sourceTree = "<group>"; };
+		CE4D3DD8204C6E5600326E42 /* SimpleLimit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SimpleLimit.cpp; path = lib_chunkware/SimpleLimit.cpp; sourceTree = "<group>"; };
+		CE4D3DD9204C6E5600326E42 /* SimpleLimit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleLimit.h; path = lib_chunkware/SimpleLimit.h; sourceTree = "<group>"; };
+		CE4D3DDA204C6E5600326E42 /* SimpleLimitProcess.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleLimitProcess.inl; path = lib_chunkware/SimpleLimitProcess.inl; sourceTree = "<group>"; };
 		D2F7E65807B2D6F200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
@@ -731,9 +818,9 @@
 		089C166AFE841209C02AAC07 /* IPlugExample */ = {
 			isa = PBXGroup;
 			children = (
-				52FBBED30D0CF143001C8B8A /* resource.h */,
-				52FBBED20D0CF13D001C8B8A /* StreamMaster.h */,
-				52FBBED00D0CF139001C8B8A /* StreamMaster.cpp */,
+				CE4D3DCD204C6E3200326E42 /* Chunkware */,
+				CE4D3DCB204C6E0900326E42 /* Plug */,
+				CE4D3DCA204C6DFC00326E42 /* Ebur128 */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				32C88E010371C26100C91783 /* Other Sources */,
 				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
@@ -1227,7 +1314,7 @@
 			isa = PBXGroup;
 			children = (
 				4F8B6723158B4EB2002FC25B /* libAAXLibrary.a */,
-				4F8B6725158B4EB2002FC25B /* AAXLibrary_UnitTest */,
+				CE4D3DC7204C6DF700326E42 /* libAAXLibrary_libcpp.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1327,6 +1414,47 @@
 			name = WDL;
 			sourceTree = "<group>";
 		};
+		CE4D3DCA204C6DFC00326E42 /* Ebur128 */ = {
+			isa = PBXGroup;
+			children = (
+				CE4D3DBB204C6DF700326E42 /* ebur128.c */,
+				CE4D3DBC204C6DF700326E42 /* ebur128.h */,
+			);
+			name = Ebur128;
+			sourceTree = "<group>";
+		};
+		CE4D3DCB204C6E0900326E42 /* Plug */ = {
+			isa = PBXGroup;
+			children = (
+				CE397590204C709B008D8437 /* PLUG_LoudnessMeter.cpp */,
+				CE397591204C709B008D8437 /* PLUG_LoudnessMeter.h */,
+				52FBBED30D0CF143001C8B8A /* resource.h */,
+				52FBBED20D0CF13D001C8B8A /* StreamMaster.h */,
+				52FBBED00D0CF139001C8B8A /* StreamMaster.cpp */,
+			);
+			name = Plug;
+			sourceTree = "<group>";
+		};
+		CE4D3DCD204C6E3200326E42 /* Chunkware */ = {
+			isa = PBXGroup;
+			children = (
+				CE4D3DCE204C6E5600326E42 /* SimpleComp.cpp */,
+				CE4D3DCF204C6E5600326E42 /* SimpleComp.h */,
+				CE4D3DD0204C6E5600326E42 /* SimpleCompProcess.inl */,
+				CE4D3DD1204C6E5600326E42 /* SimpleEnvelope.cpp */,
+				CE4D3DD2204C6E5600326E42 /* SimpleEnvelope.h */,
+				CE4D3DD3204C6E5600326E42 /* SimpleGain.h */,
+				CE4D3DD4204C6E5600326E42 /* SimpleGate.cpp */,
+				CE4D3DD5204C6E5600326E42 /* SimpleGate.h */,
+				CE4D3DD6204C6E5600326E42 /* SimpleGateProcess.inl */,
+				CE4D3DD7204C6E5600326E42 /* SimpleHeader.h */,
+				CE4D3DD8204C6E5600326E42 /* SimpleLimit.cpp */,
+				CE4D3DD9204C6E5600326E42 /* SimpleLimit.h */,
+				CE4D3DDA204C6E5600326E42 /* SimpleLimitProcess.inl */,
+			);
+			name = Chunkware;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1341,13 +1469,17 @@
 				4FF016F9134E14E2001447BA /* wdlstring.h in Headers */,
 				4FD16D1913B634E5001D0217 /* swell.h in Headers */,
 				4FD16D2413B6351C001D0217 /* swell-functions.h in Headers */,
+				CE4D3E02204C6E5600326E42 /* SimpleHeader.h in Headers */,
 				4FD16D2D13B6353C001D0217 /* swell-internal.h in Headers */,
 				4FD16D3213B6355A001D0217 /* swell-types.h in Headers */,
 				4F78D8D913B63B5D0032E0F3 /* aeffect.h in Headers */,
+				CE4D3DFA204C6E5600326E42 /* SimpleGate.h in Headers */,
+				CE4D3E0A204C6E5600326E42 /* SimpleLimit.h in Headers */,
 				4F78D8DA13B63B5D0032E0F3 /* aeffectx.h in Headers */,
 				4FF0171A134E153A001447BA /* heapbuf.h in Headers */,
 				4F1F1BEA135B1F60003A5BB2 /* wdlendian.h in Headers */,
 				4F78D93E13B63BA50032E0F3 /* IPlug_include_in_plug_hdr.h in Headers */,
+				CE4D3DF0204C6E5600326E42 /* SimpleEnvelope.h in Headers */,
 				4F78D94013B63BA50032E0F3 /* IPlug_include_in_plug_src.h in Headers */,
 				4F78D94113B63BA50032E0F3 /* IControl.h in Headers */,
 				4F78D94213B63BA50032E0F3 /* IKeyboardControl.h in Headers */,
@@ -1358,12 +1490,16 @@
 				4F78D95113B63BA50032E0F3 /* IGraphicsCocoa.h in Headers */,
 				4F78D95213B63BA50032E0F3 /* Log.h in Headers */,
 				4F78D95413B63BA50032E0F3 /* IPopupMenu.h in Headers */,
+				CE4D3DF2204C6E5600326E42 /* SimpleGain.h in Headers */,
 				4F78D95613B63BA50032E0F3 /* IPlugStructs.h in Headers */,
 				4F78D95A13B63BA50032E0F3 /* IPlug_Prefix.pch in Headers */,
 				4F78D95B13B63BA50032E0F3 /* IParam.h in Headers */,
 				4F78D95D13B63BA50032E0F3 /* IMidiQueue.h in Headers */,
 				4F78D95F13B63BA50032E0F3 /* IGraphicsCarbon.h in Headers */,
+				CE4D3DC4204C6DF700326E42 /* ebur128.h in Headers */,
+				CE397599204C709B008D8437 /* PLUG_LoudnessMeter.h in Headers */,
 				4F78D96013B63BA50032E0F3 /* IGraphics.h in Headers */,
+				CE4D3DE2204C6E5600326E42 /* SimpleComp.h in Headers */,
 				4F78DA0713B63CD90032E0F3 /* IPlugAU.h in Headers */,
 				4F3EE94913B65A350097B791 /* IPlugOSDetect.h in Headers */,
 				4FDA440913F3E4F2000B4551 /* IBitmapMonoText.h in Headers */,
@@ -1382,9 +1518,12 @@
 				4F78DAB113B640470032E0F3 /* swell-menugen.h in Headers */,
 				4F78DAB213B640470032E0F3 /* swell-dlggen.h in Headers */,
 				4F78DAB313B640470032E0F3 /* swellappmain.h in Headers */,
+				CE4D3DF1204C6E5600326E42 /* SimpleGain.h in Headers */,
 				4F78DA7713B640050032E0F3 /* resource.h in Headers */,
 				4F78DA7813B640050032E0F3 /* StreamMaster.h in Headers */,
+				CE4D3DE1204C6E5600326E42 /* SimpleComp.h in Headers */,
 				4F78DA8A13B640050032E0F3 /* mutex.h in Headers */,
+				CE397598204C709B008D8437 /* PLUG_LoudnessMeter.h in Headers */,
 				4F78DA8B13B640050032E0F3 /* ptrlist.h in Headers */,
 				4F78DA8C13B640050032E0F3 /* wdlstring.h in Headers */,
 				4F78DA8D13B640050032E0F3 /* heapbuf.h in Headers */,
@@ -1399,16 +1538,21 @@
 				4F78DA9613B640050032E0F3 /* IPlug_include_in_plug_src.h in Headers */,
 				4F78DA9713B640050032E0F3 /* IControl.h in Headers */,
 				4F78DA9813B640050032E0F3 /* IKeyboardControl.h in Headers */,
+				CE4D3DC3204C6DF700326E42 /* ebur128.h in Headers */,
 				4F78DA9913B640050032E0F3 /* IPlugBase.h in Headers */,
 				4F78DA9A13B640050032E0F3 /* IGraphicsMac.h in Headers */,
 				4F78DA9C13B640050032E0F3 /* Containers.h in Headers */,
 				4F78DA9D13B640050032E0F3 /* Hosts.h in Headers */,
 				4F78DA9E13B640050032E0F3 /* IGraphicsCocoa.h in Headers */,
+				CE4D3E09204C6E5600326E42 /* SimpleLimit.h in Headers */,
 				4F78DA9F13B640050032E0F3 /* Log.h in Headers */,
 				4F78DAA013B640050032E0F3 /* IPopupMenu.h in Headers */,
 				4F78DAA113B640050032E0F3 /* IPlugStructs.h in Headers */,
 				4F78DAA213B640050032E0F3 /* IPlug_Prefix.pch in Headers */,
 				4F78DAA313B640050032E0F3 /* IParam.h in Headers */,
+				CE4D3E01204C6E5600326E42 /* SimpleHeader.h in Headers */,
+				CE4D3DF9204C6E5600326E42 /* SimpleGate.h in Headers */,
+				CE4D3DEF204C6E5600326E42 /* SimpleEnvelope.h in Headers */,
 				4F78DAA413B640050032E0F3 /* IMidiQueue.h in Headers */,
 				4F78DAA513B640050032E0F3 /* IGraphicsCarbon.h in Headers */,
 				4F78DAA613B640050032E0F3 /* IGraphics.h in Headers */,
@@ -1607,13 +1751,6 @@
 			remoteRef = 4F8B6722158B4EB2002FC25B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		4F8B6725158B4EB2002FC25B /* AAXLibrary_UnitTest */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = AAXLibrary_UnitTest;
-			remoteRef = 4F8B6724158B4EB2002FC25B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		4F8B674F158B4F53002FC25B /* libPluginLibrary.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1642,6 +1779,13 @@
 			remoteRef = 4FA708BE158B47F000BFC572 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		CE4D3DC7204C6DF700326E42 /* libAAXLibrary_libcpp.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAAXLibrary_libcpp.a;
+			remoteRef = CE4D3DC6204C6DF700326E42 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -1649,7 +1793,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE4D3DFC204C6E5600326E42 /* SimpleGateProcess.inl in Resources */,
+				CE4D3DE4204C6E5600326E42 /* SimpleCompProcess.inl in Resources */,
 				4F23B9F313B647A00097A67E /* knob.png in Resources */,
+				CE4D3E0C204C6E5600326E42 /* SimpleLimitProcess.inl in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1657,7 +1804,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE4D3DFE204C6E5600326E42 /* SimpleGateProcess.inl in Resources */,
+				CE4D3DE6204C6E5600326E42 /* SimpleCompProcess.inl in Resources */,
 				4F23BA0C13B647A00097A67E /* knob.png in Resources */,
+				CE4D3E0E204C6E5600326E42 /* SimpleLimitProcess.inl in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1665,7 +1815,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE4D3DFF204C6E5600326E42 /* SimpleGateProcess.inl in Resources */,
+				CE4D3DE7204C6E5600326E42 /* SimpleCompProcess.inl in Resources */,
 				4F7F5C4613E95EC8002918FD /* knob.png in Resources */,
+				CE4D3E0F204C6E5600326E42 /* SimpleLimitProcess.inl in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1673,7 +1826,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE4D3DFD204C6E5600326E42 /* SimpleGateProcess.inl in Resources */,
+				CE4D3DE5204C6E5600326E42 /* SimpleCompProcess.inl in Resources */,
 				4F9828B1140A9EB700F3FCC1 /* knob.png in Resources */,
+				CE4D3E0D204C6E5600326E42 /* SimpleLimitProcess.inl in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1681,7 +1837,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE4D3E00204C6E5600326E42 /* SimpleGateProcess.inl in Resources */,
+				CE4D3DE8204C6E5600326E42 /* SimpleCompProcess.inl in Resources */,
 				4FB600161567CB0A0020189A /* knob.png in Resources */,
+				CE4D3E10204C6E5600326E42 /* SimpleLimitProcess.inl in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1689,10 +1848,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE4D3DFB204C6E5600326E42 /* SimpleGateProcess.inl in Resources */,
 				4F78D88613B6382B0032E0F3 /* StreamMaster.icns in Resources */,
 				4F78D89913B639100032E0F3 /* InfoPlist.strings in Resources */,
 				4F78D89A13B639100032E0F3 /* MainMenu.xib in Resources */,
 				4F23B9FD13B647A00097A67E /* knob.png in Resources */,
+				CE4D3E0B204C6E5600326E42 /* SimpleLimitProcess.inl in Resources */,
+				CE4D3DE3204C6E5600326E42 /* SimpleCompProcess.inl in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1743,17 +1905,23 @@
 				4F20EECB132C69FE0030E34C /* StreamMaster.cpp in Sources */,
 				4FD16D1213B634BF001D0217 /* swell-gdi.mm in Sources */,
 				4F78D9BB13B63BA50032E0F3 /* IPlugBase.cpp in Sources */,
+				CE4D3DBE204C6DF700326E42 /* ebur128.c in Sources */,
 				4F78D9BC13B63BA50032E0F3 /* IPlugStructs.cpp in Sources */,
 				4F78D9BD13B63BA50032E0F3 /* Hosts.cpp in Sources */,
 				4F78D9BF13B63BA50032E0F3 /* IGraphicsMac.mm in Sources */,
 				4F78D9C013B63BA50032E0F3 /* IGraphics.cpp in Sources */,
 				4F78D9C113B63BA50032E0F3 /* IGraphicsCarbon.cpp in Sources */,
+				CE4D3DF4204C6E5600326E42 /* SimpleGate.cpp in Sources */,
 				4F78D9C213B63BA50032E0F3 /* IGraphicsCocoa.mm in Sources */,
 				4F78D9C313B63BA50032E0F3 /* Log.cpp in Sources */,
 				4F78D9C413B63BA50032E0F3 /* IPopupMenu.cpp in Sources */,
+				CE4D3E04204C6E5600326E42 /* SimpleLimit.cpp in Sources */,
+				CE4D3DDC204C6E5600326E42 /* SimpleComp.cpp in Sources */,
 				4F78D9C813B63BA50032E0F3 /* IParam.cpp in Sources */,
 				4F78D9C913B63BA50032E0F3 /* IControl.cpp in Sources */,
+				CE4D3DEA204C6E5600326E42 /* SimpleEnvelope.cpp in Sources */,
 				4F78D9F313B63C6A0032E0F3 /* IPlugVST.cpp in Sources */,
+				CE397593204C709B008D8437 /* PLUG_LoudnessMeter.cpp in Sources */,
 				4FDA440C13F3E4F2000B4551 /* IBitmapMonoText.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1765,20 +1933,26 @@
 				4F3AE1A312C0E5E2001FD7A4 /* StreamMaster.cpp in Sources */,
 				4FD16D0E13B634BF001D0217 /* swell-gdi.mm in Sources */,
 				4F78D94513B63BA50032E0F3 /* IPlugBase.cpp in Sources */,
+				CE4D3E06204C6E5600326E42 /* SimpleLimit.cpp in Sources */,
 				4F78D94713B63BA50032E0F3 /* IPlugStructs.cpp in Sources */,
 				4F78D94B13B63BA50032E0F3 /* Hosts.cpp in Sources */,
+				CE4D3DC0204C6DF700326E42 /* ebur128.c in Sources */,
 				4F78D94D13B63BA50032E0F3 /* IGraphicsMac.mm in Sources */,
 				4F78D94E13B63BA50032E0F3 /* IGraphics.cpp in Sources */,
 				4F78D94F13B63BA50032E0F3 /* IGraphicsCarbon.cpp in Sources */,
 				4F78D95013B63BA50032E0F3 /* IGraphicsCocoa.mm in Sources */,
+				CE397595204C709B008D8437 /* PLUG_LoudnessMeter.cpp in Sources */,
 				4F78D95313B63BA50032E0F3 /* Log.cpp in Sources */,
+				CE4D3DF6204C6E5600326E42 /* SimpleGate.cpp in Sources */,
 				4F78D95513B63BA50032E0F3 /* IPopupMenu.cpp in Sources */,
+				CE4D3DDE204C6E5600326E42 /* SimpleComp.cpp in Sources */,
 				4F78D95C13B63BA50032E0F3 /* IParam.cpp in Sources */,
 				4F78D96113B63BA50032E0F3 /* IControl.cpp in Sources */,
 				4F78DA0813B63CD90032E0F3 /* IPlugAU.cpp in Sources */,
 				4F78DA0A13B63CD90032E0F3 /* IPlugAU_ViewFactory.mm in Sources */,
 				4FDA440813F3E4F2000B4551 /* IBitmapMonoText.cpp in Sources */,
 				4F296BDA1678E6C800C0F5C2 /* dfx-au-utilities.c in Sources */,
+				CE4D3DEC204C6E5600326E42 /* SimpleEnvelope.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1787,16 +1961,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F7F5C4913E95EC8002918FD /* StreamMaster.cpp in Sources */,
+				CE397596204C709B008D8437 /* PLUG_LoudnessMeter.cpp in Sources */,
 				4F7F5C5013E95EC8002918FD /* swell-gdi.mm in Sources */,
 				4F7F5C5113E95EC8002918FD /* IPlugBase.cpp in Sources */,
 				4F7F5C5213E95EC8002918FD /* IPlugStructs.cpp in Sources */,
 				4F7F5C5313E95EC8002918FD /* Hosts.cpp in Sources */,
+				CE4D3E07204C6E5600326E42 /* SimpleLimit.cpp in Sources */,
 				4F7F5C5413E95EC8002918FD /* IGraphicsMac.mm in Sources */,
 				4F7F5C5513E95EC8002918FD /* IGraphics.cpp in Sources */,
+				CE4D3DDF204C6E5600326E42 /* SimpleComp.cpp in Sources */,
 				4F7F5C5613E95EC8002918FD /* IGraphicsCarbon.cpp in Sources */,
+				CE4D3DED204C6E5600326E42 /* SimpleEnvelope.cpp in Sources */,
 				4F7F5C5713E95EC8002918FD /* IGraphicsCocoa.mm in Sources */,
+				CE4D3DF7204C6E5600326E42 /* SimpleGate.cpp in Sources */,
 				4F7F5C5813E95EC8002918FD /* Log.cpp in Sources */,
 				4F7F5C5913E95EC8002918FD /* IPopupMenu.cpp in Sources */,
+				CE4D3DC1204C6DF700326E42 /* ebur128.c in Sources */,
 				4F7F5C5A13E95EC8002918FD /* IParam.cpp in Sources */,
 				4F7F5C5B13E95EC8002918FD /* IControl.cpp in Sources */,
 				4F7F5C7113E95FB2002918FD /* IPlugRTAS.cpp in Sources */,
@@ -1818,8 +1998,10 @@
 			files = (
 				4F9828B6140A9EB700F3FCC1 /* StreamMaster.cpp in Sources */,
 				4F9828B7140A9EB700F3FCC1 /* swell-gdi.mm in Sources */,
+				CE4D3DF5204C6E5600326E42 /* SimpleGate.cpp in Sources */,
 				4F9828B8140A9EB700F3FCC1 /* IPlugBase.cpp in Sources */,
 				4F9828B9140A9EB700F3FCC1 /* IPlugStructs.cpp in Sources */,
+				CE4D3DEB204C6E5600326E42 /* SimpleEnvelope.cpp in Sources */,
 				4F9828BA140A9EB700F3FCC1 /* Hosts.cpp in Sources */,
 				4F9828BB140A9EB700F3FCC1 /* IGraphicsMac.mm in Sources */,
 				4F9828BC140A9EB700F3FCC1 /* IGraphics.cpp in Sources */,
@@ -1828,6 +2010,7 @@
 				4F9828BF140A9EB700F3FCC1 /* Log.cpp in Sources */,
 				4F9828C0140A9EB700F3FCC1 /* IPopupMenu.cpp in Sources */,
 				4F9828C1140A9EB700F3FCC1 /* IParam.cpp in Sources */,
+				CE4D3DDD204C6E5600326E42 /* SimpleComp.cpp in Sources */,
 				4F9828C2140A9EB700F3FCC1 /* IControl.cpp in Sources */,
 				4F9828C3140A9EB700F3FCC1 /* IBitmapMonoText.cpp in Sources */,
 				4F9828C4140A9EB700F3FCC1 /* IPlugVST3.cpp in Sources */,
@@ -1839,14 +2022,17 @@
 				4F9828CA140A9EB700F3FCC1 /* vstbus.cpp in Sources */,
 				4F9828CB140A9EB700F3FCC1 /* vstcomponent.cpp in Sources */,
 				4F9828CC140A9EB700F3FCC1 /* vstcomponentbase.cpp in Sources */,
+				CE4D3DBF204C6DF700326E42 /* ebur128.c in Sources */,
 				4F9828CE140A9EB700F3FCC1 /* vstinitiids.cpp in Sources */,
 				4F9828CF140A9EB700F3FCC1 /* vstnoteexpressiontypes.cpp in Sources */,
 				4F9828D0140A9EB700F3FCC1 /* vstparameters.cpp in Sources */,
 				4F9828D1140A9EB700F3FCC1 /* vstpresetfile.cpp in Sources */,
+				CE4D3E05204C6E5600326E42 /* SimpleLimit.cpp in Sources */,
 				4F9828D2140A9EB700F3FCC1 /* vstrepresentation.cpp in Sources */,
 				4F9828D3140A9EB700F3FCC1 /* vstsinglecomponenteffect.cpp in Sources */,
 				4F9828D4140A9EB700F3FCC1 /* conststringtable.cpp in Sources */,
 				4F9828D5140A9EB700F3FCC1 /* funknown.cpp in Sources */,
+				CE397594204C709B008D8437 /* PLUG_LoudnessMeter.cpp in Sources */,
 				4F9828D6140A9EB700F3FCC1 /* ustring.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1859,18 +2045,24 @@
 				4FB600191567CB0A0020189A /* swell-gdi.mm in Sources */,
 				4FB6001A1567CB0A0020189A /* IPlugBase.cpp in Sources */,
 				4FB6001B1567CB0A0020189A /* IPlugStructs.cpp in Sources */,
+				CE4D3DC2204C6DF700326E42 /* ebur128.c in Sources */,
 				4FB6001C1567CB0A0020189A /* Hosts.cpp in Sources */,
 				4FB6001D1567CB0A0020189A /* IGraphicsMac.mm in Sources */,
 				4FB6001E1567CB0A0020189A /* IGraphics.cpp in Sources */,
+				CE4D3E08204C6E5600326E42 /* SimpleLimit.cpp in Sources */,
 				4FB6001F1567CB0A0020189A /* IGraphicsCarbon.cpp in Sources */,
 				4FB600201567CB0A0020189A /* IGraphicsCocoa.mm in Sources */,
 				4FB600211567CB0A0020189A /* Log.cpp in Sources */,
 				4FB600221567CB0A0020189A /* IPopupMenu.cpp in Sources */,
+				CE4D3DE0204C6E5600326E42 /* SimpleComp.cpp in Sources */,
 				4FB600231567CB0A0020189A /* IParam.cpp in Sources */,
 				4FB600241567CB0A0020189A /* IControl.cpp in Sources */,
+				CE397597204C709B008D8437 /* PLUG_LoudnessMeter.cpp in Sources */,
 				4FB600251567CB0A0020189A /* IBitmapMonoText.cpp in Sources */,
 				4FB600261567CB0A0020189A /* AAX_Exports.cpp in Sources */,
 				4FB600271567CB0A0020189A /* IPlugAAX.cpp in Sources */,
+				CE4D3DF8204C6E5600326E42 /* SimpleGate.cpp in Sources */,
+				CE4D3DEE204C6E5600326E42 /* SimpleEnvelope.cpp in Sources */,
 				4FB600281567CB0A0020189A /* IPlugAAX_Describe.cpp in Sources */,
 				4FB600291567CB0A0020189A /* AAX_CIPlugParameters.cpp in Sources */,
 			);
@@ -1896,19 +2088,25 @@
 				4F78D90A13B63BA50032E0F3 /* IPlugStandalone.cpp in Sources */,
 				4F78D90B13B63BA50032E0F3 /* IPlugBase.cpp in Sources */,
 				4F78D90C13B63BA50032E0F3 /* IPlugStructs.cpp in Sources */,
+				CE397592204C709B008D8437 /* PLUG_LoudnessMeter.cpp in Sources */,
 				4F78D90D13B63BA50032E0F3 /* Hosts.cpp in Sources */,
 				4F78D90F13B63BA50032E0F3 /* IGraphicsMac.mm in Sources */,
+				CE4D3DE9204C6E5600326E42 /* SimpleEnvelope.cpp in Sources */,
 				4F78D91013B63BA50032E0F3 /* IGraphics.cpp in Sources */,
 				4F78D91113B63BA50032E0F3 /* IGraphicsCarbon.cpp in Sources */,
 				4F78D91213B63BA50032E0F3 /* IGraphicsCocoa.mm in Sources */,
 				4F78D91313B63BA50032E0F3 /* Log.cpp in Sources */,
 				4F78D91413B63BA50032E0F3 /* IPopupMenu.cpp in Sources */,
 				4F78D91813B63BA50032E0F3 /* IParam.cpp in Sources */,
+				CE4D3DDB204C6E5600326E42 /* SimpleComp.cpp in Sources */,
+				CE4D3DF3204C6E5600326E42 /* SimpleGate.cpp in Sources */,
 				4F78D91913B63BA50032E0F3 /* IControl.cpp in Sources */,
 				4F78DA5A13B63F150032E0F3 /* StreamMaster.cpp in Sources */,
+				CE4D3DBD204C6DF700326E42 /* ebur128.c in Sources */,
 				4FD16CA213B6327D001D0217 /* app_main.cpp in Sources */,
 				4FD16CA313B6327D001D0217 /* app_dialog.cpp in Sources */,
 				4FB3624F13B648FE00DB6B76 /* main.mm in Sources */,
+				CE4D3E03204C6E5600326E42 /* SimpleLimit.cpp in Sources */,
 				4FDA440E13F3E4F2000B4551 /* IBitmapMonoText.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2173,6 +2371,7 @@
 					$CA_SDK/AudioUnits/AUPublic/AUBase,
 				);
 				SKIP_INSTALL = NO;
+				SYMROOT = "build-mac";
 				WRAPPER_EXTENSION = component;
 			};
 			name = Debug;
@@ -2195,6 +2394,7 @@
 					$CA_SDK/AudioUnits/AUPublic/AUBase,
 				);
 				SKIP_INSTALL = NO;
+				SYMROOT = "build-mac";
 				WRAPPER_EXTENSION = component;
 			};
 			name = Release;
@@ -2217,6 +2417,7 @@
 					$CA_SDK/AudioUnits/AUPublic/AUBase,
 				);
 				SKIP_INSTALL = NO;
+				SYMROOT = "build-mac";
 				WRAPPER_EXTENSION = component;
 			};
 			name = Tracer;
