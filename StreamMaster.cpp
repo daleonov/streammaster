@@ -31,7 +31,7 @@ void StreamMaster::UpdateGui()
   double fLufs = tLoudnessMeter->GetLufs();
   double fFastLufs = tLoudnessMeter->GetMomentaryLufs();
 
-  sprintf(sLoudnessString, "Int. %4.2fLUFS\nMom. %4.2fLUFS", fLufs, fFastLufs);
+  sprintf(sLoudnessString, "Integrated: %4.1fLUFS\nMomentary: %4.1fLUFS", fLufs, fFastLufs);
     //double fTestLoudnessValue = -15.*((double)rand() / RAND_MAX);
     tLoudnessTextControl->SetTextFromPlug(sLoudnessString);
     tILevelMeteringBar->SetValue(fLufs);
@@ -43,7 +43,7 @@ void StreamMaster::UpdateGui()
       fMaxGainReductionPerSessionDb = fMaxGainReductionPerFrameDb;
     tIGrMeteringBar->SetValue(fMaxGainReductionPerFrameDb);
     tIGrMeteringBar->SetNotchValue(fMaxGainReductionPerSessionDb);
-    sprintf(sGrString, "%4.2fdB\nmax %4.2fdB", fMaxGainReductionPerFrameDb, fMaxGainReductionPerSessionDb);
+    sprintf(sGrString, "GR: %4.2fdB\nMax: %4.2fdB", fMaxGainReductionPerFrameDb, fMaxGainReductionPerSessionDb);
     tGrTextControl->SetTextFromPlug(sGrString);
 
     unsigned int nMetersWait = 0;
@@ -95,7 +95,8 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   // Text LUFS meter
   IText tDefaultLoudnessLabel = IText(32);
   tDefaultLoudnessLabel.mColor = IColor(255, 255, 255, 255);
-  tDefaultLoudnessLabel.mSize = 15;
+  tDefaultLoudnessLabel.mSize = 12;
+  tDefaultLoudnessLabel.mAlign = tDefaultLoudnessLabel.kAlignFar;
   tLoudnessTextControl = new ITextControl(
     this,
     IRECT(
@@ -111,7 +112,8 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   // Text GR meter
   IText tGrLabel = IText(32);  
   tGrLabel.mColor = IColor(255, 255, 255, 255);
-  tGrLabel.mSize = 15;
+  tGrLabel.mSize = 12;
+  tGrLabel.mAlign = tGrLabel.kAlignFar;
   tGrTextControl = new ITextControl(
     this,
     IRECT(
@@ -201,6 +203,7 @@ void StreamMaster::OnParamChange(int paramIdx)
     case kIGrMeteringBar:
       fMaxGainReductionPerSessionDb = -0.;
       break;
+
     default:
       break;
   }

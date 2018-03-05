@@ -73,6 +73,11 @@ public:
 	@brief Value of the notch. Notch can be used to mark target, peak, zero level etc. 
 	*/
 	void SetNotchValue(double fValue);
+
+	/*
+	@brief Cclick resets the notch position. 
+	*/
+	void OnMouseDown(int x, int y, IMouseMod* pMod);
 };
 
 } //namespace Plug

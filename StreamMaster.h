@@ -64,15 +64,15 @@ enum ELayout
   kKnobFrames = 11,
 
   // LUFS Text reading
-  kILoudnessTextControl_X = 320,
+  kILoudnessTextControl_X = 414,
   kILoudnessTextControl_Y = 695,
-  kILoudnessTextControl_W = 280,
+  kILoudnessTextControl_W = 80,
   kILoudnessTextControl_H = 40,
 
   // Gain reduction Text reading
-  kIGrTextControl_X = 430,
+  kIGrTextControl_X = 526,
   kIGrTextControl_Y = 695,
-  kIGrTextControl_W = 280,
+  kIGrTextControl_W = 80,
   kIGrTextControl_H = 40,
   
   // Learn-master-off

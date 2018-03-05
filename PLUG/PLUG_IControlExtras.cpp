@@ -92,6 +92,11 @@ void ILevelMeteringBar::SetNotchValue(double fValue){
 	Redraw();
 }
 
+void ILevelMeteringBar::OnMouseDown(int x, int y, IMouseMod* pMod){
+  // Isn't getting called for some reason. Son of a bitch. 
+	this->fNotchValue = 0.;
+}
+
 inline int ILevelMeteringBar::_CalculateRectHeight(double fValue){
 	const double fMax = mPlug->GetParam(this->mParamIdx)->GetMax();
 	const double fMin = mPlug->GetParam(this->mParamIdx)->GetMin();
