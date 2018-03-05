@@ -35,9 +35,9 @@ private:
 	IRECT mBarRect;
 	int x;
 	int y;
-  bool bIsReversed;
-  IColor *ptLevelBarColor;
-  IColor *ptNotchColor;
+	bool bIsReversed;
+	IColor *ptLevelBarColor;
+	IColor *ptNotchColor;
 
 	/*
 	@param Converts value in meter's units to respective vertical coordinate on the bar. 
@@ -45,7 +45,18 @@ private:
 	*/
 	inline int ILevelMeteringBar::_CalculateRectHeight(double fValue);
 public:
-	ILevelMeteringBar(IPlugBase *pPlug, int x, int y, IRECT pR, int paramIdx);
+	ILevelMeteringBar(
+		IPlugBase *pPlug,
+		int x,
+		int y,
+		IRECT pR,
+		int paramIdx,
+		const IColor *ptLevelBarColor = &METERING_BAR_DEFAULT_FG_ICOLOR,
+		const IColor *ptNotchColor = &METERING_BAR_DEFAULT_NOTCH_ICOLOR,
+		bool bIsReversed = false
+		);
+
+	~ILevelMeteringBar();
 
 	/*
 	@param Graphic part. Sizes and colours are based on macros defined in the header. 

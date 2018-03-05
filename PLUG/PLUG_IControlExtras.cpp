@@ -3,19 +3,34 @@
 
 namespace Plug{
 
-ILevelMeteringBar::ILevelMeteringBar(IPlugBase *pPlug, int x, int y, IRECT pR, int paramIdx)
+ILevelMeteringBar::ILevelMeteringBar(
+		IPlugBase *pPlug,
+		int x,
+		int y,
+		IRECT pR,
+		int paramIdx,
+		const IColor *ptLevelBarColor,
+		const IColor *ptNotchColor,
+		bool bIsReversed
+		)
 : IPanelControl(pPlug, pR, &PLUG_DEFAULT_BG_ICOLOR)
 {
 	this->x = x;
 	this->y = y;
 	this->mPlug = pPlug;
 	this->mParamIdx = paramIdx;
-  this->fNotchValue = METERING_BAR_DEFAULT_NOTCH_VALUE;
+	this->fNotchValue = METERING_BAR_DEFAULT_NOTCH_VALUE;
 	this->fCurrentValue = mPlug->GetParam(paramIdx)->GetDefault();
 	// There is no operator "=" for IRECT, so copying it explicitely
 	memcpy(&this->mBarRect, &pR, sizeof(pR));
+	this->ptLevelBarColor = new IColor(*ptLevelBarColor);
+	this->ptNotchColor = new IColor(*ptNotchColor);
+	this->bIsReversed = bIsReversed;
 }
-
+ILevelMeteringBar::~ILevelMeteringBar(){
+	delete (this->ptLevelBarColor);
+	delete (this->ptNotchColor);
+}
 bool ILevelMeteringBar::Draw(IGraphics* pGraphics){
 
 	// Background
@@ -28,21 +43,39 @@ bool ILevelMeteringBar::Draw(IGraphics* pGraphics){
 
 	// Foreground
 	const int nLevelBarTopLeftX     = nBgBarTopLeftX;
-	const int nLevelBarTopLeftY     = nBgBarBottomRightY - _CalculateRectHeight(this->fCurrentValue);
 	const int nLevelBarBottomRightX = nBgBarBottomRightX;
-	const int nLevelBarBottomRightY = nBgBarBottomRightY;
+	int nLevelBarTopLeftY;
+	int nLevelBarBottomRightY;
+	// Normal display (bar starts at the bottom)
+	if (!this->bIsReversed){
+		nLevelBarTopLeftY     = nBgBarBottomRightY - _CalculateRectHeight(this->fCurrentValue);
+		nLevelBarBottomRightY = nBgBarBottomRightY;
+	}
+	// Reversed display (bar starts at the top)
+	else{
+		nLevelBarTopLeftY     = nBgBarTopLeftY;
+		nLevelBarBottomRightY = nBgBarBottomRightY - _CalculateRectHeight(this->fCurrentValue);
+	}
 	IRECT tLevelRect(nLevelBarTopLeftX, nLevelBarTopLeftY, nLevelBarBottomRightX, nLevelBarBottomRightY);
-	pGraphics->FillIRect(&METERING_BAR_DEFAULT_FG_ICOLOR, &tLevelRect);
+	pGraphics->FillIRect(ptLevelBarColor, &tLevelRect);
 
 	// Notch
-	// Y's are calculated the way the height of the notch is preserved
-	// both when METERING_BAR_DEFAULT_NOTCH_HEIGHT is even and odd.
 	const int nNotchTopLeftX     = nBgBarTopLeftX;
-	const int nNotchTopLeftY     = nBgBarBottomRightY - _CalculateRectHeight(this->fNotchValue) - METERING_BAR_DEFAULT_NOTCH_HEIGHT/2;
 	const int nNotchBottomRightX = nBgBarBottomRightX;
-	const int nNotchBottomRightY = nNotchTopLeftY + METERING_BAR_DEFAULT_NOTCH_HEIGHT;
+	int nNotchTopLeftY;
+	int nNotchBottomRightY;
+	if (!this->bIsReversed){
+		nNotchTopLeftY  = nBgBarBottomRightY - _CalculateRectHeight(this->fNotchValue) - \
+			METERING_BAR_DEFAULT_NOTCH_HEIGHT/2;
+		nNotchBottomRightY = nNotchTopLeftY + METERING_BAR_DEFAULT_NOTCH_HEIGHT;
+	}
+	else{
+		nNotchTopLeftY  = nBgBarBottomRightY - _CalculateRectHeight(this->fNotchValue) - \
+			METERING_BAR_DEFAULT_NOTCH_HEIGHT/2;
+		nNotchBottomRightY = nNotchTopLeftY + METERING_BAR_DEFAULT_NOTCH_HEIGHT;
+	}
 	IRECT tNotchRect(nNotchTopLeftX, nNotchTopLeftY, nNotchBottomRightX, nNotchBottomRightY);
-	pGraphics->FillIRect(&METERING_BAR_DEFAULT_NOTCH_ICOLOR, &tNotchRect);
+	pGraphics->FillIRect(ptNotchColor, &tNotchRect);
 
 	return true;
 }

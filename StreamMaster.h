@@ -8,6 +8,10 @@
 #define PLUG_DEFAULT_SAMPLERATE 44100.
 #define PLUG_DEFAULT_CHANNEL_NUMBER 2
 
+
+#define GR_BAR_DEFAULT_FG_ICOLOR IColor(255, 255, 50, 50)
+#define GR_BAR_DEFAULT_NOTCH_ICOLOR IColor(255, 200, 0, 0)
+
 class StreamMaster : public IPlug
 {
 public:

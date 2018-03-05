@@ -60,7 +60,8 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   //arguments are: name, defaultVal, minVal, maxVal, step, label
   GetParam(kGain)->InitDouble("Peaking", -0.3, -1., 0.0, 0.1, "dB");
   GetParam(kGain)->SetShape(2.);
-  GetParam(kILevelMeteringBar)->InitDouble("Loudness", -24., -60., 3.0, 0.1, "LUFS");
+  GetParam(kILevelMeteringBar)->InitDouble("Loudness", -24., -40., 3.0, 0.1, "LUFS");
+  GetParam(kIGrMeteringBar)->InitDouble("Gain reduction", -0., -43., 0.0, 0.1, "dB");
   GetParam(kModeSwitch)->InitInt("Mode", 0, 0, 2, "");
   GetParam(kPlatformSwitch)->InitInt("Target platform", 4, 0, 4, "");
 
@@ -72,7 +73,8 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   pGraphics->AttachControl(tILevelMeteringBar);
 
   // Gain Reduction meter
-  tIGrMeteringBar = new Plug::ILevelMeteringBar(this, kGrMeter_X, kGrMeter_Y, METERING_BAR_DEFAULT_SIZE_IRECT, kIGrMeteringBar);
+  tIGrMeteringBar = new Plug::ILevelMeteringBar(this, kGrMeter_X, kGrMeter_Y, METERING_BAR_DEFAULT_SIZE_IRECT, kIGrMeteringBar, \
+    &GR_BAR_DEFAULT_FG_ICOLOR, &GR_BAR_DEFAULT_NOTCH_ICOLOR, true);
   pGraphics->AttachControl(tIGrMeteringBar);
     
   // Limiter knob
