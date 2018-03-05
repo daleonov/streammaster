@@ -5,18 +5,18 @@
 #include "IControl.h"
 
 #ifndef PLUG_DEFAULT_BG_ICOLOR
-#define PLUG_DEFAULT_BG_ICOLOR IColor(255, 40, 40, 40)
+const IColor PLUG_DEFAULT_BG_ICOLOR(255, 40, 40, 40);
 #endif
 #define METERING_BAR_DEFAULT_SIZE_IRECT IRECT(0, 0, 74, 492)
-#define METERING_BAR_DEFAULT_BG_ICOLOR IColor(255, 61, 61, 61)
-#define METERING_BAR_DEFAULT_FG_ICOLOR IColor(255, 100, 255, 100)
+const IColor METERING_BAR_DEFAULT_BG_ICOLOR(255, 61, 61, 61);
+const IColor METERING_BAR_DEFAULT_FG_ICOLOR(255, 100, 255, 100);
 #define METERING_BAR_MIN_FG_HEIGHT 2
-#define METERING_BAR_DEFAULT_NOTCH_ICOLOR IColor(255, 0, 96, 0)
+const IColor METERING_BAR_DEFAULT_NOTCH_ICOLOR(255, 0, 96, 0);
 #define METERING_BAR_DEFAULT_NOTCH_HEIGHT 3
 #define METERING_BAR_DEFAULT_NOTCH_VALUE -0.
 #define METERING_BAR_MAX_NAME_SIZE 64
 #define METERING_BAR_MAX_LABEL_SIZE 32
-#define METERING_BAR_ABOVE_NOTCH_ICOLOR IColor(255, 200, 0, 0)
+const IColor METERING_BAR_ABOVE_NOTCH_ICOLOR(255, 200, 0, 0);
 
 // This define results in a background showing range to fNotchValue
 #define METERING_BAR_NOTCH_1
@@ -51,7 +51,7 @@ private:
 	@param Converts value in meter's units to respective vertical coordinate on the bar. 
 	@retval Converted vertical coordinate in pixels relative to bottom y of the meter.
 	*/
-	int ILevelMeteringBar::_CalculateRectHeight(double fValue);
+	int _CalculateRectHeight(double fValue);
 public:
 	ILevelMeteringBar(
 		IPlugBase *pPlug,

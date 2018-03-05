@@ -104,19 +104,22 @@ bool ILevelMeteringBar::Draw(IGraphics* pGraphics){
 	// End notch option 2
 	#endif
 	
+    const IColor tIcolorRed(255, 255, 0, 0);
+    IRECT tIrectA(nNotchTopLeftX, nNotchTopLeftY, nLevelBarBottomRightX, nLevelBarBottomRightY);
+    IRECT tIrectB(nLevelBarTopLeftX, nLevelBarTopLeftY, nNotchBottomRightX, nNotchBottomRightY);
 	// If the value is above the notch level	
 	if ((this->bIsReversed) && (this->fCurrentValue < this->fNotchValue))
-		pGraphics->FillIRect(&IColor(255, 255, 0, 0), &IRECT(nNotchTopLeftX, nNotchTopLeftY, nLevelBarBottomRightX, nLevelBarBottomRightY));
+		pGraphics->FillIRect(&tIcolorRed, &tIrectA);
 	if ((!this->bIsReversed) && (this->fCurrentValue > this->fNotchValue))
-		pGraphics->FillIRect(&IColor(255, 255, 0, 0), &IRECT(nLevelBarTopLeftX, nLevelBarTopLeftY, nNotchBottomRightX, nNotchBottomRightY));
+		pGraphics->FillIRect(&tIcolorRed, &tIrectB);
 
 	// If the value completely overloards the meter - just fill the whole box with solid color. 	
 	const double fMax = mPlug->GetParam(this->mParamIdx)->GetMax();
 	const double fMin = mPlug->GetParam(this->mParamIdx)->GetMin();
 	if ((this->bIsReversed) && (this->fCurrentValue < fMin))
-		pGraphics->FillIRect(&IColor(255, 255, 0, 0), &tBgRect);
+		pGraphics->FillIRect(&tIcolorRed, &tBgRect);
 	if ((!this->bIsReversed) && (this->fCurrentValue > fMax))
-		pGraphics->FillIRect(&IColor(255, 255, 0, 0), &tBgRect);
+		pGraphics->FillIRect(&tIcolorRed, &tBgRect);
 
 	#ifdef METERING_BAR_NOTCH_2
 	// Always draw notch option 2 on top of everything!
