@@ -26,6 +26,7 @@ public:
   void OnParamChange(int paramIdx);
   void ProcessDoubleReplacing(double** inputs, double** outputs, int nFrames);
   void UpdateGui();
+  void UpdateAvailableControls();
 
 private:
 
@@ -98,5 +99,13 @@ double afTargetLufs[PLUG_PLATFORM_OPTIONS] = {
 #define PLUG_DEFAULT_TARGET_PLATFORM 4
 #define PLUG_GET_TARGET_LOUDNESS(i) (afTargetLufs[i])
 #define PLUG_DEFAULT_TARGET_LOUDNESS PLUG_GET_TARGET_LOUDNESS(PLUG_DEFAULT_TARGET_PLATFORM)
+
+typedef enum{
+  PLUG_LEARN_MODE = 1,
+  PLUG_MASTER_MODE = 2,
+  PLUG_OFF_MODE = 3
+}PLUG_Mode;
+
+#define PLUG_INITIAL_MODE 1
 
 #endif

@@ -11,8 +11,10 @@ const int kNumPrograms = 1;
 chunkware_simple::SimpleLimit tLimiter;
 const double fDefaultLimiterThreshold = 0.;
 
-ITextControl * tLoudnessTextControl;
-ITextControl * tGrTextControl;
+ITextControl *tLoudnessTextControl;
+ITextControl *tGrTextControl;
+IKnobMultiControl *tPeakingKnob;
+IKnobMultiControl *tPlatformSelector;
 IGraphics* pGraphics;
 Plug::ILevelMeteringBar* tILevelMeteringBar;
 Plug::ILevelMeteringBar* tIGrMeteringBar;
@@ -20,6 +22,9 @@ double fAudioFramesPerSecond = 1.;
 double fMaxGainReductionPerFrame = 0.;
 double fMaxGainReductionPerSessionDb = -0.;
 double fTargetLoudness = PLUG_DEFAULT_TARGET_LOUDNESS;
+
+// Plugin starts up in this mode
+PLUG_Mode tPlugCurrentMode = PLUG_LEARN_MODE;
 
 void StreamMaster::UpdateGui()
 {
@@ -51,6 +56,34 @@ void StreamMaster::UpdateGui()
     int nMeterUpdatesPerSecond = 5;
     int nMetersWaitIterations = fAudioFramesPerSecond/ nMeterUpdatesPerSecond;
 
+}
+void StreamMaster::UpdateAvailableControls(){
+  switch (tPlugCurrentMode){
+  case PLUG_LEARN_MODE:
+    // Learn mode
+    // Only mode switch and LUFS meter
+    tIGrMeteringBar->GrayOut(true);
+    tPeakingKnob->GrayOut(true);
+    tPlatformSelector->GrayOut(true);
+    tILevelMeteringBar->GrayOut(false);
+    break;
+  case PLUG_MASTER_MODE:
+    // Master mode
+    // Everything unlocked
+    tIGrMeteringBar->GrayOut(false);
+    tPeakingKnob->GrayOut(false);
+    tPlatformSelector->GrayOut(false);
+    tILevelMeteringBar->GrayOut(false);
+    break;
+  case PLUG_OFF_MODE:
+    // Learn mode
+    // Only mode switch
+    tIGrMeteringBar->GrayOut(true);
+    tPeakingKnob->GrayOut(true);
+    tPlatformSelector->GrayOut(true);
+    tILevelMeteringBar->GrayOut(true);
+    break;
+  }
 }
 
 StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
@@ -85,14 +118,17 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
     
   // Limiter knob
   IBitmap tBmp = pGraphics->LoadIBitmap(KNOB_ID, KNOB_FN, kKnobFrames);
-  pGraphics->AttachControl(new IKnobMultiControl(this, kGainX, kGainY, kGain, &tBmp));
+  tPeakingKnob = new IKnobMultiControl(this, kGainX, kGainY, kGain, &tBmp);
+  pGraphics->AttachControl(tPeakingKnob);
   
   // Mode selector (learn-master-off)
   tBmp = pGraphics->LoadIBitmap(MODESWITCH_ID, MODESWITCH_FN, kModeSwitch_N);
   pGraphics->AttachControl(new ISwitchControl(this, kModeSwitch_X, kModeSwitch_Y, kModeSwitch, &tBmp));
 
+  // Platform selector (YT, spotify etc.)
   tBmp = pGraphics->LoadIBitmap(PLATFORMSWITCH_ID, PLATFORMSWITCH_FN, kPlatformSwitch_N);
-  pGraphics->AttachControl(new IKnobMultiControl(this, kPlatformSwitch_X, kPlatformSwitch_Y, kPlatformSwitch, &tBmp));
+  tPlatformSelector = new IKnobMultiControl(this, kPlatformSwitch_X, kPlatformSwitch_Y, kPlatformSwitch, &tBmp);
+  pGraphics->AttachControl(tPlatformSelector);
 
   // Text LUFS meter
   IText tDefaultLoudnessLabel = IText(32);
@@ -143,6 +179,9 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   tLoudnessMeter = new Plug::LoudnessMeter();
   tLoudnessMeter->SetSampleRate(PLUG_DEFAULT_SAMPLERATE);
   tLoudnessMeter->SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER);  
+
+  // Interface stuff
+  UpdateAvailableControls();
 }
 
 double fSampleSample;
@@ -205,6 +244,12 @@ void StreamMaster::OnParamChange(int paramIdx)
       fTargetLoudness = PLUG_GET_TARGET_LOUDNESS(nIndex);
       tILevelMeteringBar->SetNotchValue(fTargetLoudness);
       tILevelMeteringBar->Redraw();
+      break;
+
+    case kModeSwitch:
+      // Converting switch's value to mode
+      tPlugCurrentMode = (PLUG_Mode)int(GetParam(kModeSwitch)->Value()+1);
+      UpdateAvailableControls();
       break;
 
     default:
