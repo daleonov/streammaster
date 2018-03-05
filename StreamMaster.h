@@ -29,8 +29,10 @@ private:
 enum EParams
 {
   kGain = 0,
-  kIContactControl = 1,
+  kModeSwitch = 1,
+  kPlatformSwitch = 2,
   kILevelMeteringBar,
+  kIGrMeteringBar,
   kNumParams,
   kInvisibleSwitchIndicator   // the user after kNumParams so they get a param id
 };
@@ -40,18 +42,34 @@ enum ELayout
   kWidth = GUI_WIDTH,
   kHeight = GUI_HEIGHT,
 
-  kGainX = 100,
-  kGainY = 100,
-  kKnobFrames = 60,
+  // LUFS meter
+  kLufsMeter_X = 420,
+  kLufsMeter_Y = 197,
 
-  kILoudnessTextControl_X = 10,
-  kILoudnessTextControl_Y = 57,
+  // GR meter
+  kGrMeter_X = 532,
+  kGrMeter_Y = 197,
+  
+  // Peaking knob
+  kGainX = 226,
+  kGainY = 180,
+  kKnobFrames = 11,
+
+  // LUFS Text reading
+  kILoudnessTextControl_X = 320,
+  kILoudnessTextControl_Y = 700,
   kILoudnessTextControl_W = 280,
   kILoudnessTextControl_H = 20,
-
-  kIContactControl_N = 2,
-  kIContactControl_X = 110,
-  kIContactControl_Y = 200,
+  
+  // Learn-master-off
+  kModeSwitch_N = 3,
+  kModeSwitch_X = 45,
+  kModeSwitch_Y = 180,
+  
+  // Youtube-Spotify-etc.
+  kPlatformSwitch_N = 5,
+  kPlatformSwitch_X = 226,
+  kPlatformSwitch_Y = 480,
 };
 
 #endif

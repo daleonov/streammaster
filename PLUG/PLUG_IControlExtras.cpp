@@ -67,7 +67,7 @@ inline int ILevelMeteringBar::_CalculateRectHeight(double fValue){
 	double fRelativeValue;
 
 	if(fValue < fMin)
-		fRelativeValue = METERING_BAR_MIN_FG_HEIGHT;
+    return METERING_BAR_MIN_FG_HEIGHT;
 	else
 		fRelativeValue = (fValue > fMax) ? fMax : fValue - fMin;
 

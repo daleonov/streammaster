@@ -14,6 +14,7 @@ const double fDefaultLimiterThreshold = 0.;
 ITextControl * tLoudnessTextControl;
 IGraphics* pGraphics;
 Plug::ILevelMeteringBar* tILevelMeteringBar;
+Plug::ILevelMeteringBar* tIGrMeteringBar;
 double fAudioFramesPerSecond = 1.;
 
 
@@ -57,28 +58,33 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   IRECT *tLufsBarRect = new IRECT(0, 10, 40, 100);
 
   //arguments are: name, defaultVal, minVal, maxVal, step, label
-  GetParam(kGain)->InitDouble("Threshold", fDefaultLimiterThreshold, -60., 5.0, 0.1, "dB");
+  GetParam(kGain)->InitDouble("Peaking", -0.3, -1., 0.0, 0.1, "dB");
   GetParam(kGain)->SetShape(2.);
-  GetParam(kIContactControl)->InitBool("IContactControl", 0, "");
   GetParam(kILevelMeteringBar)->InitDouble("Loudness", -24., -60., 3.0, 0.1, "LUFS");
+  GetParam(kModeSwitch)->InitInt("Mode", 0, 0, 2, "");
+  GetParam(kPlatformSwitch)->InitInt("Target platform", 4, 0, 4, "");
 
   pGraphics = MakeGraphics(this, kWidth, kHeight);
-
-  IColor tBgColor = IColor(255, 35, 35, 35);
-  pGraphics->AttachPanelBackground(&tBgColor);
-
-  tILevelMeteringBar = new Plug::ILevelMeteringBar(this, 250, 10, METERING_BAR_DEFAULT_SIZE_IRECT, kILevelMeteringBar);
+  pGraphics->AttachBackground(BG_ID, BG_FN);
+  
+  // LUFS meter
+  tILevelMeteringBar = new Plug::ILevelMeteringBar(this, kLufsMeter_X, kLufsMeter_Y, METERING_BAR_DEFAULT_SIZE_IRECT, kILevelMeteringBar);
   pGraphics->AttachControl(tILevelMeteringBar);
+
+  // Gain Reduction meter
+  tIGrMeteringBar = new Plug::ILevelMeteringBar(this, kGrMeter_X, kGrMeter_Y, METERING_BAR_DEFAULT_SIZE_IRECT, kIGrMeteringBar);
+  pGraphics->AttachControl(tIGrMeteringBar);
     
   // Limiter knob
   IBitmap tBmp = pGraphics->LoadIBitmap(KNOB_ID, KNOB_FN, kKnobFrames);
   pGraphics->AttachControl(new IKnobMultiControl(this, kGainX, kGainY, kGain, &tBmp));
   
-  // LUFS read button
-  tBmp = pGraphics->LoadIBitmap(ICONTACTCONTROL_ID, ICONTACTCONTROL_FN, kIContactControl_N);
-  pGraphics->AttachControl(new IContactControl(this, kIContactControl_X, kIContactControl_Y, kIContactControl, &tBmp));
+  // Mode selector (learn-master-off)
+  tBmp = pGraphics->LoadIBitmap(MODESWITCH_ID, MODESWITCH_FN, kModeSwitch_N);
+  pGraphics->AttachControl(new ISwitchControl(this, kModeSwitch_X, kModeSwitch_Y, kModeSwitch, &tBmp));
 
-  pGraphics->GrayOutControl(kIContactControl, true);
+  tBmp = pGraphics->LoadIBitmap(PLATFORMSWITCH_ID, PLATFORMSWITCH_FN, kPlatformSwitch_N);
+  pGraphics->AttachControl(new IKnobMultiControl(this, kPlatformSwitch_X, kPlatformSwitch_Y, kPlatformSwitch, &tBmp));
 
   // Text LUFS meter
   IText tDefaultLoudnessLabel = IText(32);
@@ -168,6 +174,7 @@ void StreamMaster::OnParamChange(int paramIdx)
       //mGain = GetParam(kGain)->Value() / 100.;
       tLimiter.setThresh(GetParam(kGain)->Value());
       break;
+      /*
     case kIContactControl:
       if (GetParam(kIContactControl)->Value()) {
         fLufs = tLoudnessMeter->GetLufs();
@@ -180,7 +187,7 @@ void StreamMaster::OnParamChange(int paramIdx)
         tLoudnessTextControl->SetTextFromPlug(sLoudnessString);
         tLoudnessTextControl->Redraw();
       }
-      break;
+      break;*/
 
     default:
       break;

@@ -7,7 +7,7 @@
 #ifndef PLUG_DEFAULT_BG_ICOLOR
 #define PLUG_DEFAULT_BG_ICOLOR IColor(255, 40, 40, 40)
 #endif
-#define METERING_BAR_DEFAULT_SIZE_IRECT IRECT(0, 0, 30, 250)
+#define METERING_BAR_DEFAULT_SIZE_IRECT IRECT(0, 0, 74, 492)
 #define METERING_BAR_DEFAULT_BG_ICOLOR IColor(255, 61, 61, 61)
 #define METERING_BAR_DEFAULT_FG_ICOLOR IColor(255, 100, 255, 100)
 #define METERING_BAR_MIN_FG_HEIGHT 2
@@ -35,6 +35,9 @@ private:
 	IRECT mBarRect;
 	int x;
 	int y;
+  bool bIsReversed;
+  IColor *ptLevelBarColor;
+  IColor *ptNotchColor;
 
 	/*
 	@param Converts value in meter's units to respective vertical coordinate on the bar. 
