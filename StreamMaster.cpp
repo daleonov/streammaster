@@ -12,39 +12,43 @@ chunkware_simple::SimpleLimit tLimiter;
 const double fDefaultLimiterThreshold = 0.;
 
 ITextControl * tLoudnessTextControl;
+ITextControl * tGrTextControl;
 IGraphics* pGraphics;
 Plug::ILevelMeteringBar* tILevelMeteringBar;
 Plug::ILevelMeteringBar* tIGrMeteringBar;
 double fAudioFramesPerSecond = 1.;
-
+double fMaxGainReductionPerFrame = 0.;
+double fMaxGainReductionPerSessionDb = -0.;
 
 void StreamMaster::UpdateGui()
 {
   const IColor* tLufsBarColor = new IColor(255, 255, 255, 255);
   IRECT *tLufsBarRect = new IRECT(10,10,20,100);
   char sLoudnessString[64];
+  char sGrString[64];
+  double fMaxGainReductionPerFrameDb = 0.;
+
   double fLufs = tLoudnessMeter->GetLufs();
-    if (fabs(fLufs - HUGE_VAL) < std::numeric_limits<double>::epsilon()) {
-      sprintf(sLoudnessString, "-oo LUFS");
-    }
-    else {
-      sprintf(sLoudnessString, "%4.2f LUFS", fLufs);
-    }
+  double fFastLufs = tLoudnessMeter->GetMomentaryLufs();
+
+  sprintf(sLoudnessString, "Int. %4.2fLUFS\nMom. %4.2fLUFS", fLufs, fFastLufs);
     //double fTestLoudnessValue = -15.*((double)rand() / RAND_MAX);
     tLoudnessTextControl->SetTextFromPlug(sLoudnessString);
     tILevelMeteringBar->SetValue(fLufs);
 
+    // Gain reduction
+    fMaxGainReductionPerFrameDb = LINEAR_TO_LOG(fMaxGainReductionPerFrame);
+    // ("<" because gain reduction is negative in log domain)
+    if (fMaxGainReductionPerFrameDb < fMaxGainReductionPerSessionDb)
+      fMaxGainReductionPerSessionDb = fMaxGainReductionPerFrameDb;
+    tIGrMeteringBar->SetValue(fMaxGainReductionPerFrameDb);
+    tIGrMeteringBar->SetNotchValue(fMaxGainReductionPerSessionDb);
+    sprintf(sGrString, "%4.2fdB\nmax %4.2fdB", fMaxGainReductionPerFrameDb, fMaxGainReductionPerSessionDb);
+    tGrTextControl->SetTextFromPlug(sGrString);
+
     unsigned int nMetersWait = 0;
     int nMeterUpdatesPerSecond = 5;
     int nMetersWaitIterations = fAudioFramesPerSecond/ nMeterUpdatesPerSecond;
-
-    //fAudioFramesPerSecond
-    if (nMetersWait++ % nMetersWaitIterations) {
-      tILevelMeteringBar->Draw(pGraphics);
-      tILevelMeteringBar->Redraw();
-      pGraphics->Draw(&IRECT(0, 0, GUI_WIDTH, GUI_HEIGHT));
-      nMetersWait = 0;
-    }
 
 }
 
@@ -90,9 +94,8 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
 
   // Text LUFS meter
   IText tDefaultLoudnessLabel = IText(32);
-
   tDefaultLoudnessLabel.mColor = IColor(255, 255, 255, 255);
-  tDefaultLoudnessLabel.mSize = 20;
+  tDefaultLoudnessLabel.mSize = 15;
   tLoudnessTextControl = new ITextControl(
     this,
     IRECT(
@@ -105,11 +108,28 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
     "-");
   pGraphics->AttachControl(tLoudnessTextControl);
 
+  // Text GR meter
+  IText tGrLabel = IText(32);  
+  tGrLabel.mColor = IColor(255, 255, 255, 255);
+  tGrLabel.mSize = 15;
+  tGrTextControl = new ITextControl(
+    this,
+    IRECT(
+      kIGrTextControl_X,
+      kIGrTextControl_Y,
+      (kIGrTextControl_X + kIGrTextControl_W),
+      (kIGrTextControl_Y + kIGrTextControl_H)
+    ),
+    &tGrLabel,
+    "-");
+  pGraphics->AttachControl(tGrTextControl);
+
   AttachGraphics(pGraphics);
   
   //Limiter 
   tLimiter.setThresh(fDefaultLimiterThreshold);
   tLimiter.setSampleRate(PLUG_DEFAULT_SAMPLERATE);
+  tLimiter.setAttack(0.1);
   tLimiter.initRuntime();
 
   //MakePreset("preset 1", ... );
@@ -139,6 +159,7 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
     *out1 = *in1;
     *out2 = *in2;
     tLimiter.process(*out1, *out2);
+    tLimiter.getGr(&fMaxGainReductionPerFrame);
     fSampleSample = *in1;
     afInterleavedSamples[sample]   = *in1;
     afInterleavedSamples[sample+1] = *in2;
@@ -176,21 +197,10 @@ void StreamMaster::OnParamChange(int paramIdx)
       //mGain = GetParam(kGain)->Value() / 100.;
       tLimiter.setThresh(GetParam(kGain)->Value());
       break;
-      /*
-    case kIContactControl:
-      if (GetParam(kIContactControl)->Value()) {
-        fLufs = tLoudnessMeter->GetLufs();
-        if (fabs(fLufs - HUGE_VAL) < std::numeric_limits<double>::epsilon()) {
-          sprintf(sLoudnessString, "-oo LUFS");
-        }
-        else {
-          sprintf(sLoudnessString, "%4.2f LUFS, %4.4f", fLufs, fSampleSample);
-        }
-        tLoudnessTextControl->SetTextFromPlug(sLoudnessString);
-        tLoudnessTextControl->Redraw();
-      }
-      break;*/
-
+    // Reset GR meter on left mouseclick
+    case kIGrMeteringBar:
+      fMaxGainReductionPerSessionDb = -0.;
+      break;
     default:
       break;
   }

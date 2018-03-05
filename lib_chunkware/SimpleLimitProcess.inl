@@ -94,6 +94,7 @@ namespace chunkware_simple
 
 		// gain reduction
 		double gR = thresh_ / env_;
+    _UpdateGr(&gR);
 
 		// unload current buffer index
 		// ( cur_ - delay ) & mask_ gets sample from [delay] samples ago

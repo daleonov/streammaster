@@ -21,11 +21,16 @@ public:
 	void AddSamples(double* afBuffer, size_t nSamples);
 
 	/*
-	@brief LUFS reading
-	@note Each call resets the meter
+	@brief Integrated LUFS reading
 	@retval LUFS value (in dB)
 	*/
 	double GetLufs();
+
+	/*
+	@brief Momentary LUFS reading
+	@retval LUFS value (in dB)
+	*/
+	double GetMomentaryLufs();
 
 	/*
 	@brief LRA reading

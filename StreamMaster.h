@@ -9,6 +9,10 @@
 #define PLUG_DEFAULT_CHANNEL_NUMBER 2
 
 
+#define LOG_TO_LINEAR(v) pow(10, v/20.)
+#define LINEAR_TO_LOG(v) (20.*log10(v))
+
+
 #define GR_BAR_DEFAULT_FG_ICOLOR IColor(255, 255, 50, 50)
 #define GR_BAR_DEFAULT_NOTCH_ICOLOR IColor(255, 200, 0, 0)
 
@@ -61,9 +65,15 @@ enum ELayout
 
   // LUFS Text reading
   kILoudnessTextControl_X = 320,
-  kILoudnessTextControl_Y = 700,
+  kILoudnessTextControl_Y = 695,
   kILoudnessTextControl_W = 280,
-  kILoudnessTextControl_H = 20,
+  kILoudnessTextControl_H = 40,
+
+  // Gain reduction Text reading
+  kIGrTextControl_X = 430,
+  kIGrTextControl_Y = 695,
+  kIGrTextControl_W = 280,
+  kIGrTextControl_H = 40,
   
   // Learn-master-off
   kModeSwitch_N = 3,

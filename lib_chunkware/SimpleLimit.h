@@ -56,6 +56,8 @@ namespace chunkware_simple
 		virtual double getAttack( void )  const { return att_.getTc(); }
 		virtual double getRelease( void ) const { return rel_.getTc(); }
 
+    void getGr(double *pfGainReduction) { *pfGainReduction = this->gR; (this->gR)=0; }
+
 		// latency
 		virtual const unsigned int getLatency( void ) const { return peakHold_; }
 
@@ -66,6 +68,9 @@ namespace chunkware_simple
 		// runtime
 		virtual void initRuntime( void );			// call before runtime (in resume())
 		void process( double &in1, double &in2 );	// limiter runtime process
+
+    // Gain reduction. The idea is to keep the largest value from any given frame. 
+    virtual void   _UpdateGr(double *Gr) { this->gR = (*Gr > this->gR) ? *Gr : this->gR; };
 
 	protected:
 
@@ -84,6 +89,8 @@ namespace chunkware_simple
 		};
 		
 	private:
+    // Gain reduction;
+    double gR;
 		
 		// transfer function
 		double threshdB_;	// threshold (dB)

@@ -40,11 +40,20 @@ LoudnessMeter::~LoudnessMeter(){
 
 double LoudnessMeter::GetLufs(){
 	double fLoudness;
-  // Options
-  // Monemtary (2sec): ebur128_loudness_momentary()
-  // LUFS short term: ebur128_loudness_shortterm()
-  // LIFS integrated: ebur128_loudness_global()
+	// Options
+	// Monemtary (2sec): ebur128_loudness_momentary()
+	// LUFS short term: ebur128_loudness_shortterm()
+	// LIFS integrated: ebur128_loudness_global()
 	ebur128_loudness_global(this->_tLoudnessMeterEbur128, &fLoudness);
+	return fLoudness;
+}
+
+double LoudnessMeter::GetMomentaryLufs(){
+	double fLoudness;
+	// Options
+	// Monemtary (2sec): ebur128_loudness_momentary()
+	// LUFS short term: ebur128_loudness_shortterm()
+	ebur128_loudness_momentary(this->_tLoudnessMeterEbur128, &fLoudness);
 	return fLoudness;
 }
 
