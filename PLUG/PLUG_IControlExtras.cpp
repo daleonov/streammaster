@@ -43,15 +43,20 @@ bool ILevelMeteringBar::Draw(IGraphics* pGraphics){
 	const int nNotchBottomRightY = nNotchTopLeftY + METERING_BAR_DEFAULT_NOTCH_HEIGHT;
 	IRECT tNotchRect(nNotchTopLeftX, nNotchTopLeftY, nNotchBottomRightX, nNotchBottomRightY);
 	pGraphics->FillIRect(&METERING_BAR_DEFAULT_NOTCH_ICOLOR, &tNotchRect);
+
 	return true;
 }
 
 void ILevelMeteringBar::SetValue(double fValue){
 	this->fCurrentValue = fValue;
+	SetDirty(false);
+	Redraw();
 }
 
 void ILevelMeteringBar::SetNotchValue(double fValue){
 	this->fNotchValue = fValue;
+	SetDirty(false);
+	Redraw();
 }
 
 inline int ILevelMeteringBar::_CalculateRectHeight(double fValue){
