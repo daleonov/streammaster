@@ -118,6 +118,7 @@
     <ClCompile Include="lib-jiixyj-ebur128\ebur128.c">
       <Filter>lib-jiixyj-ebur128</Filter>
     </ClCompile>
+    <ClCompile Include="PLUG\PLUG_IControlExtras.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="StreamMaster.rc" />

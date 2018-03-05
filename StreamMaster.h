@@ -30,6 +30,7 @@ enum EParams
 {
   kGain = 0,
   kIContactControl = 1,
+  kILevelMeteringBar,
   kNumParams,
   kInvisibleSwitchIndicator   // the user after kNumParams so they get a param id
 };
