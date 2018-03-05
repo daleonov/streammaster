@@ -13,8 +13,8 @@
 #define LINEAR_TO_LOG(v) (20.*log10(v))
 
 
-#define GR_BAR_DEFAULT_FG_ICOLOR IColor(255, 255, 50, 50)
-#define GR_BAR_DEFAULT_NOTCH_ICOLOR IColor(255, 200, 0, 0)
+#define GR_BAR_DEFAULT_FG_ICOLOR IColor(255, 200, 0, 0)
+#define GR_BAR_DEFAULT_NOTCH_ICOLOR IColor(255, 128, 0, 0)
 
 class StreamMaster : public IPlug
 {
@@ -85,5 +85,18 @@ enum ELayout
   kPlatformSwitch_X = 226,
   kPlatformSwitch_Y = 480,
 };
+
+// Loudness stuff
+#define PLUG_PLATFORM_OPTIONS 5
+double afTargetLufs[PLUG_PLATFORM_OPTIONS] = {
+  -23., /* #0 Broadcast - EBU R128 guideline */
+  -16., /* #1 Apple Music, SoundCheck, AES */
+  -14., /* #2 Tidal */
+  -14., /* #3 Spotify */
+  -13.  /* #4 Youtube */
+};
+#define PLUG_DEFAULT_TARGET_PLATFORM 4
+#define PLUG_GET_TARGET_LOUDNESS(i) (afTargetLufs[i])
+#define PLUG_DEFAULT_TARGET_LOUDNESS PLUG_GET_TARGET_LOUDNESS(PLUG_DEFAULT_TARGET_PLATFORM)
 
 #endif

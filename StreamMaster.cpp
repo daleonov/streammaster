@@ -19,6 +19,7 @@ Plug::ILevelMeteringBar* tIGrMeteringBar;
 double fAudioFramesPerSecond = 1.;
 double fMaxGainReductionPerFrame = 0.;
 double fMaxGainReductionPerSessionDb = -0.;
+double fTargetLoudness = PLUG_DEFAULT_TARGET_LOUDNESS;
 
 void StreamMaster::UpdateGui()
 {
@@ -67,18 +68,19 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   GetParam(kILevelMeteringBar)->InitDouble("Loudness", -24., -40., 3.0, 0.1, "LUFS");
   GetParam(kIGrMeteringBar)->InitDouble("Gain reduction", -0., -43., 0.0, 0.1, "dB");
   GetParam(kModeSwitch)->InitInt("Mode", 0, 0, 2, "");
-  GetParam(kPlatformSwitch)->InitInt("Target platform", 4, 0, 4, "");
+  GetParam(kPlatformSwitch)->InitInt("Target platform", PLUG_DEFAULT_TARGET_PLATFORM, 0, 4, "");
 
   pGraphics = MakeGraphics(this, kWidth, kHeight);
   pGraphics->AttachBackground(BG_ID, BG_FN);
   
   // LUFS meter
   tILevelMeteringBar = new Plug::ILevelMeteringBar(this, kLufsMeter_X, kLufsMeter_Y, METERING_BAR_DEFAULT_SIZE_IRECT, kILevelMeteringBar);
+  tILevelMeteringBar->SetNotchValue(PLUG_DEFAULT_TARGET_LOUDNESS);
   pGraphics->AttachControl(tILevelMeteringBar);
 
   // Gain Reduction meter
   tIGrMeteringBar = new Plug::ILevelMeteringBar(this, kGrMeter_X, kGrMeter_Y, METERING_BAR_DEFAULT_SIZE_IRECT, kIGrMeteringBar, \
-    &GR_BAR_DEFAULT_FG_ICOLOR, &GR_BAR_DEFAULT_NOTCH_ICOLOR, true);
+    true, &GR_BAR_DEFAULT_FG_ICOLOR, &GR_BAR_DEFAULT_NOTCH_ICOLOR, &METERING_BAR_ABOVE_NOTCH_ICOLOR);
   pGraphics->AttachControl(tIGrMeteringBar);
     
   // Limiter knob
@@ -190,18 +192,19 @@ void StreamMaster::OnParamChange(int paramIdx)
 {
   IMutexLock lock(this);
   double fLufs;
-  char sLoudnessString[64];
-
+  unsigned int nIndex;
 
   switch (paramIdx)
   {
     case kGain:
-      //mGain = GetParam(kGain)->Value() / 100.;
       tLimiter.setThresh(GetParam(kGain)->Value());
       break;
-    // Reset GR meter on left mouseclick
-    case kIGrMeteringBar:
-      fMaxGainReductionPerSessionDb = -0.;
+    //Platform control
+    case kPlatformSwitch:
+      nIndex = (unsigned int)GetParam(kPlatformSwitch)->Value();
+      fTargetLoudness = PLUG_GET_TARGET_LOUDNESS(nIndex);
+      tILevelMeteringBar->SetNotchValue(fTargetLoudness);
+      tILevelMeteringBar->Redraw();
       break;
 
     default:

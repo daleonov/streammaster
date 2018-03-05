@@ -11,11 +11,18 @@
 #define METERING_BAR_DEFAULT_BG_ICOLOR IColor(255, 61, 61, 61)
 #define METERING_BAR_DEFAULT_FG_ICOLOR IColor(255, 100, 255, 100)
 #define METERING_BAR_MIN_FG_HEIGHT 2
-#define METERING_BAR_DEFAULT_NOTCH_ICOLOR IColor(255, 100, 100, 255)
+#define METERING_BAR_DEFAULT_NOTCH_ICOLOR IColor(255, 0, 96, 0)
 #define METERING_BAR_DEFAULT_NOTCH_HEIGHT 3
 #define METERING_BAR_DEFAULT_NOTCH_VALUE -0.
 #define METERING_BAR_MAX_NAME_SIZE 64
 #define METERING_BAR_MAX_LABEL_SIZE 32
+#define METERING_BAR_ABOVE_NOTCH_ICOLOR IColor(255, 200, 0, 0)
+
+// This define results in a background showing range to fNotchValue
+#define METERING_BAR_NOTCH_1
+// This define results in a small line corresponding to fNotchValue
+//#define METERING_BAR_NOTCH_2
+// Normally you would want to use only one of those two. 
 
 namespace Plug{
 /*
@@ -38,12 +45,13 @@ private:
 	bool bIsReversed;
 	IColor *ptLevelBarColor;
 	IColor *ptNotchColor;
+	IColor *ptAboveNotchColor;
 
 	/*
 	@param Converts value in meter's units to respective vertical coordinate on the bar. 
 	@retval Converted vertical coordinate in pixels relative to bottom y of the meter.
 	*/
-	inline int ILevelMeteringBar::_CalculateRectHeight(double fValue);
+	int ILevelMeteringBar::_CalculateRectHeight(double fValue);
 public:
 	ILevelMeteringBar(
 		IPlugBase *pPlug,
@@ -51,9 +59,10 @@ public:
 		int y,
 		IRECT pR,
 		int paramIdx,
+		bool bIsReversed = false,
 		const IColor *ptLevelBarColor = &METERING_BAR_DEFAULT_FG_ICOLOR,
 		const IColor *ptNotchColor = &METERING_BAR_DEFAULT_NOTCH_ICOLOR,
-		bool bIsReversed = false
+		const IColor *ptAboveNotchColor = &METERING_BAR_ABOVE_NOTCH_ICOLOR
 		);
 
 	~ILevelMeteringBar();
@@ -74,10 +83,6 @@ public:
 	*/
 	void SetNotchValue(double fValue);
 
-	/*
-	@brief Cclick resets the notch position. 
-	*/
-	void OnMouseDown(int x, int y, IMouseMod* pMod);
 };
 
 } //namespace Plug

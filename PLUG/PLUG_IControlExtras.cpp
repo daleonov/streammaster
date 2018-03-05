@@ -9,9 +9,10 @@ ILevelMeteringBar::ILevelMeteringBar(
 		int y,
 		IRECT pR,
 		int paramIdx,
+		bool bIsReversed,
 		const IColor *ptLevelBarColor,
 		const IColor *ptNotchColor,
-		bool bIsReversed
+		const IColor *ptAboveNotchColor
 		)
 : IPanelControl(pPlug, pR, &PLUG_DEFAULT_BG_ICOLOR)
 {
@@ -33,6 +34,9 @@ ILevelMeteringBar::~ILevelMeteringBar(){
 }
 bool ILevelMeteringBar::Draw(IGraphics* pGraphics){
 
+	int nRectHeight  = _CalculateRectHeight(this->fCurrentValue);
+	int nNotchHeight = _CalculateRectHeight(this->fNotchValue);
+
 	// Background
 	const int nBgBarTopLeftX     = mBarRect.L + this->x;
 	const int nBgBarTopLeftY     = mBarRect.T + this->y;
@@ -41,6 +45,24 @@ bool ILevelMeteringBar::Draw(IGraphics* pGraphics){
 	IRECT tBgRect(nBgBarTopLeftX, nBgBarTopLeftY, nBgBarBottomRightX, nBgBarBottomRightY);
 	pGraphics->FillIRect(&METERING_BAR_DEFAULT_BG_ICOLOR, &tBgRect);
 
+	// Notch
+	const int nNotchTopLeftX     = nBgBarTopLeftX;
+	const int nNotchBottomRightX = nBgBarBottomRightX;
+	int nNotchTopLeftY;
+	int nNotchBottomRightY;
+	// This code fills the background behind a level bar with solid color 
+	if (!this->bIsReversed){
+		nNotchTopLeftY = nBgBarBottomRightY - nNotchHeight - METERING_BAR_DEFAULT_NOTCH_HEIGHT;
+		nNotchBottomRightY = nBgBarBottomRightY;
+	}
+	else{
+		nNotchTopLeftY  = nBgBarTopLeftY;
+		nNotchBottomRightY = nBgBarBottomRightY - nNotchHeight - METERING_BAR_DEFAULT_NOTCH_HEIGHT;
+	}
+	IRECT tNotchRectOption1(nNotchTopLeftX, nNotchTopLeftY, nNotchBottomRightX, nNotchBottomRightY);
+	pGraphics->FillIRect(ptNotchColor, &tNotchRectOption1);
+	// End notch option 1
+
 	// Foreground
 	const int nLevelBarTopLeftX     = nBgBarTopLeftX;
 	const int nLevelBarBottomRightX = nBgBarBottomRightX;
@@ -48,22 +70,21 @@ bool ILevelMeteringBar::Draw(IGraphics* pGraphics){
 	int nLevelBarBottomRightY;
 	// Normal display (bar starts at the bottom)
 	if (!this->bIsReversed){
-		nLevelBarTopLeftY     = nBgBarBottomRightY - _CalculateRectHeight(this->fCurrentValue);
+		nLevelBarTopLeftY     = nBgBarBottomRightY - nRectHeight;
 		nLevelBarBottomRightY = nBgBarBottomRightY;
 	}
 	// Reversed display (bar starts at the top)
 	else{
 		nLevelBarTopLeftY     = nBgBarTopLeftY;
-		nLevelBarBottomRightY = nBgBarBottomRightY - _CalculateRectHeight(this->fCurrentValue);
+		nLevelBarBottomRightY = nBgBarBottomRightY - nRectHeight;
 	}
 	IRECT tLevelRect(nLevelBarTopLeftX, nLevelBarTopLeftY, nLevelBarBottomRightX, nLevelBarBottomRightY);
 	pGraphics->FillIRect(ptLevelBarColor, &tLevelRect);
 
-	// Notch
-	const int nNotchTopLeftX     = nBgBarTopLeftX;
-	const int nNotchBottomRightX = nBgBarBottomRightX;
-	int nNotchTopLeftY;
-	int nNotchBottomRightY;
+
+	// This code draws a small line at notch level.
+	// Uncomment following lines and comment the code above that draws solid background to choose that appearance. 
+	
 	if (!this->bIsReversed){
 		nNotchTopLeftY  = nBgBarBottomRightY - _CalculateRectHeight(this->fNotchValue) - \
 			METERING_BAR_DEFAULT_NOTCH_HEIGHT/2;
@@ -74,8 +95,20 @@ bool ILevelMeteringBar::Draw(IGraphics* pGraphics){
 			METERING_BAR_DEFAULT_NOTCH_HEIGHT/2;
 		nNotchBottomRightY = nNotchTopLeftY + METERING_BAR_DEFAULT_NOTCH_HEIGHT;
 	}
-	IRECT tNotchRect(nNotchTopLeftX, nNotchTopLeftY, nNotchBottomRightX, nNotchBottomRightY);
-	pGraphics->FillIRect(ptNotchColor, &tNotchRect);
+	/*
+	IRECT tNotchRectOption2(nNotchTopLeftX, nNotchTopLeftY, nNotchBottomRightX, nNotchBottomRightY);
+	pGraphics->FillIRect(ptNotchColor, &tNotchRectOption2);*/
+	// End notch option 2
+	
+
+	// If the value is above the notch level	
+	if ((this->bIsReversed) && (this->fCurrentValue < this->fNotchValue))
+		pGraphics->FillIRect(&IColor(255, 255, 0, 0), &IRECT(nNotchTopLeftX, nNotchTopLeftY, nLevelBarBottomRightX, nLevelBarBottomRightY));
+	if ((!this->bIsReversed) && (this->fCurrentValue > this->fNotchValue))
+		pGraphics->FillIRect(&IColor(255, 255, 0, 0), &IRECT(nLevelBarTopLeftX, nLevelBarTopLeftY, nNotchBottomRightX, nNotchBottomRightY));
+
+	// Always draw notch option 2 on top of everything!
+	// pGraphics->FillIRect(ptNotchColor, &tNotchRectOption2);
 
 	return true;
 }
@@ -92,12 +125,7 @@ void ILevelMeteringBar::SetNotchValue(double fValue){
 	Redraw();
 }
 
-void ILevelMeteringBar::OnMouseDown(int x, int y, IMouseMod* pMod){
-  // Isn't getting called for some reason. Son of a bitch. 
-	this->fNotchValue = 0.;
-}
-
-inline int ILevelMeteringBar::_CalculateRectHeight(double fValue){
+int ILevelMeteringBar::_CalculateRectHeight(double fValue){
 	const double fMax = mPlug->GetParam(this->mParamIdx)->GetMax();
 	const double fMin = mPlug->GetParam(this->mParamIdx)->GetMin();
 	const double fBarRange = fabs(fMax - fMin);
