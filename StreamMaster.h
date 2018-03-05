@@ -29,6 +29,8 @@
 #define PLUG_KNOB_PEAK_DEFAULT 7
 #define PLUG_KNOB_PEAK_DOUBLE(i) (-1.+(i/10.))
 
+#define PLUG_MODE_TEXT_LABEL_STRING_SIZE 256
+
 class StreamMaster : public IPlug
 {
 public:
@@ -40,6 +42,7 @@ public:
   void ProcessDoubleReplacing(double** inputs, double** outputs, int nFrames);
   void UpdateGui();
   void UpdateAvailableControls();
+  void UpdatePreMastering();
 
 private:
 
@@ -56,6 +59,7 @@ enum EParams
   kILevelMeteringBar,
   kIGrMeteringBar,
   kIPeakingTextControl,
+  kIModeTextControl,
   kNumParams,
   kInvisibleSwitchIndicator   // the user after kNumParams so they get a param id
 };
@@ -96,6 +100,12 @@ enum ELayout
   kIPeakingTextControl_W = 80,
   kIPeakingTextControl_H = 20,
   
+  // Mode text guide
+  kIModeTextControl_X = 0,
+  kIModeTextControl_Y = 130,
+  kIModeTextControl_W = GUI_WIDTH,
+  kIModeTextControl_H = 20,
+
   // Learn-master-off
   kModeSwitch_N = 3,
   kModeSwitch_X = 45,
