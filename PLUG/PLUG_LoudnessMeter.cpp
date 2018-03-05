@@ -40,14 +40,18 @@ LoudnessMeter::~LoudnessMeter(){
 
 double LoudnessMeter::GetLufs(){
 	double fLoudness;
-	ebur128_loudness_momentary(this->_tLoudnessMeterEbur128, &fLoudness);
-	//ebur128_loudness_global(this->_tLoudnessMeterEbur128, &fLoudness);
-	// See also: ebur128_loudness_global_multiple() for multiple files
+  // Options
+  // Monemtary (2sec): ebur128_loudness_momentary()
+  // LUFS short term: ebur128_loudness_shortterm()
+  // LIFS integrated: ebur128_loudness_global()
+	ebur128_loudness_global(this->_tLoudnessMeterEbur128, &fLoudness);
 	return fLoudness;
 }
 
 double LoudnessMeter::GetLra(){
-	return 0.;
+  double fLra;
+  ebur128_loudness_range(this->_tLoudnessMeterEbur128, &fLra);
+	return fLra;
 }
 
 void LoudnessMeter::SetSampleRate(double fRate){
