@@ -17,9 +17,14 @@
     <ClCompile Include="lib_chunkware\SimpleEnvelope.cpp">
       <Filter>Chunkware</Filter>
     </ClCompile>
-    <ClCompile Include="PLUG\PLUG_LoudnessMeter.cpp" />
     <ClCompile Include="lib-jiixyj-ebur128\ebur128.c">
       <Filter>lib-jiixyj-ebur128</Filter>
+    </ClCompile>
+    <ClCompile Include="PLUG\PLUG_LoudnessMeter.cpp">
+      <Filter>Plug</Filter>
+    </ClCompile>
+    <ClCompile Include="PLUG\PLUG_IControlExtras.cpp">
+      <Filter>Plug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -62,6 +67,9 @@
     </Filter>
     <Filter Include="lib-jiixyj-ebur128">
       <UniqueIdentifier>{f74b83a6-d66b-4c56-931c-c02a15f01f68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plug">
+      <UniqueIdentifier>{6a1758cc-f3f0-4600-a868-b640cb4d7244}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

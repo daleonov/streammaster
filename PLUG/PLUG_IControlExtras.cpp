@@ -55,11 +55,17 @@ void ILevelMeteringBar::SetNotchValue(double fValue){
 }
 
 inline int ILevelMeteringBar::_CalculateRectHeight(double fValue){
-  const double fMax = mPlug->GetParam(this->mParamIdx)->GetMax();
-  const double fMin = mPlug->GetParam(this->mParamIdx)->GetMin();
+	const double fMax = mPlug->GetParam(this->mParamIdx)->GetMax();
+	const double fMin = mPlug->GetParam(this->mParamIdx)->GetMin();
 	const double fBarRange = fabs(fMax - fMin);
 	const int nBarBgHeight = fabs(mBarRect.B - mBarRect.T);
-  const double fRelativeValue = (fValue > fMax) ? fMax : fValue - fMin;
+	double fRelativeValue;
+
+	if(fValue < fMin)
+		fRelativeValue = METERING_BAR_MIN_FG_HEIGHT;
+	else
+		fRelativeValue = (fValue > fMax) ? fMax : fValue - fMin;
+
 	int nLevelBarHeight = floor((fRelativeValue / fBarRange) * nBarBgHeight);
 	return nLevelBarHeight;
 }

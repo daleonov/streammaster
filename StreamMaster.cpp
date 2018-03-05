@@ -14,7 +14,7 @@ const double fDefaultLimiterThreshold = 0.;
 ITextControl * tLoudnessTextControl;
 IGraphics* pGraphics;
 Plug::ILevelMeteringBar* tILevelMeteringBar;
-
+double fAudioFramesPerSecond = 1.;
 
 
 void StreamMaster::UpdateGui()
@@ -29,9 +29,21 @@ void StreamMaster::UpdateGui()
     else {
       sprintf(sLoudnessString, "%4.2f LUFS", fLufs);
     }
+    //double fTestLoudnessValue = -15.*((double)rand() / RAND_MAX);
     tLoudnessTextControl->SetTextFromPlug(sLoudnessString);
-    //pGraphics->DrawRect(tLufsBarColor, tLufsBarRect);
-   // AttachGraphics(pGraphics);
+    tILevelMeteringBar->SetValue(fLufs);
+
+    unsigned int nMetersWait = 0;
+    int nMeterUpdatesPerSecond = 5;
+    int nMetersWaitIterations = fAudioFramesPerSecond/ nMeterUpdatesPerSecond;
+
+    //fAudioFramesPerSecond
+    if (nMetersWait++ % nMetersWaitIterations) {
+      tILevelMeteringBar->Draw(pGraphics);
+      tILevelMeteringBar->Redraw();
+      pGraphics->Draw(&IRECT(0, 0, GUI_WIDTH, GUI_HEIGHT));
+      nMetersWait = 0;
+    }
 
 }
 
@@ -55,9 +67,8 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   IColor tBgColor = IColor(255, 35, 35, 35);
   pGraphics->AttachPanelBackground(&tBgColor);
 
-  tILevelMeteringBar = new Plug::ILevelMeteringBar(this, 200, 10, METERING_BAR_DEFAULT_SIZE_IRECT, kILevelMeteringBar);
+  tILevelMeteringBar = new Plug::ILevelMeteringBar(this, 250, 10, METERING_BAR_DEFAULT_SIZE_IRECT, kILevelMeteringBar);
   pGraphics->AttachControl(tILevelMeteringBar);
-  tILevelMeteringBar->Draw(pGraphics);
     
   // Limiter knob
   IBitmap tBmp = pGraphics->LoadIBitmap(KNOB_ID, KNOB_FN, kKnobFrames);
@@ -130,18 +141,10 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
   in2 = inputs[1];
 
   double fRandom;
-  // Creating an interleaved buffer
-  /*
-  for (int frame = 0, sample = 0; frame < nFrames; frame++, sample+=2) {
-    fRandom = -1. + static_cast <double> (rand()) / (static_cast <double> (RAND_MAX / (1. - (-1.))));
-    afInterleavedSamples[sample] = fRandom/2;
-    afInterleavedSamples[sample + 1] = fRandom/2;
 
-    //afInterleavedSamples[sample]   = in1[sample];
-    //afInterleavedSamples[sample+1] = in2[sample];
-  }*/
   tLoudnessMeter->AddSamples(afInterleavedSamples, nFrames);
   delete[] afInterleavedSamples;
+  fAudioFramesPerSecond = GetSampleRate()/ nFrames;
   UpdateGui();
 
 }
