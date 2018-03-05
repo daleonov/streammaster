@@ -13,6 +13,7 @@ const double fDefaultLimiterThreshold = 0.;
 
 ITextControl *tLoudnessTextControl;
 ITextControl *tGrTextControl;
+ITextControl *tPeakingTextControl;
 IKnobMultiControl *tPeakingKnob;
 IKnobMultiControl *tPlatformSelector;
 IGraphics* pGraphics;
@@ -65,6 +66,7 @@ void StreamMaster::UpdateAvailableControls(){
     tIGrMeteringBar->GrayOut(true);
     tPeakingKnob->GrayOut(true);
     tPlatformSelector->GrayOut(true);
+    tPeakingTextControl->GrayOut(true);
     tILevelMeteringBar->GrayOut(false);
     break;
   case PLUG_MASTER_MODE:
@@ -73,6 +75,7 @@ void StreamMaster::UpdateAvailableControls(){
     tIGrMeteringBar->GrayOut(false);
     tPeakingKnob->GrayOut(false);
     tPlatformSelector->GrayOut(false);
+    tPeakingTextControl->GrayOut(false);
     tILevelMeteringBar->GrayOut(false);
     break;
   case PLUG_OFF_MODE:
@@ -81,6 +84,7 @@ void StreamMaster::UpdateAvailableControls(){
     tIGrMeteringBar->GrayOut(true);
     tPeakingKnob->GrayOut(true);
     tPlatformSelector->GrayOut(true);
+    tPeakingTextControl->GrayOut(true);
     tILevelMeteringBar->GrayOut(true);
     break;
   }
@@ -96,8 +100,9 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   IRECT *tLufsBarRect = new IRECT(0, 10, 40, 100);
 
   //arguments are: name, defaultVal, minVal, maxVal, step, label
-  GetParam(kGain)->InitDouble("Peaking", -0.3, -1., 0.0, 0.1, "dB");
-  GetParam(kGain)->SetShape(2.);
+  // We need precise values, so we have to use integer values and convert them into double later
+  GetParam(kGain)->InitInt("Peaking", 0,0, 10,  "dB");
+  GetParam(kGain)->SetShape(1.);
   GetParam(kILevelMeteringBar)->InitDouble("Loudness", -24., -40., 3.0, 0.1, "LUFS");
   GetParam(kIGrMeteringBar)->InitDouble("Gain reduction", -0., -43., 0.0, 0.1, "dB");
   GetParam(kModeSwitch)->InitInt("Mode", 0, 0, 2, "");
@@ -131,9 +136,9 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   pGraphics->AttachControl(tPlatformSelector);
 
   // Text LUFS meter
-  IText tDefaultLoudnessLabel = IText(32);
-  tDefaultLoudnessLabel.mColor = IColor(255, 255, 255, 255);
-  tDefaultLoudnessLabel.mSize = 12;
+  IText tDefaultLoudnessLabel = IText(PLUG_METER_TEXT_LABEL_STRING_SIZE);
+  tDefaultLoudnessLabel.mColor = PLUG_METER_TEXT_LABEL_COLOR;
+  tDefaultLoudnessLabel.mSize = PLUG_METER_TEXT_LABEL_FONT_SIZE;
   tDefaultLoudnessLabel.mAlign = tDefaultLoudnessLabel.kAlignFar;
   tLoudnessTextControl = new ITextControl(
     this,
@@ -148,9 +153,9 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   pGraphics->AttachControl(tLoudnessTextControl);
 
   // Text GR meter
-  IText tGrLabel = IText(32);  
-  tGrLabel.mColor = IColor(255, 255, 255, 255);
-  tGrLabel.mSize = 12;
+  IText tGrLabel = IText(PLUG_METER_TEXT_LABEL_STRING_SIZE);  
+  tGrLabel.mColor = PLUG_METER_TEXT_LABEL_COLOR;
+  tGrLabel.mSize = PLUG_METER_TEXT_LABEL_FONT_SIZE;
   tGrLabel.mAlign = tGrLabel.kAlignFar;
   tGrTextControl = new ITextControl(
     this,
@@ -163,6 +168,23 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
     &tGrLabel,
     "-");
   pGraphics->AttachControl(tGrTextControl);
+
+  // Text Peaking knob guide
+  IText tPeakingLabel = IText(PLUG_KNOB_TEXT_LABEL_STRING_SIZE);
+  tPeakingLabel.mColor = PLUG_KNOB_TEXT_LABEL_COLOR;
+  tPeakingLabel.mSize = PLUG_KNOB_TEXT_LABEL_FONT_SIZE;
+  tPeakingLabel.mAlign = tPeakingLabel.kAlignCenter;
+  tPeakingTextControl = new ITextControl(
+    this,
+    IRECT(
+      kIPeakingTextControl_X,
+      kIPeakingTextControl_Y,
+      (kIPeakingTextControl_X + kIPeakingTextControl_W),
+      (kIPeakingTextControl_Y + kIPeakingTextControl_H)
+    ),
+    &tPeakingLabel,
+    "-");
+  pGraphics->AttachControl(tPeakingTextControl);
 
   AttachGraphics(pGraphics);
   
@@ -230,13 +252,17 @@ void StreamMaster::Reset()
 void StreamMaster::OnParamChange(int paramIdx)
 {
   IMutexLock lock(this);
-  double fLufs;
+  double fLufs, fPeaking;
   unsigned int nIndex;
+  char sPeakingString[PLUG_KNOB_TEXT_LABEL_STRING_SIZE];
 
   switch (paramIdx)
   {
     case kGain:
-      tLimiter.setThresh(GetParam(kGain)->Value());
+      fPeaking = PLUG_KNOB_PEAK_DOUBLE(GetParam(kGain)->Value());
+      //tLimiter.setThresh(GetParam(kGain)->Value());
+      sprintf(sPeakingString, "%5.2fdB", fPeaking);
+      tPeakingTextControl->SetTextFromPlug(sPeakingString);
       break;
     //Platform control
     case kPlatformSwitch:

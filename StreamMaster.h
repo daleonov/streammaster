@@ -16,6 +16,19 @@
 #define GR_BAR_DEFAULT_FG_ICOLOR IColor(255, 200, 0, 0)
 #define GR_BAR_DEFAULT_NOTCH_ICOLOR IColor(255, 128, 0, 0)
 
+#define PLUG_METER_TEXT_LABEL_COLOR IColor(255, 255, 255, 255)
+#define PLUG_METER_TEXT_LABEL_STRING_SIZE 32
+#define PLUG_METER_TEXT_LABEL_FONT_SIZE 12
+
+#define PLUG_KNOB_TEXT_LABEL_COLOR IColor(255, 84, 84, 84)
+#define PLUG_KNOB_TEXT_LABEL_STRING_SIZE 16
+#define PLUG_KNOB_TEXT_LABEL_FONT_SIZE 12
+
+#define PLUG_KNOB_PEAK_MIN 0
+#define PLUG_KNOB_PEAK_MAX 10
+#define PLUG_KNOB_PEAK_DEFAULT 7
+#define PLUG_KNOB_PEAK_DOUBLE(i) (-1.+(i/10.))
+
 class StreamMaster : public IPlug
 {
 public:
@@ -42,6 +55,7 @@ enum EParams
   kPlatformSwitch = 2,
   kILevelMeteringBar,
   kIGrMeteringBar,
+  kIPeakingTextControl,
   kNumParams,
   kInvisibleSwitchIndicator   // the user after kNumParams so they get a param id
 };
@@ -61,7 +75,7 @@ enum ELayout
   
   // Peaking knob
   kGainX = 226,
-  kGainY = 180,
+  kGainY = 185,
   kKnobFrames = 11,
 
   // LUFS Text reading
@@ -75,6 +89,12 @@ enum ELayout
   kIGrTextControl_Y = 695,
   kIGrTextControl_W = 80,
   kIGrTextControl_H = 40,
+
+  // Peaking knob Text reading
+  kIPeakingTextControl_X = 260,
+  kIPeakingTextControl_Y = 170,
+  kIPeakingTextControl_W = 80,
+  kIPeakingTextControl_H = 20,
   
   // Learn-master-off
   kModeSwitch_N = 3,
