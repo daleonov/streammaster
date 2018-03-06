@@ -18,17 +18,22 @@ const IColor PLUG_KNOB_TEXT_LABEL_COLOR(255, 84, 84, 84);
 const IColor PLUG_GUIDE_TEXT_LABEL_COLOR(255, 200, 200, 200);
 
 #define PLUG_METER_TEXT_LABEL_STRING_SIZE 32
-#define PLUG_METER_TEXT_LABEL_FONT_SIZE 12
-
 #define PLUG_KNOB_TEXT_LABEL_STRING_SIZE 16
-#define PLUG_KNOB_TEXT_LABEL_FONT_SIZE 12
-
 #define PLUG_MODE_TEXT_LABEL_STRING_SIZE 512
 #define PLUG_GUIDE_TEXT_LABEL_STRING_SIZE PLUG_MODE_TEXT_LABEL_STRING_SIZE
-#define PLUG_GUIDE_TEXT_LABEL_FONT_SIZE 14
-
 #define PLUG_VERSION_TEXT_LABEL_STRING_SIZE 32
+
+#ifdef _WIN32
+#define PLUG_KNOB_TEXT_LABEL_FONT_SIZE 12
+#define PLUG_METER_TEXT_LABEL_FONT_SIZE 12
+#define PLUG_GUIDE_TEXT_LABEL_FONT_SIZE 14
 #define PLUG_VERSION_TEXT_LABEL_FONT_SIZE 10
+#elif defined(__APPLE__)
+#define PLUG_KNOB_TEXT_LABEL_FONT_SIZE 13
+#define PLUG_METER_TEXT_LABEL_FONT_SIZE 13
+#define PLUG_GUIDE_TEXT_LABEL_FONT_SIZE 15
+#define PLUG_VERSION_TEXT_LABEL_FONT_SIZE 11
+#endif
 
 #define PLUG_KNOB_PEAK_MIN 0
 #define PLUG_KNOB_PEAK_MAX 10
@@ -102,7 +107,7 @@ Please repeat learning cycle again. \n\
 #ifdef _WIN32
 #define PLUG_METER_TEXT_ALIGNMENT kAlignFar
 #elif defined(__APPLE__)
-#define PLUG_METER_TEXT_ALIGNMENT kAlignFar
+#define PLUG_METER_TEXT_ALIGNMENT kAlignNear
 #endif
 
 class StreamMaster : public IPlug
@@ -174,20 +179,20 @@ enum ELayout
   kIModeTextControl_W = GUI_WIDTH,
   kIModeTextControl_H = 20,
 #elif defined(__APPLE__)
-    // LUFS Text reading
-  kILoudnessTextControl_X = 414,
+  // LUFS Text reading
+  kILoudnessTextControl_X = kLufsMeter_X,
   kILoudnessTextControl_Y = 692+PLUG_Y_OFFSET,
   kILoudnessTextControl_W = 80,
   kILoudnessTextControl_H = 40,
 
   // Gain reduction Text reading
-  kIGrTextControl_X = 526,
+  kIGrTextControl_X = kGrMeter_X,
   kIGrTextControl_Y = kILoudnessTextControl_Y,
   kIGrTextControl_W = 80,
   kIGrTextControl_H = 40,
 
   // Mode text guide
-  kIModeTextControl_X = 0,
+  kIModeTextControl_X = 26,
   kIModeTextControl_Y = 95+PLUG_Y_OFFSET,
   kIModeTextControl_W = GUI_WIDTH,
   kIModeTextControl_H = 20,

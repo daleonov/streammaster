@@ -61,7 +61,7 @@ void StreamMaster::UpdateGui()
   double fFastLufs = tLoudnessMeter->GetMomentaryLufs();
 
   // Text below LUFS meter bar
-  sprintf(sLoudnessString, "Integrated: %4.1fLUFS\nMomentary: %4.1fLUFS", fLufs, fFastLufs);
+  sprintf(sLoudnessString, "Int.: %4.1fLUFS\nMom.: %4.1fLUFS", fLufs, fFastLufs);
   tLoudnessTextControl->SetTextFromPlug(sLoudnessString);
 
   // Updating LUFS bar values
