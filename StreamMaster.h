@@ -11,8 +11,6 @@
 #define LOG_TO_LINEAR(v) pow(10, v/20.)
 #define LINEAR_TO_LOG(v) (20.*log10(v))
 
-#define PLUG_ALMOST_PLUS_0_DB (1./1000000)
-
 const IColor GR_BAR_DEFAULT_FG_ICOLOR(255, 200, 0, 0);
 const IColor GR_BAR_DEFAULT_NOTCH_ICOLOR(255, 128, 0, 0);
 
@@ -53,6 +51,9 @@ const IColor PLUG_KNOB_TEXT_LABEL_COLOR(255, 84, 84, 84);
 
 #define PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET -0.
 #define PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET -0.
+
+#define PLUG_OFF_STARTUP_MESSAGE \
+"Press Mode switch to start adjusting song's loudness"
 
 #define PLUG_OFF_GUIDE_MESSAGE \
 "I'm just chilling now. Press Mode switch again\n\
@@ -162,7 +163,7 @@ double afTargetLufs[PLUG_PLATFORM_OPTIONS] = {
   -14., /* #3 Spotify & Tidal */
   -13.  /* #4 Youtube */
 };
-#define PLUG_DEFAULT_TARGET_PLATFORM 4
+#define PLUG_DEFAULT_TARGET_PLATFORM 1
 #define PLUG_GET_TARGET_LOUDNESS(i) (afTargetLufs[i])
 #define PLUG_DEFAULT_TARGET_LOUDNESS PLUG_GET_TARGET_LOUDNESS(PLUG_DEFAULT_TARGET_PLATFORM)
 
@@ -172,6 +173,10 @@ typedef enum{
   PLUG_OFF_MODE = 3
 }PLUG_Mode;
 
-#define PLUG_INITIAL_MODE 1
+#define PLUG_INITIAL_MODE PLUG_OFF_MODE
+#define PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(idx) \
+  ((PLUG_Mode)int(GetParam(idx)->Value()+1))
+
+#define PLUG_CONVERT_PLUG_MODE_TO_SWITCH_VALUE(m) (m-1)
 
 #endif

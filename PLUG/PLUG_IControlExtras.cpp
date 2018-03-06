@@ -116,9 +116,9 @@ bool ILevelMeteringBar::Draw(IGraphics* pGraphics){
 	// If the value completely overloards the meter - just fill the whole box with solid color. 	
 	const double fMax = mPlug->GetParam(this->mParamIdx)->GetMax();
 	const double fMin = mPlug->GetParam(this->mParamIdx)->GetMin();
-	if ((this->bIsReversed) && (this->fCurrentValue < fMin))
+	if ((this->bIsReversed) && (this->fCurrentValue < fMin - PLUG_ALMOST_PLUS_0_DB))
 		pGraphics->FillIRect(&tIcolorRed, &tBgRect);
-	if ((!this->bIsReversed) && (this->fCurrentValue > fMax))
+	if ((!this->bIsReversed) && (this->fCurrentValue > fMax + PLUG_ALMOST_PLUS_0_DB))
 		pGraphics->FillIRect(&tIcolorRed, &tBgRect);
 
 	#ifdef METERING_BAR_NOTCH_2

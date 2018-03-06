@@ -32,7 +32,7 @@ double fMaxGainReductionPerSessionDb = PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RE
 double fTargetLoudness = PLUG_DEFAULT_TARGET_LOUDNESS;
 
 // Plugin starts up in this mode
-PLUG_Mode tPlugCurrentMode = PLUG_LEARN_MODE;
+PLUG_Mode tPlugCurrentMode = PLUG_INITIAL_MODE;
 // Vars for mastering mode
 double \
   fMasteringGainDb = PLUG_MASTERING_GAIN_DB_RESET, \
@@ -61,13 +61,15 @@ void StreamMaster::UpdateGui()
   tILevelMeteringBar->SetValue(fLufs);
 
   // Updating gain reduction bar values
-  fMaxGainReductionPerFrameDb = LINEAR_TO_LOG(fMaxGainReductionPerFrame);
-  // ("<" because gain reduction is negative in log domain)
-  // "MaxGainReductionPerSession" is displayed as a notch on a GR bar
-  if (fMaxGainReductionPerFrameDb < fMaxGainReductionPerSessionDb)
-    fMaxGainReductionPerSessionDb = fMaxGainReductionPerFrameDb;
-  tIGrMeteringBar->SetValue(fMaxGainReductionPerFrameDb);
-  tIGrMeteringBar->SetNotchValue(fMaxGainReductionPerSessionDb);
+  if (tPlugCurrentMode == PLUG_MASTER_MODE){
+    fMaxGainReductionPerFrameDb = LINEAR_TO_LOG(fMaxGainReductionPerFrame);
+    // ("<" because gain reduction is negative in log domain)
+    // "MaxGainReductionPerSession" is displayed as a notch on a GR bar
+    if (fMaxGainReductionPerFrameDb < fMaxGainReductionPerSessionDb)
+      fMaxGainReductionPerSessionDb = fMaxGainReductionPerFrameDb;
+    tIGrMeteringBar->SetValue(fMaxGainReductionPerFrameDb);
+    tIGrMeteringBar->SetNotchValue(fMaxGainReductionPerSessionDb);
+  }
 
   // Text below Gain reduction bar
   sprintf(sGrString, "GR: %4.2fdB\nMax: %4.2fdB", 
@@ -125,14 +127,15 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
 
   // Ceiling knob
   /* We need precise values for ceiling knob,
-  so we have to use integer values and convert them into double later */
-  GetParam(kGain)->InitInt("Ceiling", 0, 0, 10, "dB");
+  so we have to use integer values and convert them into double later.
+  For example, "9" represents -0.1dB, "0" is for -1.0dB etc. if the actual range is -1.0..-0.0dB*/
+  GetParam(kGain)->InitInt("Ceiling", 9, 0, 10, "dB");
   GetParam(kGain)->SetShape(1.);
   // LUFS and GR bars
   GetParam(kILevelMeteringBar)->InitDouble("Loudness", -24., -40., 3.0, 0.1, "LUFS");
   GetParam(kIGrMeteringBar)->InitDouble("Gain reduction", -0., -43., 0.0, 0.1, "dB");
   // Mode and platform switches
-  GetParam(kModeSwitch)->InitInt("Mode", 0, 0, 2, "");
+  GetParam(kModeSwitch)->InitInt("Mode", PLUG_CONVERT_PLUG_MODE_TO_SWITCH_VALUE(tPlugCurrentMode), 0, 2, "");
   GetParam(kPlatformSwitch)->InitInt("Target platform", PLUG_DEFAULT_TARGET_PLATFORM, 0, 4, "");
 
   // *** Initing actual GUI controls
@@ -232,6 +235,10 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
     &tModeLabel,
     "-");
   pGraphics->AttachControl(tModeTextControl);
+
+  // Guide message
+  char sModeString[] = PLUG_OFF_STARTUP_MESSAGE;
+  tModeTextControl->SetTextFromPlug(sModeString);
   
   // Finally - feed all the controls to IPlug's graphics gizmo
   AttachGraphics(pGraphics);
@@ -388,7 +395,11 @@ void StreamMaster::OnParamChange(int paramIdx)
   unsigned int nIndex;
   char sPeakingString[PLUG_KNOB_TEXT_LABEL_STRING_SIZE];
   char sModeString[PLUG_MODE_TEXT_LABEL_STRING_SIZE];
+  const double fMaxGainReductionPerFrameDb = LINEAR_TO_LOG(fMaxGainReductionPerFrame);
+  PLUG_Mode tPlugNewMode;
 
+  // General control handling
+  // Locking and unlocking of controls happens in UpdateAvailableControls()
   switch (paramIdx)
   {
     case kGain:
@@ -419,11 +430,16 @@ void StreamMaster::OnParamChange(int paramIdx)
       */
     case kModeSwitch:
       // Converting switch's value to mode
-      tPlugCurrentMode = (PLUG_Mode)int(GetParam(kModeSwitch)->Value()+1);
-      UpdateAvailableControls();
-        switch (tPlugCurrentMode){
+      tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
+      // Apparently it can be falsely triggered during startup, 
+      // so we have to ignore that one
+      if (tPlugNewMode == tPlugCurrentMode) break;
+      
+      switch (tPlugNewMode){
       case PLUG_LEARN_MODE:
         // Learn mode
+
+        // Guide message
         sprintf(sModeString, PLUG_LEARN_GUIDE_MESSAGE);
         tModeTextControl->SetTextFromPlug(sModeString);
         break;
@@ -464,11 +480,18 @@ void StreamMaster::OnParamChange(int paramIdx)
         fMaxGainReductionPerFrame = PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET;
         fMaxGainReductionPerSessionDb = PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET;
 
+        // Reset gain reduction meter bar
+        tIGrMeteringBar->SetValue(fMaxGainReductionPerFrameDb);
+        tIGrMeteringBar->SetNotchValue(fMaxGainReductionPerSessionDb);
+
+        // Guide message
         sprintf(sModeString, PLUG_OFF_GUIDE_MESSAGE);
         tModeTextControl->SetTextFromPlug(sModeString);
-
         break;
       }
+
+      tPlugCurrentMode = tPlugNewMode;
+      UpdateAvailableControls();
       break;
 
     default:

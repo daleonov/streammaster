@@ -7,22 +7,30 @@
 #ifndef PLUG_DEFAULT_BG_ICOLOR
 const IColor PLUG_DEFAULT_BG_ICOLOR(255, 40, 40, 40);
 #endif
-#define METERING_BAR_DEFAULT_SIZE_IRECT IRECT(0, 0, 74, 492)
 const IColor METERING_BAR_DEFAULT_BG_ICOLOR(255, 61, 61, 61);
 const IColor METERING_BAR_DEFAULT_FG_ICOLOR(255, 100, 255, 100);
-#define METERING_BAR_MIN_FG_HEIGHT 2
 const IColor METERING_BAR_DEFAULT_NOTCH_ICOLOR(255, 0, 96, 0);
+const IColor METERING_BAR_ABOVE_NOTCH_ICOLOR(255, 200, 0, 0);
+
+#define METERING_BAR_DEFAULT_SIZE_IRECT IRECT(0, 0, 74, 492)
+#define METERING_BAR_MIN_FG_HEIGHT 2
 #define METERING_BAR_DEFAULT_NOTCH_HEIGHT 3
 #define METERING_BAR_DEFAULT_NOTCH_VALUE -0.
 #define METERING_BAR_MAX_NAME_SIZE 64
 #define METERING_BAR_MAX_LABEL_SIZE 32
-const IColor METERING_BAR_ABOVE_NOTCH_ICOLOR(255, 200, 0, 0);
+
+#ifndef PLUG_ALMOST_PLUS_0_DB
+#define PLUG_ALMOST_PLUS_0_DB (1./1000)
+#endif
 
 // This define results in a background showing range to fNotchValue
 #define METERING_BAR_NOTCH_1
 // This define results in a small line corresponding to fNotchValue
 //#define METERING_BAR_NOTCH_2
-// Normally you would want to use only one of those two. 
+// Normally you would want to use only one of those two.
+
+// Transparency of the bar in METERING_BAR_NOTCH_1 mode
+#define PLUG_NOTCH_1_ALPHA 64.
 
 namespace Plug{
 /*
