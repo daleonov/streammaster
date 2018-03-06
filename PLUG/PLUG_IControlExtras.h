@@ -34,7 +34,20 @@ const IColor METERING_BAR_DEFAULT_NOTCH_ICOLOR(255, 0, 96, 0);
 // Normally you would want to use only one of those two.
 
 // Transparency of the bar in METERING_BAR_NOTCH_1 mode
-#define PLUG_NOTCH_1_ALPHA 32.
+#define PLUG_METERING_NOTCH_1_ALPHA 32
+#define PLUG_METERING_SOLID_ALPHA 255
+#define PLUG_METERING_NOTCH_1_NORMALIZED_ALPHA ((double)PLUG_METERING_NOTCH_1_ALPHA/PLUG_METERING_SOLID_ALPHA)
+
+// If defined, the notch color is calculated as a solid color based on alpha value
+// Saves resources. Remove this define to use actual alpha blending. 
+#define PLUG_METERING_DONT_USE_ALPHA
+
+// color = alpha * src + (1 - alpha) * dest, or
+// color = alpha * (src - dest) + dest
+#ifdef PLUG_METERING_DONT_USE_ALPHA
+#define PLUG_METERING_CALC_COLOR(alpha, back, front) \
+(alpha * (front-back) + back)
+#endif
 
 namespace Plug{
 /*

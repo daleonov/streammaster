@@ -53,12 +53,21 @@ bool ILevelMeteringBar::Draw(IGraphics* pGraphics){
 
 	#ifdef METERING_BAR_NOTCH_1
 	// Notch's color is semi-transparent version of that of a bar 
-	IColor tNotchTransColor(
-		PLUG_NOTCH_1_ALPHA,
-		ptLevelBarColor->R,
-		ptLevelBarColor->G,
-		ptLevelBarColor->B
-		);
+	#ifdef PLUG_METERING_DONT_USE_ALPHA
+		IColor tNotchTransColor(
+			PLUG_METERING_SOLID_ALPHA,
+			PLUG_METERING_CALC_COLOR(PLUG_METERING_NOTCH_1_NORMALIZED_ALPHA, METERING_BAR_DEFAULT_BG_ICOLOR.R, ptLevelBarColor->R), 
+			PLUG_METERING_CALC_COLOR(PLUG_METERING_NOTCH_1_NORMALIZED_ALPHA, METERING_BAR_DEFAULT_BG_ICOLOR.G, ptLevelBarColor->G),
+			PLUG_METERING_CALC_COLOR(PLUG_METERING_NOTCH_1_NORMALIZED_ALPHA, METERING_BAR_DEFAULT_BG_ICOLOR.B, ptLevelBarColor->B)
+			);
+	#else
+		IColor tNotchTransColor(
+			PLUG_METERING_NOTCH_1_ALPHA,
+			ptLevelBarColor->R,
+			ptLevelBarColor->G,
+			ptLevelBarColor->B
+			);
+	#endif
 	// This code fills the background behind a level bar with solid color 
 	if (!this->bIsReversed){
 		nNotchTopLeftY = nBgBarBottomRightY - nNotchHeight - METERING_BAR_DEFAULT_NOTCH_HEIGHT;
