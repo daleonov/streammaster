@@ -86,9 +86,9 @@ Play me the whole song if you need precision,\n\
 or just show me the loudest section if you\'re in a hurry. "
 
 #define PLUG_TOO_QUIET_GUIDE_MESSAGE \
-"\n\
-Source is too quiet, or you didn't show me the source.\n\
-Please repeat learning cycle again."
+"Source is too quiet, or you didn't show me the source.\n\
+Please repeat learning cycle again. \n\
+(press Mode switch twice to go to learning mode)"
 
 
 class StreamMaster : public IPlug
@@ -138,24 +138,24 @@ enum ELayout
   
   // Peaking knob
   kGainX = 226,
-  kGainY = 185+PLUG_Y_OFFSET,
+  kGainY = 180+PLUG_Y_OFFSET,
   kKnobFrames = 11,
 
   // LUFS Text reading
   kILoudnessTextControl_X = 414,
-  kILoudnessTextControl_Y = 695+PLUG_Y_OFFSET,
+  kILoudnessTextControl_Y = 692+PLUG_Y_OFFSET,
   kILoudnessTextControl_W = 80,
   kILoudnessTextControl_H = 40,
 
   // Gain reduction Text reading
   kIGrTextControl_X = 526,
-  kIGrTextControl_Y = 695+PLUG_Y_OFFSET,
+  kIGrTextControl_Y = kILoudnessTextControl_Y,
   kIGrTextControl_W = 80,
   kIGrTextControl_H = 40,
 
   // Peaking knob Text reading
   kIPeakingTextControl_X = 260,
-  kIPeakingTextControl_Y = 170+PLUG_Y_OFFSET,
+  kIPeakingTextControl_Y = 165+PLUG_Y_OFFSET,
   kIPeakingTextControl_W = 80,
   kIPeakingTextControl_H = 20,
   
@@ -168,7 +168,7 @@ enum ELayout
   // Learn-master-off
   kModeSwitch_N = 3,
   kModeSwitch_X = 45,
-  kModeSwitch_Y = 180+PLUG_Y_OFFSET,
+  kModeSwitch_Y = kGainY,
   
   // Youtube-Spotify-etc.
   kPlatformSwitch_N = 5,

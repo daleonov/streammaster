@@ -167,6 +167,9 @@
 copy /y "$(TargetPath)" "$(VST3_32_PATH)\StreamMaster.vst3"</Command>
       <Message>Copy VST3 Binary to VST3 Plugins folder</Message>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>git_version.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -188,6 +191,9 @@ copy /y "$(TargetPath)" "$(VST3_32_PATH)\StreamMaster.vst3"</Command>
 if exist "%programfiles(x86)%" (copy /y "$(TargetPath)" "$(VST3_64_PATH)\StreamMaster.vst3") else (echo Not copying 64bit binary - 32bit OS detected)</Command>
       <Message>Copy VST3 Binary to VST3 Plugins folder</Message>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>git_version.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -215,6 +221,9 @@ if exist "%programfiles(x86)%" (copy /y "$(TargetPath)" "$(VST3_64_PATH)\StreamM
       <Message>
       </Message>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>git_version.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -241,6 +250,9 @@ if exist "%programfiles(x86)%" (copy /y "$(TargetPath)" "$(VST3_64_PATH)\StreamM
 if exist "%programfiles(x86)%" (copy /y "$(TargetPath)" "$(VST3_64_PATH)\StreamMaster.vst3") else (echo Not copying 64bit binary - 32bit OS detected)</Command>
       <Message>Copy VST3 Binary to VST3 Plugins folder</Message>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>git_version.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Tracer|Win32'">
     <ClCompile>
