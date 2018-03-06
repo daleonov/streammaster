@@ -26,10 +26,12 @@ Plug::ILevelMeteringBar* tIGrMeteringBar;
 // Shared statistic variables
 double fMaxGainReductionPerFrame = PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET;
 double fMaxGainReductionPerSessionDb = PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET;
+bool bLufsTooLow = true;
 /* Move those into StreamMaster class - end */
 
 // Operation related stuff
 double fTargetLoudness = PLUG_DEFAULT_TARGET_LOUDNESS;
+unsigned short nCurrentTargetIndex = PLUG_DEFAULT_TARGET_PLATFORM;
 
 // Plugin starts up in this mode
 PLUG_Mode tPlugCurrentMode = PLUG_INITIAL_MODE;
@@ -42,8 +44,8 @@ double \
   fMasteringGainLinear = PLUG_MASTERING_GAIN_LINEAR_RESET;
 
 /*
-\brief All GUI relates data is updated in this thread
-\note Actual redrawing happens in IPlug's craphics core automatically at a given FPS, not here. 
+@brief All GUI relates data is updated in this thread
+@note Actual redrawing happens in IPlug's craphics core automatically at a given FPS, not here. 
 */
 void StreamMaster::UpdateGui()
 {
@@ -94,12 +96,24 @@ void StreamMaster::UpdateAvailableControls(){
     break;
   case PLUG_MASTER_MODE:
     // Master mode
-    // Everything unlocked
-    tIGrMeteringBar->GrayOut(false);
-    tPeakingKnob->GrayOut(false);
-    tPlatformSelector->GrayOut(false);
-    tPeakingTextControl->GrayOut(false);
-    tILevelMeteringBar->GrayOut(false);
+    if(bLufsTooLow)
+    {
+      // If LUFS was too low in learning mode...
+      // Only mode switch and LUFS meter
+      tIGrMeteringBar->GrayOut(true);
+      tPeakingKnob->GrayOut(true);
+      tPlatformSelector->GrayOut(true);
+      tPeakingTextControl->GrayOut(true);
+      tILevelMeteringBar->GrayOut(false);
+    }
+    else{
+      // Everything unlocked
+      tIGrMeteringBar->GrayOut(false);
+      tPeakingKnob->GrayOut(false);
+      tPlatformSelector->GrayOut(false);
+      tPeakingTextControl->GrayOut(false);
+      tILevelMeteringBar->GrayOut(false);
+    }
     break;
   case PLUG_OFF_MODE:
     // Learn mode
@@ -132,8 +146,25 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   GetParam(kGain)->InitInt("Ceiling", 9, 0, 10, "dB");
   GetParam(kGain)->SetShape(1.);
   // LUFS and GR bars
-  GetParam(kILevelMeteringBar)->InitDouble("Loudness", -24., -40., 3.0, 0.1, "LUFS");
-  GetParam(kIGrMeteringBar)->InitDouble("Gain reduction", -0., -43., 0.0, 0.1, "dB");
+  GetParam(kILevelMeteringBar)->InitDouble(
+    "Loudness",
+    PLUG_LUFS_RANGE_MAX,
+    PLUG_LUFS_RANGE_MIN,
+    PLUG_LUFS_RANGE_MAX,
+    0.1,
+    "LUFS"
+    );
+
+  // Min and max values are the other way around here
+  // because -6dB of gain reduction is more than -3dB,
+  // but -6 is less than -3 obviously.
+  GetParam(kIGrMeteringBar)->InitDouble(
+    "Gain reduction",
+    PLUG_GR_RANGE_MIN,
+    PLUG_GR_RANGE_MAX,
+    PLUG_GR_RANGE_MIN,
+    0.1,
+    "dB");
   // Mode and platform switches
   GetParam(kModeSwitch)->InitInt("Mode", PLUG_CONVERT_PLUG_MODE_TO_SWITCH_VALUE(tPlugCurrentMode), 0, 2, "");
   GetParam(kPlatformSwitch)->InitInt("Target platform", PLUG_DEFAULT_TARGET_PLATFORM, 0, 4, "");
@@ -146,7 +177,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   
   // LUFS meter
   tILevelMeteringBar = new Plug::ILevelMeteringBar(this, kLufsMeter_X, kLufsMeter_Y, METERING_BAR_DEFAULT_SIZE_IRECT, kILevelMeteringBar);
-  tILevelMeteringBar->SetNotchValue(PLUG_DEFAULT_TARGET_LOUDNESS);
+  tILevelMeteringBar->SetNotchValue(PLUG_LUFS_RANGE_MAX);
   pGraphics->AttachControl(tILevelMeteringBar);
 
   // Gain Reduction meter
@@ -221,8 +252,8 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
 
   // Text for the mastering mode
   IText tModeLabel = IText(PLUG_MODE_TEXT_LABEL_STRING_SIZE);
-  tModeLabel.mColor = PLUG_KNOB_TEXT_LABEL_COLOR;
-  tModeLabel.mSize = PLUG_KNOB_TEXT_LABEL_FONT_SIZE;
+  tModeLabel.mColor = PLUG_GUIDE_TEXT_LABEL_COLOR;
+  tModeLabel.mSize = PLUG_GUIDE_TEXT_LABEL_FONT_SIZE;
   tModeLabel.mAlign = tModeLabel.kAlignCenter;
   tModeTextControl = new ITextControl(
     this,
@@ -377,6 +408,7 @@ void StreamMaster::UpdatePreMastering(){
   // ...but before, let's output some text
   sprintf(sModeString,
     PLUG_MASTER_GUIDE_MESSAGE,
+    asTargetDescription[nCurrentTargetIndex],
     fSourceLufsIntegratedDb,
     fTargetLufsIntegratedDb,
     fLimiterCeilingDb,
@@ -412,11 +444,20 @@ void StreamMaster::OnParamChange(int paramIdx)
       break;
     //Platform control
     case kPlatformSwitch:
-      nIndex = (unsigned int)GetParam(kPlatformSwitch)->Value();
-      fTargetLoudness = PLUG_GET_TARGET_LOUDNESS(nIndex);
+      // Apparently it can be falsely triggered during startup, 
+      // so we have to ignore that one
+      tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
+      if (tPlugNewMode != PLUG_MASTER_MODE) break;
+
+      nCurrentTargetIndex = (unsigned int)GetParam(kPlatformSwitch)->Value();
+      fTargetLoudness = PLUG_GET_TARGET_LOUDNESS(nCurrentTargetIndex);
+
       // Update the notch on the LUFS meter
       tILevelMeteringBar->SetNotchValue(fTargetLoudness);
-      tILevelMeteringBar->Redraw();
+      // Reset gain reduction meter bar
+      tIGrMeteringBar->SetValue(PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET);
+      tIGrMeteringBar->SetNotchValue(PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET);
+
       if (tPlugCurrentMode == PLUG_MASTER_MODE)
         UpdatePreMastering();
       break;
@@ -431,9 +472,12 @@ void StreamMaster::OnParamChange(int paramIdx)
     case kModeSwitch:
       // Converting switch's value to mode
       tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
-      // Apparently it can be falsely triggered during startup, 
-      // so we have to ignore that one
-      if (tPlugNewMode == tPlugCurrentMode) break;
+
+      if (tPlugNewMode == tPlugCurrentMode){
+          // Apparently it can be falsely triggered during startup, 
+          // so we have to ignore that one
+          break;
+      }
       
       switch (tPlugNewMode){
       case PLUG_LEARN_MODE:
@@ -442,24 +486,49 @@ void StreamMaster::OnParamChange(int paramIdx)
         // Guide message
         sprintf(sModeString, PLUG_LEARN_GUIDE_MESSAGE);
         tModeTextControl->SetTextFromPlug(sModeString);
+
+        // Set LUFS notch to max so it doesn't confuse the user
+        tILevelMeteringBar->SetNotchValue(PLUG_LUFS_RANGE_MAX);
+
         break;
       case PLUG_MASTER_MODE:
         // Master mode
+
         // Store source Loudness and other values 
 
         // Storing source Loudness value
         fSourceLufsIntegratedDb = tLoudnessMeter->GetLufs();
 
+        // *** Check if learn mode wass successful - start
+        if(fSourceLufsIntegratedDb < PLUG_LUFS_TOO_LOW){
+          // In case the source LUFS was too low
+          bLufsTooLow = true;
+
+          // Guide message
+          sprintf(sModeString, PLUG_TOO_QUIET_GUIDE_MESSAGE);
+          tModeTextControl->SetTextFromPlug(sModeString);
+
+          fMasteringGainDb = PLUG_MASTERING_GAIN_DB_RESET;
+          fLimiterCeilingDb = PLUG_LIMITER_CEILING_DB_RESET;
+          fMasteringGainLinear = PLUG_MASTERING_GAIN_LINEAR_RESET;
+        }
+        else{         
+          bLufsTooLow = false; 
+          delete tLoudnessMeter;
+          tLoudnessMeter = new Plug::LoudnessMeter();
+          //TODO: Sample Rate!
+          tLoudnessMeter->SetSampleRate(PLUG_DEFAULT_SAMPLERATE);
+          tLoudnessMeter->SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER); 
+          UpdatePreMastering();
+
+          // Set notch on LUFS meter
+          tILevelMeteringBar->SetNotchValue(fTargetLufsIntegratedDb);
+        }
+        // *** Check if learn mode wass successful - end
         //Resetting the meter
-        delete tLoudnessMeter;
-        tLoudnessMeter = new Plug::LoudnessMeter();
-        //TODO: Sample Rate!
-        tLoudnessMeter->SetSampleRate(PLUG_DEFAULT_SAMPLERATE);
-        tLoudnessMeter->SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER); 
-        UpdatePreMastering();
+
         // The rest is handled in kPlatformSwitch part
         // Since we can switch it multiple times in that mode
-
         break;
       case PLUG_OFF_MODE:
         // Off mode
@@ -481,14 +550,19 @@ void StreamMaster::OnParamChange(int paramIdx)
         fMaxGainReductionPerSessionDb = PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET;
 
         // Reset gain reduction meter bar
-        tIGrMeteringBar->SetValue(fMaxGainReductionPerFrameDb);
-        tIGrMeteringBar->SetNotchValue(fMaxGainReductionPerSessionDb);
+        tIGrMeteringBar->SetValue(PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET);
+        tIGrMeteringBar->SetNotchValue(PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET);
+
+        // Reset notch on LUFS meter
+        tILevelMeteringBar->SetNotchValue(PLUG_LUFS_RANGE_MAX);
 
         // Guide message
         sprintf(sModeString, PLUG_OFF_GUIDE_MESSAGE);
         tModeTextControl->SetTextFromPlug(sModeString);
+
         break;
       }
+
 
       tPlugCurrentMode = tPlugNewMode;
       UpdateAvailableControls();
