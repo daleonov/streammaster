@@ -208,7 +208,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   IText tDefaultLoudnessLabel = IText(PLUG_METER_TEXT_LABEL_STRING_SIZE);
   tDefaultLoudnessLabel.mColor = PLUG_METER_TEXT_LABEL_COLOR;
   tDefaultLoudnessLabel.mSize = PLUG_METER_TEXT_LABEL_FONT_SIZE;
-  tDefaultLoudnessLabel.mAlign = tDefaultLoudnessLabel.kAlignFar;
+  tDefaultLoudnessLabel.mAlign = tDefaultLoudnessLabel.PLUG_METER_TEXT_ALIGNMENT;
   tLoudnessTextControl = new ITextControl(
     this,
     IRECT(
@@ -225,7 +225,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   IText tGrLabel = IText(PLUG_METER_TEXT_LABEL_STRING_SIZE);  
   tGrLabel.mColor = PLUG_METER_TEXT_LABEL_COLOR;
   tGrLabel.mSize = PLUG_METER_TEXT_LABEL_FONT_SIZE;
-  tGrLabel.mAlign = tGrLabel.kAlignFar;
+  tGrLabel.mAlign = tGrLabel.PLUG_METER_TEXT_ALIGNMENT;
   tGrTextControl = new ITextControl(
     this,
     IRECT(
@@ -259,7 +259,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   IText tModeLabel = IText(PLUG_MODE_TEXT_LABEL_STRING_SIZE);
   tModeLabel.mColor = PLUG_GUIDE_TEXT_LABEL_COLOR;
   tModeLabel.mSize = PLUG_GUIDE_TEXT_LABEL_FONT_SIZE;
-  tModeLabel.mAlign = tModeLabel.kAlignCenter;
+  tModeLabel.mAlign = tModeLabel.PLUG_GUIDE_TEXT_ALIGNMENT;
   tModeTextControl = new ITextControl(
     this,
     IRECT(

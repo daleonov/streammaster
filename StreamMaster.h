@@ -53,7 +53,7 @@ const IColor PLUG_GUIDE_TEXT_LABEL_COLOR(255, 200, 200, 200);
   fTargetLufsIntegratedDb,
   fSourceLufsIntegratedDb,
   fLimiterCeilingDb,
-  fMasteringGainLinear,
+  fLimiterCeilingLinear,
   fMasteringGainLinear
 */
 #define PLUG_MASTERING_GAIN_DB_RESET 0.
@@ -92,6 +92,18 @@ or just show me the loudest section if you\'re in a hurry. "
 Please repeat learning cycle again. \n\
 (press Mode switch twice to go to learning mode)"
 
+// Some Mac compatibility shenanigans
+#ifdef _WIN32
+#define PLUG_GUIDE_TEXT_ALIGNMENT kAlignCenter
+#elif defined(__APPLE__)
+#define PLUG_GUIDE_TEXT_ALIGNMENT kAlignNear
+#endif
+
+#ifdef _WIN32
+#define PLUG_METER_TEXT_ALIGNMENT kAlignFar
+#elif defined(__APPLE__)
+#define PLUG_METER_TEXT_ALIGNMENT kAlignFar
+#endif
 
 class StreamMaster : public IPlug
 {
@@ -143,6 +155,7 @@ enum ELayout
   kGainY = 180+PLUG_Y_OFFSET,
   kKnobFrames = 11,
 
+#ifdef _WIN32
   // LUFS Text reading
   kILoudnessTextControl_X = 414,
   kILoudnessTextControl_Y = 692+PLUG_Y_OFFSET,
@@ -155,17 +168,36 @@ enum ELayout
   kIGrTextControl_W = 80,
   kIGrTextControl_H = 40,
 
-  // Peaking knob Text reading
-  kIPeakingTextControl_X = 260,
-  kIPeakingTextControl_Y = 165+PLUG_Y_OFFSET,
-  kIPeakingTextControl_W = 80,
-  kIPeakingTextControl_H = 20,
-  
   // Mode text guide
   kIModeTextControl_X = 0,
   kIModeTextControl_Y = 95+PLUG_Y_OFFSET,
   kIModeTextControl_W = GUI_WIDTH,
   kIModeTextControl_H = 20,
+#elif defined(__APPLE__)
+    // LUFS Text reading
+  kILoudnessTextControl_X = 414,
+  kILoudnessTextControl_Y = 692+PLUG_Y_OFFSET,
+  kILoudnessTextControl_W = 80,
+  kILoudnessTextControl_H = 40,
+
+  // Gain reduction Text reading
+  kIGrTextControl_X = 526,
+  kIGrTextControl_Y = kILoudnessTextControl_Y,
+  kIGrTextControl_W = 80,
+  kIGrTextControl_H = 40,
+
+  // Mode text guide
+  kIModeTextControl_X = 0,
+  kIModeTextControl_Y = 95+PLUG_Y_OFFSET,
+  kIModeTextControl_W = GUI_WIDTH,
+  kIModeTextControl_H = 20,
+#endif
+
+  // Peaking knob Text reading
+  kIPeakingTextControl_X = 260,
+  kIPeakingTextControl_Y = 165+PLUG_Y_OFFSET,
+  kIPeakingTextControl_W = 80,
+  kIPeakingTextControl_H = 20,
 
   // Learn-master-off
   kModeSwitch_N = 3,
