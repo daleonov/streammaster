@@ -45,6 +45,7 @@ double \
   fTargetLufsIntegratedDb = PLUG_TARGET_LUFS_INTERGRATED_DB_RESET, \
   fSourceLufsIntegratedDb = PLUG_SOURCE_LUFS_INTERGRATED_DB_RESET, \
   fLimiterCeilingDb = PLUG_LIMITER_CEILING_DB_RESET, \
+  fLimiterCeilingLinear = PLUG_LIMITER_CEILING_LINEAR_RESET, \
   fMasteringGainLinear = PLUG_MASTERING_GAIN_LINEAR_RESET;
 
 /*
@@ -371,6 +372,10 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
       tLimiter.process(*out1, *out2);
       tLimiter.getGr(&fMaxGainReductionPerFrame);
 
+      // Applying ceiling value (post-limiter gain)
+      *out1 *= fLimiterCeilingLinear;
+      *out2 *= fLimiterCeilingLinear;
+
       // Collect samples for loudness measurement. After limiter obviously. 
       afInterleavedSamples[sample]   = *out1;
       afInterleavedSamples[sample+1] = *out2;
@@ -423,6 +428,7 @@ void StreamMaster::UpdatePreMastering(){
 
   // *** Limiter ceiling
   fLimiterCeilingDb = PLUG_KNOB_PEAK_DOUBLE(GetParam(kGain)->Value());
+  fLimiterCeilingLinear = LOG_TO_LINEAR(fLimiterCeilingDb);
 
   // *** Mastering gain in dB
   fMasteringGainDb = fTargetLufsIntegratedDb - fSourceLufsIntegratedDb - fLimiterCeilingDb;
@@ -495,6 +501,7 @@ void StreamMaster::OnParamChange(int paramIdx)
         v fTargetLufsIntegratedDb,
         v fSourceLufsIntegratedDb,
         v fLimiterCeilingDb,
+        v fLimiterCeilingLinear,
         v fMasteringGainLinear;
       */
     case kModeSwitch:
@@ -538,6 +545,7 @@ void StreamMaster::OnParamChange(int paramIdx)
 
           fMasteringGainDb = PLUG_MASTERING_GAIN_DB_RESET;
           fLimiterCeilingDb = PLUG_LIMITER_CEILING_DB_RESET;
+          fLimiterCeilingLinear = PLUG_LIMITER_CEILING_LINEAR_RESET;
           fMasteringGainLinear = PLUG_MASTERING_GAIN_LINEAR_RESET;
         }
         else{         
