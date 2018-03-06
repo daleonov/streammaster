@@ -6,59 +6,79 @@
 #include "lib_chunkware/SimpleLimit.h"
 #include "PLUG/PLUG_LoudnessMeter.h"
 
-
+// Number of presets
 const int kNumPrograms = 1;
-chunkware_simple::SimpleLimit tLimiter;
-const double fDefaultLimiterThreshold = 0.;
 
+/* TODO: Move those into StreamMaster class - start */
+// Limiter
+chunkware_simple::SimpleLimit tLimiter;
+const double fDefaultLimiterThreshold = PLUG_LIMITER_DEFAULT_THRESHOLD_DB;
+// IPlug GUI stuff
+IGraphics* pGraphics;
 ITextControl *tLoudnessTextControl;
 ITextControl *tGrTextControl;
 ITextControl *tPeakingTextControl;
 ITextControl *tModeTextControl;
 IKnobMultiControl *tPeakingKnob;
 IKnobMultiControl *tPlatformSelector;
-IGraphics* pGraphics;
 Plug::ILevelMeteringBar* tILevelMeteringBar;
 Plug::ILevelMeteringBar* tIGrMeteringBar;
-double fAudioFramesPerSecond = 1.;
-double fMaxGainReductionPerFrame = 1.;
-double fMaxGainReductionPerSessionDb = -0.;
+// Shared statistic variables
+double fMaxGainReductionPerFrame = PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET;
+double fMaxGainReductionPerSessionDb = PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET;
+/* Move those into StreamMaster class - end */
+
+// Operation related stuff
 double fTargetLoudness = PLUG_DEFAULT_TARGET_LOUDNESS;
 
 // Plugin starts up in this mode
 PLUG_Mode tPlugCurrentMode = PLUG_LEARN_MODE;
+// Vars for mastering mode
+double \
+  fMasteringGainDb = PLUG_MASTERING_GAIN_DB_RESET, \
+  fTargetLufsIntegratedDb = PLUG_TARGET_LUFS_INTERGRATED_DB_RESET, \
+  fSourceLufsIntegratedDb = PLUG_SOURCE_LUFS_INTERGRATED_DB_RESET, \
+  fLimiterCeilingDb = PLUG_LIMITER_CEILING_DB_RESET, \
+  fMasteringGainLinear = PLUG_MASTERING_GAIN_LINEAR_RESET;
 
+/*
+\brief All GUI relates data is updated in this thread
+\note Actual redrawing happens in IPlug's craphics core automatically at a given FPS, not here. 
+*/
 void StreamMaster::UpdateGui()
 {
-  const IColor* tLufsBarColor = new IColor(255, 255, 255, 255);
-  IRECT *tLufsBarRect = new IRECT(10,10,20,100);
   char sLoudnessString[64];
   char sGrString[64];
   double fMaxGainReductionPerFrameDb = 0.;
-
   double fLufs = tLoudnessMeter->GetLufs();
   double fFastLufs = tLoudnessMeter->GetMomentaryLufs();
 
+  // Text below LUFS meter bar
   sprintf(sLoudnessString, "Integrated: %4.1fLUFS\nMomentary: %4.1fLUFS", fLufs, fFastLufs);
-    //double fTestLoudnessValue = -15.*((double)rand() / RAND_MAX);
-    tLoudnessTextControl->SetTextFromPlug(sLoudnessString);
-    tILevelMeteringBar->SetValue(fLufs);
+  tLoudnessTextControl->SetTextFromPlug(sLoudnessString);
 
-    // Gain reduction
-    fMaxGainReductionPerFrameDb = LINEAR_TO_LOG(fMaxGainReductionPerFrame);
-    // ("<" because gain reduction is negative in log domain)
-    if (fMaxGainReductionPerFrameDb < fMaxGainReductionPerSessionDb)
-      fMaxGainReductionPerSessionDb = fMaxGainReductionPerFrameDb;
-    tIGrMeteringBar->SetValue(fMaxGainReductionPerFrameDb);
-    tIGrMeteringBar->SetNotchValue(fMaxGainReductionPerSessionDb);
-    sprintf(sGrString, "GR: %4.2fdB\nMax: %4.2fdB", fMaxGainReductionPerFrameDb, fMaxGainReductionPerSessionDb);
-    tGrTextControl->SetTextFromPlug(sGrString);
+  // Updating LUFS bar values
+  tILevelMeteringBar->SetValue(fLufs);
 
-    unsigned int nMetersWait = 0;
-    int nMeterUpdatesPerSecond = 5;
-    int nMetersWaitIterations = fAudioFramesPerSecond/ nMeterUpdatesPerSecond;
+  // Updating gain reduction bar values
+  fMaxGainReductionPerFrameDb = LINEAR_TO_LOG(fMaxGainReductionPerFrame);
+  // ("<" because gain reduction is negative in log domain)
+  // "MaxGainReductionPerSession" is displayed as a notch on a GR bar
+  if (fMaxGainReductionPerFrameDb < fMaxGainReductionPerSessionDb)
+    fMaxGainReductionPerSessionDb = fMaxGainReductionPerFrameDb;
+  tIGrMeteringBar->SetValue(fMaxGainReductionPerFrameDb);
+  tIGrMeteringBar->SetNotchValue(fMaxGainReductionPerSessionDb);
 
+  // Text below Gain reduction bar
+  sprintf(sGrString, "GR: %4.2fdB\nMax: %4.2fdB", 
+    fMaxGainReductionPerFrameDb,
+    fMaxGainReductionPerSessionDb);
+  tGrTextControl->SetTextFromPlug(sGrString);
 }
+
+/*
+\brief Locks and unlocks controls depending on current mode. Called every time the mode is changed. 
+*/
 void StreamMaster::UpdateAvailableControls(){
   switch (tPlugCurrentMode){
   case PLUG_LEARN_MODE:
@@ -91,24 +111,33 @@ void StreamMaster::UpdateAvailableControls(){
   }
 }
 
+/*
+\brief We set up GUI and related processing classes here. 
+*/
 StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   :	IPLUG_CTOR(kNumParams, kNumPrograms, instanceInfo), mGain(1.)
 {
 
   TRACE;
 
-  const IColor* tLufsBarColor = new IColor(255, 255, 128, 0);
-  IRECT *tLufsBarRect = new IRECT(0, 10, 40, 100);
-
+  // Setting up values for all the controls
   //arguments are: name, defaultVal, minVal, maxVal, step, label
-  // We need precise values, so we have to use integer values and convert them into double later
-  GetParam(kGain)->InitInt("Peaking", 0,0, 10,  "dB");
+
+  // Ceiling knob
+  /* We need precise values for ceiling knob,
+  so we have to use integer values and convert them into double later */
+  GetParam(kGain)->InitInt("Ceiling", 0, 0, 10, "dB");
   GetParam(kGain)->SetShape(1.);
+  // LUFS and GR bars
   GetParam(kILevelMeteringBar)->InitDouble("Loudness", -24., -40., 3.0, 0.1, "LUFS");
   GetParam(kIGrMeteringBar)->InitDouble("Gain reduction", -0., -43., 0.0, 0.1, "dB");
+  // Mode and platform switches
   GetParam(kModeSwitch)->InitInt("Mode", 0, 0, 2, "");
   GetParam(kPlatformSwitch)->InitInt("Target platform", PLUG_DEFAULT_TARGET_PLATFORM, 0, 4, "");
 
+  // *** Initing actual GUI controls
+
+  // Plug window, background
   pGraphics = MakeGraphics(this, kWidth, kHeight);
   pGraphics->AttachBackground(BG_ID, BG_FN);
   
@@ -204,45 +233,48 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
     "-");
   pGraphics->AttachControl(tModeTextControl);
   
-
+  // Finally - feed all the controls to IPlug's graphics gizmo
   AttachGraphics(pGraphics);
+  // *** Initing actual GUI controls - end
   
+  // *** Stuff for signal processing
   //Limiter 
   tLimiter.setThresh(fDefaultLimiterThreshold);
   tLimiter.setSampleRate(PLUG_DEFAULT_SAMPLERATE);
-  tLimiter.setAttack(0.1);
+  tLimiter.setAttack(PLUG_LIMITER_ATTACK_MILLISECONDS);
   tLimiter.initRuntime();
-
-  //MakePreset("preset 1", ... );
-  MakeDefaultPreset((char *) "-", kNumPrograms);
 
   //LUFS loudness meter 
   tLoudnessMeter = new Plug::LoudnessMeter();
   tLoudnessMeter->SetSampleRate(PLUG_DEFAULT_SAMPLERATE);
   tLoudnessMeter->SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER);  
 
-  // Interface stuff
+  // *** General plugin shenanigans
+  // Presets displayed in the plugin's hosts
+  // We have only one preset
+  MakeDefaultPreset((char *)PLUG_DEFAULT_PRESET_NAME, kNumPrograms);
+
+  // *** Interface stuff
+  // Set initial values to controls that can't be handled
+  // in the "GetParam()->Init...() section of this constructor"
   UpdateAvailableControls();
 }
 
-
-
-double \
-  fMasteringGainDb = 0., \
-  fTargetLufsIntegratedDb = 14., \
-  fSourceLufsIntegratedDb = -60., \
-  fLimiterCeilingDb = 0., \
-  fMasteringGainLinear = 1.;
-
+/*
+\brief DSP thread. All signall processing happens here. Also the GUI values are updated fron this thread.
+*/
 StreamMaster::~StreamMaster() {}
 void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int nFrames)
 {
   // Mutex is already locked for us.
+
+  // Assuming we're wirking with a stereo signal
   double* in1 = inputs[0];
   double* in2 = inputs[1];
   double* out1 = outputs[0];
   double* out2 = outputs[1];
   double *afInterleavedSamples = new double[nFrames * 2];
+
   switch(tPlugCurrentMode){
     case PLUG_LEARN_MODE:
     // Learn mode
@@ -313,7 +345,9 @@ SignalOutLinear = MasteringGainLinear * SignalInLinear, pre-limiter!
 then feed it into the limiter. 
 Done! 
 */
-
+/*
+\brief calculate all relevant values before we start mastering
+*/
 void StreamMaster::UpdatePreMastering(){
   unsigned int nIndex;
   char sModeString[PLUG_MODE_TEXT_LABEL_STRING_SIZE];
@@ -334,10 +368,19 @@ void StreamMaster::UpdatePreMastering(){
   // and feed it into the limiter afterwards
 
   // ...but before, let's output some text
-  sprintf(sModeString, "I'm ready to process the track!\nInput loudness: %0.2fLUFS, Target loudness: %0.2fLUFS\nCeiling: %0.2fdB, Applied gain: %0.2fdB",
-    fSourceLufsIntegratedDb, fTargetLufsIntegratedDb, fLimiterCeilingDb, fMasteringGainDb);
+  sprintf(sModeString,
+    PLUG_MASTER_GUIDE_MESSAGE,
+    fSourceLufsIntegratedDb,
+    fTargetLufsIntegratedDb,
+    fLimiterCeilingDb,
+    fMasteringGainDb
+    );
   tModeTextControl->SetTextFromPlug(sModeString);
 }
+
+/*
+\brief Handles all user interactions with the controls
+*/
 void StreamMaster::OnParamChange(int paramIdx)
 {
   IMutexLock lock(this);
@@ -360,19 +403,20 @@ void StreamMaster::OnParamChange(int paramIdx)
     case kPlatformSwitch:
       nIndex = (unsigned int)GetParam(kPlatformSwitch)->Value();
       fTargetLoudness = PLUG_GET_TARGET_LOUDNESS(nIndex);
+      // Update the notch on the LUFS meter
       tILevelMeteringBar->SetNotchValue(fTargetLoudness);
       tILevelMeteringBar->Redraw();
       if (tPlugCurrentMode == PLUG_MASTER_MODE)
         UpdatePreMastering();
       break;
       /*
-      double \
-        v fMasteringGainDb, \
-        v fTargetLufsIntegratedDb, \
-        v fSourceLufsIntegratedDb, \
-        v fLimiterCeilingDb, \
-        v fMasteringGainLinear;*/
-
+      Make sure we update all following variables:
+        v fMasteringGainDb,
+        v fTargetLufsIntegratedDb,
+        v fSourceLufsIntegratedDb,
+        v fLimiterCeilingDb,
+        v fMasteringGainLinear;
+      */
     case kModeSwitch:
       // Converting switch's value to mode
       tPlugCurrentMode = (PLUG_Mode)int(GetParam(kModeSwitch)->Value()+1);
@@ -380,7 +424,7 @@ void StreamMaster::OnParamChange(int paramIdx)
         switch (tPlugCurrentMode){
       case PLUG_LEARN_MODE:
         // Learn mode
-        sprintf(sModeString, "Press play in your DAW to measure song's loudness,\nthen press Mode switch to auto adjust loudness");
+        sprintf(sModeString, PLUG_LEARN_GUIDE_MESSAGE);
         tModeTextControl->SetTextFromPlug(sModeString);
         break;
       case PLUG_MASTER_MODE:
@@ -412,13 +456,15 @@ void StreamMaster::OnParamChange(int paramIdx)
         tLoudnessMeter->SetSampleRate(PLUG_DEFAULT_SAMPLERATE);
         tLoudnessMeter->SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER); 
 
-        fMasteringGainLinear = 1.;
-        fMasteringGainDb = 0.;
-        fTargetLufsIntegratedDb = 0.;
-        fSourceLufsIntegratedDb = -60.;
-        fMaxGainReductionPerFrame = 1.;
+        fMasteringGainDb = PLUG_MASTERING_GAIN_DB_RESET;
+        fTargetLufsIntegratedDb = PLUG_TARGET_LUFS_INTERGRATED_DB_RESET;
+        fSourceLufsIntegratedDb = PLUG_SOURCE_LUFS_INTERGRATED_DB_RESET;
+        fLimiterCeilingDb = PLUG_LIMITER_CEILING_DB_RESET;
+        fMasteringGainLinear = PLUG_MASTERING_GAIN_LINEAR_RESET;
+        fMaxGainReductionPerFrame = PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET;
+        fMaxGainReductionPerSessionDb = PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET;
 
-        sprintf(sModeString, "I'm just chilling now. Press Mode switch again\nto do another song or measurement.");
+        sprintf(sModeString, PLUG_OFF_GUIDE_MESSAGE);
         tModeTextControl->SetTextFromPlug(sModeString);
 
         break;

@@ -8,10 +8,10 @@
 #define PLUG_DEFAULT_SAMPLERATE 44100.
 #define PLUG_DEFAULT_CHANNEL_NUMBER 2
 
-
 #define LOG_TO_LINEAR(v) pow(10, v/20.)
 #define LINEAR_TO_LOG(v) (20.*log10(v))
 
+#define PLUG_ALMOST_PLUS_0_DB (1./1000000)
 
 const IColor GR_BAR_DEFAULT_FG_ICOLOR(255, 200, 0, 0);
 const IColor GR_BAR_DEFAULT_NOTCH_ICOLOR(255, 128, 0, 0);
@@ -33,6 +33,39 @@ const IColor PLUG_KNOB_TEXT_LABEL_COLOR(255, 84, 84, 84);
 
 // Aftermath of tweaking UI size
 #define PLUG_Y_OFFSET (27)
+
+#define PLUG_DEFAULT_PRESET_NAME "Default"
+#define PLUG_LIMITER_ATTACK_MILLISECONDS 0.1
+#define PLUG_LIMITER_DEFAULT_THRESHOLD_DB 0.;
+  
+/* Defaults for:
+  fMasteringGainDb,
+  fTargetLufsIntegratedDb,
+  fSourceLufsIntegratedDb,
+  fLimiterCeilingDb,
+  fMasteringGainLinear
+*/
+#define PLUG_MASTERING_GAIN_DB_RESET 0.
+#define PLUG_TARGET_LUFS_INTERGRATED_DB_RESET -14.
+#define PLUG_SOURCE_LUFS_INTERGRATED_DB_RESET -60.
+#define PLUG_LIMITER_CEILING_DB_RESET 0.
+#define PLUG_MASTERING_GAIN_LINEAR_RESET 1.
+
+#define PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET -0.
+#define PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET -0.
+
+#define PLUG_OFF_GUIDE_MESSAGE \
+"I'm just chilling now. Press Mode switch again\n\
+to do another song or measurement."
+
+#define PLUG_MASTER_GUIDE_MESSAGE \
+"I'm ready to process the track!\n\
+Input loudness: %0.2fLUFS, Target loudness: %0.2fLUFS\n\
+Ceiling: %0.2fdB, Applied gain: %0.2fdB"
+
+#define PLUG_LEARN_GUIDE_MESSAGE \
+"Press Play in your DAW to let me measure the song's loudness,\n\
+then stop the playback and press Mode switch to jump into mastering"
 
 class StreamMaster : public IPlug
 {
