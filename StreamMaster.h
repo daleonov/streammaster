@@ -27,6 +27,9 @@ const IColor PLUG_GUIDE_TEXT_LABEL_COLOR(255, 200, 200, 200);
 #define PLUG_GUIDE_TEXT_LABEL_STRING_SIZE PLUG_MODE_TEXT_LABEL_STRING_SIZE
 #define PLUG_GUIDE_TEXT_LABEL_FONT_SIZE 14
 
+#define PLUG_VERSION_TEXT_LABEL_STRING_SIZE 32
+#define PLUG_VERSION_TEXT_LABEL_FONT_SIZE 10
+
 #define PLUG_KNOB_PEAK_MIN 0
 #define PLUG_KNOB_PEAK_MAX 10
 #define PLUG_KNOB_PEAK_DEFAULT 7
@@ -171,6 +174,13 @@ enum ELayout
   kPlatformSwitch_N = 5,
   kPlatformSwitch_X = 226,
   kPlatformSwitch_Y = 480+PLUG_Y_OFFSET,
+
+  // Text version label
+  kTextVersion_X = 5,
+  kTextVersion_Y = GUI_HEIGHT-15,
+  kTextVersion_W = 64,
+  kTextVersion_H = 20,
+  kTextVersion_ColorMono = 64,
 };
 
 // Loudness stuff

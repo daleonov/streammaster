@@ -6,6 +6,10 @@
 #include "lib_chunkware/SimpleLimit.h"
 #include "PLUG/PLUG_LoudnessMeter.h"
 
+// If this file is missing, run "git_version" script from project folder,
+// or create an empty file if you don't use git. 
+#include "PLUG_Version.h"
+
 // Number of presets
 const int kNumPrograms = 1;
 
@@ -266,6 +270,30 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
     &tModeLabel,
     "-");
   pGraphics->AttachControl(tModeTextControl);
+
+  #ifdef _PLUG_VERSION_H 
+  // Text label with current version of the plug
+  IText tTextVersion = IText(PLUG_VERSION_TEXT_LABEL_STRING_SIZE);
+  char sDisplayedVersion[PLUG_VERSION_TEXT_LABEL_STRING_SIZE];
+  const IColor tTextVersionColor(
+    255,
+    kTextVersion_ColorMono,
+    kTextVersion_ColorMono,
+    kTextVersion_ColorMono
+    );
+  const IRECT tTextVersionRect(
+    kTextVersion_X,
+    kTextVersion_Y,
+    (kTextVersion_X + kTextVersion_W),
+    (kTextVersion_Y + kTextVersion_H)
+    );
+  sprintf(sDisplayedVersion, "Ver. %s (%s)", &sPlugVersionGitHead, &sPlugVersionDate);
+  tTextVersion.mColor = tTextVersionColor;
+  tTextVersion.mSize = PLUG_VERSION_TEXT_LABEL_FONT_SIZE;
+  tTextVersion.mAlign = tTextVersion.kAlignNear;
+  pGraphics->AttachControl(new ITextControl(this, tTextVersionRect, &tTextVersion, (const char*)&sDisplayedVersion));
+  AttachGraphics(pGraphics);
+  #endif
 
   // Guide message
   char sModeString[] = PLUG_OFF_STARTUP_MESSAGE;
