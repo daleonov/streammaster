@@ -1,41 +1,13 @@
 #include "StreamMaster.h"
 #include "IPlug_include_in_plug_src.h"
-#include "IControl.h"
-#include "PLUG_IControlExtras.h"
-#include "resource.h"
-#include "lib_chunkware/SimpleLimit.h"
-#include "PLUG/PLUG_LoudnessMeter.h"
-
-// If this file is missing, run "git_version" script from project folder,
-// or create an empty file if you don't use git. 
-#include "PLUG_Version.h"
 
 // Number of presets
 const int kNumPrograms = 1;
 
-/* TODO: Move those into StreamMaster class - start */
-// Limiter
-chunkware_simple::SimpleLimit tLimiter;
-const double fDefaultLimiterThreshold = PLUG_LIMITER_DEFAULT_THRESHOLD_DB;
-// IPlug GUI stuff
-IGraphics* pGraphics;
-ITextControl *tLoudnessTextControl;
-ITextControl *tGrTextControl;
-ITextControl *tPeakingTextControl;
-ITextControl *tModeTextControl;
-IKnobMultiControl *tPeakingKnob;
-IKnobMultiControl *tPlatformSelector;
-Plug::ILevelMeteringBar* tILevelMeteringBar;
-Plug::ILevelMeteringBar* tIGrMeteringBar;
-// Shared statistic variables
-double fMaxGainReductionPerFrame = PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET;
-double fMaxGainReductionPerSessionDb = PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET;
-bool bLufsTooLow = true;
-/* Move those into StreamMaster class - end */
-
 // Operation related stuff
 double fTargetLoudness = PLUG_DEFAULT_TARGET_LOUDNESS;
 unsigned short nCurrentTargetIndex = PLUG_DEFAULT_TARGET_PLATFORM;
+const double fDefaultLimiterThreshold = PLUG_LIMITER_DEFAULT_THRESHOLD_DB;
 
 // Plugin starts up in this mode
 PLUG_Mode tPlugCurrentMode = PLUG_INITIAL_MODE;
@@ -54,8 +26,8 @@ double \
 */
 void StreamMaster::UpdateGui()
 {
-  char sLoudnessString[64];
-  char sGrString[64];
+  char sLoudnessString[PLUG_METER_TEXT_LABEL_STRING_SIZE];
+  char sGrString[PLUG_METER_TEXT_LABEL_STRING_SIZE];
   double fMaxGainReductionPerFrameDb = 0.;
   double fLufs = tLoudnessMeter->GetLufs();
   double fFastLufs = tLoudnessMeter->GetMomentaryLufs();
@@ -136,7 +108,7 @@ void StreamMaster::UpdateAvailableControls(){
 \brief We set up GUI and related processing classes here. 
 */
 StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
-  :	IPLUG_CTOR(kNumParams, kNumPrograms, instanceInfo), mGain(1.)
+  :	IPLUG_CTOR(kNumParams, kNumPrograms, instanceInfo)
 {
 
   TRACE;
@@ -314,7 +286,28 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   //LUFS loudness meter 
   tLoudnessMeter = new Plug::LoudnessMeter();
   tLoudnessMeter->SetSampleRate(PLUG_DEFAULT_SAMPLERATE);
-  tLoudnessMeter->SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER);  
+  tLoudnessMeter->SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER); 
+
+  // Low (-inf) LUFS flag. Doesn't allow user to go into mastering mode
+  // unless plugin successfully got source LUFS reading first.
+  bLufsTooLow = true; 
+
+  // Value inits
+  fMaxGainReductionPerFrame = PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET;
+  fMaxGainReductionPerSessionDb = PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET;
+  // Operation related stuff
+  fTargetLoudness = PLUG_DEFAULT_TARGET_LOUDNESS;
+  nCurrentTargetIndex = PLUG_DEFAULT_TARGET_PLATFORM;
+  fDefaultLimiterThreshold = PLUG_LIMITER_DEFAULT_THRESHOLD_DB;
+  // Plugin starts up in this mode
+  tPlugCurrentMode = PLUG_INITIAL_MODE;
+  // Vars for mastering mode
+  fMasteringGainDb = PLUG_MASTERING_GAIN_DB_RESET;
+  fTargetLufsIntegratedDb = PLUG_TARGET_LUFS_INTERGRATED_DB_RESET;
+  fSourceLufsIntegratedDb = PLUG_SOURCE_LUFS_INTERGRATED_DB_RESET;
+  fLimiterCeilingDb = PLUG_LIMITER_CEILING_DB_RESET;
+  fLimiterCeilingLinear = PLUG_LIMITER_CEILING_LINEAR_RESET;
+  fMasteringGainLinear = PLUG_MASTERING_GAIN_LINEAR_RESET;
 
   // *** General plugin shenanigans
   // Presets displayed in the plugin's hosts

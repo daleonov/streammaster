@@ -4,6 +4,13 @@
 #include "IPlug_include_in_plug_hdr.h"
 #include "IControl.h"
 #include "PLUG_LoudnessMeter.h"
+#include "PLUG_IControlExtras.h"
+#include "resource.h"
+#include "lib_chunkware/SimpleLimit.h"
+
+// If this file is missing, run "git_version" script from project folder,
+// or create an empty file if you don't use git. 
+#include "PLUG_Version.h"
 
 #define PLUG_DEFAULT_SAMPLERATE 44100.
 #define PLUG_DEFAULT_CHANNEL_NUMBER 2
@@ -17,7 +24,7 @@ const IColor PLUG_METER_TEXT_LABEL_COLOR(255, 255, 255, 255);
 const IColor PLUG_KNOB_TEXT_LABEL_COLOR(255, 84, 84, 84);
 const IColor PLUG_GUIDE_TEXT_LABEL_COLOR(255, 200, 200, 200);
 
-#define PLUG_METER_TEXT_LABEL_STRING_SIZE 32
+#define PLUG_METER_TEXT_LABEL_STRING_SIZE 64
 #define PLUG_KNOB_TEXT_LABEL_STRING_SIZE 16
 #define PLUG_MODE_TEXT_LABEL_STRING_SIZE 512
 #define PLUG_GUIDE_TEXT_LABEL_STRING_SIZE PLUG_MODE_TEXT_LABEL_STRING_SIZE
@@ -109,25 +116,6 @@ Please repeat learning cycle again. \n\
 #elif defined(__APPLE__)
 #define PLUG_METER_TEXT_ALIGNMENT kAlignNear
 #endif
-
-class StreamMaster : public IPlug
-{
-public:
-  StreamMaster(IPlugInstanceInfo instanceInfo);
-  ~StreamMaster();
-
-  void Reset();
-  void OnParamChange(int paramIdx);
-  void ProcessDoubleReplacing(double** inputs, double** outputs, int nFrames);
-  void UpdateGui();
-  void UpdateAvailableControls();
-  void UpdatePreMastering();
-
-private:
-
-  Plug::LoudnessMeter* tLoudnessMeter;
-  double mGain;
-};
 
 enum EParams
 {
@@ -253,5 +241,51 @@ typedef enum{
   ((PLUG_Mode)int(GetParam(idx)->Value()+1))
 
 #define PLUG_CONVERT_PLUG_MODE_TO_SWITCH_VALUE(m) (m-1)
+
+class StreamMaster : public IPlug{
+public:
+  StreamMaster(IPlugInstanceInfo instanceInfo);
+  ~StreamMaster();
+
+  void Reset();
+  void OnParamChange(int paramIdx);
+  void ProcessDoubleReplacing(double** inputs, double** outputs, int nFrames);
+  void UpdateGui();
+  void UpdateAvailableControls();
+  void UpdatePreMastering();
+
+private:
+  // Limiter and loudness meter
+  chunkware_simple::SimpleLimit tLimiter;
+  Plug::LoudnessMeter* tLoudnessMeter;
+  // IPlug GUI stuff
+  IGraphics* pGraphics;
+  ITextControl *tLoudnessTextControl;
+  ITextControl *tGrTextControl;
+  ITextControl *tPeakingTextControl;
+  ITextControl *tModeTextControl;
+  IKnobMultiControl *tPeakingKnob;
+  IKnobMultiControl *tPlatformSelector;
+  Plug::ILevelMeteringBar* tILevelMeteringBar;
+  Plug::ILevelMeteringBar* tIGrMeteringBar;
+  // Shared statistic variables
+  double fMaxGainReductionPerFrame;
+  double fMaxGainReductionPerSessionDb;
+  bool bLufsTooLow;
+  // Operation related stuff
+  double fTargetLoudness;
+  unsigned short nCurrentTargetIndex;
+  double fDefaultLimiterThreshold;
+  // Plugin starts up in this mode
+  PLUG_Mode tPlugCurrentMode;
+  // Vars for mastering mode
+  double fMasteringGainDb;
+  double fTargetLufsIntegratedDb;
+  double fSourceLufsIntegratedDb;
+  double fLimiterCeilingDb;
+  double fLimiterCeilingLinear;
+  double fMasteringGainLinear;
+
+}; //class StreamMaster
 
 #endif
