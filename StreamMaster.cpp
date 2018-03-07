@@ -4,22 +4,6 @@
 // Number of presets
 const int kNumPrograms = 1;
 
-// Operation related stuff
-double fTargetLoudness = PLUG_DEFAULT_TARGET_LOUDNESS;
-unsigned short nCurrentTargetIndex = PLUG_DEFAULT_TARGET_PLATFORM;
-const double fDefaultLimiterThreshold = PLUG_LIMITER_DEFAULT_THRESHOLD_DB;
-
-// Plugin starts up in this mode
-PLUG_Mode tPlugCurrentMode = PLUG_INITIAL_MODE;
-// Vars for mastering mode
-double \
-  fMasteringGainDb = PLUG_MASTERING_GAIN_DB_RESET, \
-  fTargetLufsIntegratedDb = PLUG_TARGET_LUFS_INTERGRATED_DB_RESET, \
-  fSourceLufsIntegratedDb = PLUG_SOURCE_LUFS_INTERGRATED_DB_RESET, \
-  fLimiterCeilingDb = PLUG_LIMITER_CEILING_DB_RESET, \
-  fLimiterCeilingLinear = PLUG_LIMITER_CEILING_LINEAR_RESET, \
-  fMasteringGainLinear = PLUG_MASTERING_GAIN_LINEAR_RESET;
-
 /*
 @brief All GUI relates data is updated in this thread
 @note Actual redrawing happens in IPlug's craphics core automatically at a given FPS, not here. 
@@ -125,6 +109,26 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
 {
 
   TRACE;
+
+  // Value inits
+  fMaxGainReductionPerFrame = PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET;
+  fMaxGainReductionPerSessionDb = PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET;
+  // Operation related stuff
+  fTargetLoudness = PLUG_DEFAULT_TARGET_LOUDNESS;
+  nCurrentTargetIndex = PLUG_DEFAULT_TARGET_PLATFORM;
+  fDefaultLimiterThreshold = PLUG_LIMITER_DEFAULT_THRESHOLD_DB;
+  // Plugin starts up in this mode
+  tPlugCurrentMode = PLUG_INITIAL_MODE;
+  // Vars for mastering mode
+  fMasteringGainDb = PLUG_MASTERING_GAIN_DB_RESET;
+  fTargetLufsIntegratedDb = PLUG_TARGET_LUFS_INTERGRATED_DB_RESET;
+  fSourceLufsIntegratedDb = PLUG_SOURCE_LUFS_INTERGRATED_DB_RESET;
+  fLimiterCeilingDb = PLUG_LIMITER_CEILING_DB_RESET;
+  fLimiterCeilingLinear = PLUG_LIMITER_CEILING_LINEAR_RESET;
+  fMasteringGainLinear = PLUG_MASTERING_GAIN_LINEAR_RESET;
+  // Low (-inf) LUFS flag. Doesn't allow user to go into mastering mode
+  // unless plugin successfully got source LUFS reading first.
+  bLufsTooLow = true; 
 
   // Setting up values for all the controls
   //arguments are: name, defaultVal, minVal, maxVal, step, label
@@ -299,27 +303,6 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   //LUFS loudness meter 
   tLoudnessMeter = new Plug::LoudnessMeter();
   tLoudnessMeter->SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER); 
-
-  // Low (-inf) LUFS flag. Doesn't allow user to go into mastering mode
-  // unless plugin successfully got source LUFS reading first.
-  bLufsTooLow = true; 
-
-  // Value inits
-  fMaxGainReductionPerFrame = PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET;
-  fMaxGainReductionPerSessionDb = PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET;
-  // Operation related stuff
-  fTargetLoudness = PLUG_DEFAULT_TARGET_LOUDNESS;
-  nCurrentTargetIndex = PLUG_DEFAULT_TARGET_PLATFORM;
-  fDefaultLimiterThreshold = PLUG_LIMITER_DEFAULT_THRESHOLD_DB;
-  // Plugin starts up in this mode
-  tPlugCurrentMode = PLUG_INITIAL_MODE;
-  // Vars for mastering mode
-  fMasteringGainDb = PLUG_MASTERING_GAIN_DB_RESET;
-  fTargetLufsIntegratedDb = PLUG_TARGET_LUFS_INTERGRATED_DB_RESET;
-  fSourceLufsIntegratedDb = PLUG_SOURCE_LUFS_INTERGRATED_DB_RESET;
-  fLimiterCeilingDb = PLUG_LIMITER_CEILING_DB_RESET;
-  fLimiterCeilingLinear = PLUG_LIMITER_CEILING_LINEAR_RESET;
-  fMasteringGainLinear = PLUG_MASTERING_GAIN_LINEAR_RESET;
 
   // *** General plugin shenanigans
   // Presets displayed in the plugin's hosts
@@ -604,7 +587,6 @@ void StreamMaster::OnParamChange(int paramIdx)
 
         break;
       }
-
 
       tPlugCurrentMode = tPlugNewMode;
       UpdateAvailableControls();

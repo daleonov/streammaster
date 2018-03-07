@@ -56,7 +56,7 @@ namespace chunkware_simple
 		virtual double getAttack( void )  const { return att_.getTc(); }
 		virtual double getRelease( void ) const { return rel_.getTc(); }
 
-    void getGr(double *pfGainReduction) { *pfGainReduction = this->gR; (this->gR)=0; }
+		void getGr(double *pfGainReduction) { *pfGainReduction = this->gR; (this->gR)=0; }
 
 		// latency
 		virtual const unsigned int getLatency( void ) const { return peakHold_; }

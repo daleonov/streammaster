@@ -200,7 +200,7 @@ enum ELayout
   // Youtube-Spotify-etc.
   kPlatformSwitch_N = 5,
   kPlatformSwitch_X = 226,
-  kPlatformSwitch_Y = 480+PLUG_Y_OFFSET,
+  kPlatformSwitch_Y = 481+PLUG_Y_OFFSET,
 
   // Text version label
   kTextVersion_X = 5,
