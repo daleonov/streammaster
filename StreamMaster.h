@@ -119,17 +119,16 @@ Please repeat learning cycle again. \n\
 
 enum EParams
 {
-  kGain = 0,
-  kModeSwitch = 1,
-  kPlatformSwitch = 2,
+  kGain,
+  kModeSwitch,
+  kPlatformSwitch,
+  kIGrContactControl,
+  kILufsContactControl,
   kILevelMeteringBar,
   kIGrMeteringBar,
   kIPeakingTextControl,
   kIModeTextControl,
-  kIGrContactControl,
-  kILufsContactControl,
-  kNumParams,
-  kInvisibleSwitchIndicator   // the user after kNumParams so they get a param id
+  kNumParams, /* Anything below that line will be non-automatable */
 };
 
 enum ELayout
