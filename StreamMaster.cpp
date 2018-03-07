@@ -495,6 +495,7 @@ void StreamMaster::OnParamChange(int paramIdx)
       // Just reset the peak GR value on the GR bar
       fMaxGainReductionPerSessionDb = PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET;
       tIGrMeteringBar->SetNotchValue(fMaxGainReductionPerSessionDb);
+      break;
     case kILufsContactControl:
       // Resetting LUFS meter bar and the actual meter
       /* TODO: this switch probably falsely triggers during the startup once,
@@ -509,6 +510,7 @@ void StreamMaster::OnParamChange(int paramIdx)
       // Reset source LUFS if we were measuring it
       tPlugCurrentMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
       if (tPlugCurrentMode == PLUG_LEARN_MODE) fSourceLufsIntegratedDb = PLUG_SOURCE_LUFS_INTERGRATED_DB_RESET;
+      break;
     case kGain:
       fPeaking = PLUG_KNOB_PEAK_DOUBLE(GetParam(kGain)->Value());
       sprintf(sPeakingString, "%5.2fdB", fPeaking);
