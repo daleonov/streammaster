@@ -256,7 +256,7 @@ public:
 
 private:
   // Limiter and loudness meter
-  chunkware_simple::SimpleLimit tLimiter;
+  chunkware_simple::SimpleLimit* tLimiter;
   Plug::LoudnessMeter* tLoudnessMeter;
   // IPlug GUI stuff
   IGraphics* pGraphics;

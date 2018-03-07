@@ -278,10 +278,11 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   
   // *** Stuff for signal processing
   //Limiter 
-  tLimiter.setThresh(fDefaultLimiterThreshold);
-  tLimiter.setSampleRate(PLUG_DEFAULT_SAMPLERATE);
-  tLimiter.setAttack(PLUG_LIMITER_ATTACK_MILLISECONDS);
-  tLimiter.initRuntime();
+  tLimiter = new chunkware_simple::SimpleLimit();
+  tLimiter->setThresh(fDefaultLimiterThreshold);
+  tLimiter->setSampleRate(PLUG_DEFAULT_SAMPLERATE);
+  tLimiter->setAttack(PLUG_LIMITER_ATTACK_MILLISECONDS);
+  tLimiter->initRuntime();
 
   //LUFS loudness meter 
   tLoudnessMeter = new Plug::LoudnessMeter();
@@ -362,8 +363,8 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
       *out2 = fMasteringGainLinear * *in2;
 
       // Feed them to the limiter and read GR value
-      tLimiter.process(*out1, *out2);
-      tLimiter.getGr(&fMaxGainReductionPerFrame);
+      tLimiter->process(*out1, *out2);
+      tLimiter->getGr(&fMaxGainReductionPerFrame);
 
       // Applying ceiling value (post-limiter gain)
       *out1 *= fLimiterCeilingLinear;
@@ -450,7 +451,6 @@ void StreamMaster::UpdatePreMastering(){
 void StreamMaster::OnParamChange(int paramIdx)
 {
   IMutexLock lock(this);
-  double fLufs, fPeaking;
   unsigned int nIndex;
   char sPeakingString[PLUG_KNOB_TEXT_LABEL_STRING_SIZE];
   char sModeString[PLUG_MODE_TEXT_LABEL_STRING_SIZE];
@@ -463,7 +463,6 @@ void StreamMaster::OnParamChange(int paramIdx)
   {
     case kGain:
       fPeaking = PLUG_KNOB_PEAK_DOUBLE(GetParam(kGain)->Value());
-      //tLimiter.setThresh(GetParam(kGain)->Value());
       sprintf(sPeakingString, "%5.2fdB", fPeaking);
       tPeakingTextControl->SetTextFromPlug(sPeakingString);
       if (tPlugCurrentMode == PLUG_MASTER_MODE)
