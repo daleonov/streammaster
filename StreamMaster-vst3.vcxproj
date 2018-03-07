@@ -128,10 +128,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>build-win\vst3\$(Platform)\$(Configuration)\</IntDir>
     <TargetExt>.vst3</TargetExt>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)lib-jiixyj-ebur128\;$(ProjectDir)PLUG\;$(ProjectDir)lib-jiixyj-ebur128\queue</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>build-win\vst3\$(Platform)\$(Configuration)\</IntDir>
     <TargetExt>.vst3</TargetExt>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)lib-jiixyj-ebur128\;$(ProjectDir)PLUG\;$(ProjectDir)lib-jiixyj-ebur128\queue</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Tracer|Win32'">
     <OutDir>build-win\vst3\$(Platform)\bin\</OutDir>
@@ -337,11 +339,14 @@ if exist "%programfiles(x86)%" (copy /y "$(TargetPath)" "$(VST3_64_PATH)\StreamM
     <ClInclude Include="..\..\VST3_SDK\public.sdk\source\vst\vstparameters.h" />
     <ClInclude Include="..\..\VST3_SDK\public.sdk\source\vst\vstsinglecomponenteffect.h" />
     <ClInclude Include="..\..\WDL\IPlug\IPlugVST3.h" />
+    <ClInclude Include="lib-jiixyj-ebur128\ebur128.h" />
     <ClInclude Include="lib_chunkware\SimpleEnvelope.h" />
     <ClInclude Include="lib_chunkware\SimpleGain.h" />
     <ClInclude Include="lib_chunkware\SimpleGate.h" />
     <ClInclude Include="lib_chunkware\SimpleHeader.h" />
     <ClInclude Include="lib_chunkware\SimpleLimit.h" />
+    <ClInclude Include="PLUG\PLUG_IControlExtras.h" />
+    <ClInclude Include="PLUG\PLUG_LoudnessMeter.h" />
     <ClInclude Include="StreamMaster.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
@@ -359,9 +364,12 @@ if exist "%programfiles(x86)%" (copy /y "$(TargetPath)" "$(VST3_64_PATH)\StreamM
     <ClCompile Include="..\..\VST3_SDK\public.sdk\source\vst\vstparameters.cpp" />
     <ClCompile Include="..\..\VST3_SDK\public.sdk\source\vst\vstsinglecomponenteffect.cpp" />
     <ClCompile Include="..\..\WDL\IPlug\IPlugVST3.cpp" />
+    <ClCompile Include="lib-jiixyj-ebur128\ebur128.c" />
     <ClCompile Include="lib_chunkware\SimpleEnvelope.cpp" />
     <ClCompile Include="lib_chunkware\SimpleGate.cpp" />
     <ClCompile Include="lib_chunkware\SimpleLimit.cpp" />
+    <ClCompile Include="PLUG\PLUG_IControlExtras.cpp" />
+    <ClCompile Include="PLUG\PLUG_LoudnessMeter.cpp" />
     <ClCompile Include="StreamMaster.cpp" />
   </ItemGroup>
   <ItemGroup>

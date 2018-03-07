@@ -105,6 +105,19 @@ void StreamMaster::UpdateAvailableControls(){
 }
 
 /*
+@brief Makes sure all DSP stuff works at the correct sample rate
+*/
+void StreamMaster::UpdateSampleRate(){
+  const double fCurrentSampleRate = GetSampleRate();
+
+  // Limiter's envelope has sample rate in Hz, double
+  tLimiter->setSampleRate(fCurrentSampleRate);
+
+  // Loudness meter has sample rate in Hz, unsigned long
+  tLoudnessMeter->SetSampleRate((unsigned long)fCurrentSampleRate);
+}
+
+/*
 \brief We set up GUI and related processing classes here. 
 */
 StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
@@ -280,13 +293,11 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   //Limiter 
   tLimiter = new chunkware_simple::SimpleLimit();
   tLimiter->setThresh(fDefaultLimiterThreshold);
-  tLimiter->setSampleRate(PLUG_DEFAULT_SAMPLERATE);
   tLimiter->setAttack(PLUG_LIMITER_ATTACK_MILLISECONDS);
   tLimiter->initRuntime();
 
   //LUFS loudness meter 
   tLoudnessMeter = new Plug::LoudnessMeter();
-  tLoudnessMeter->SetSampleRate(PLUG_DEFAULT_SAMPLERATE);
   tLoudnessMeter->SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER); 
 
   // Low (-inf) LUFS flag. Doesn't allow user to go into mastering mode
@@ -319,6 +330,9 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   // Set initial values to controls that can't be handled
   // in the "GetParam()->Init...() section of this constructor"
   UpdateAvailableControls();
+
+  // Tell DSP related objects what the current sample rate is
+  UpdateSampleRate();
 }
 
 /*
@@ -397,8 +411,8 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
 void StreamMaster::Reset()
 {
   TRACE;
-  // TODO: Sample rate handler
   IMutexLock lock(this);
+  UpdateSampleRate();
 }
 
 /*
@@ -451,6 +465,8 @@ void StreamMaster::UpdatePreMastering(){
 void StreamMaster::OnParamChange(int paramIdx)
 {
   IMutexLock lock(this);
+
+  double fPeaking;
   unsigned int nIndex;
   char sPeakingString[PLUG_KNOB_TEXT_LABEL_STRING_SIZE];
   char sModeString[PLUG_MODE_TEXT_LABEL_STRING_SIZE];
@@ -544,9 +560,8 @@ void StreamMaster::OnParamChange(int paramIdx)
           bLufsTooLow = false; 
           delete tLoudnessMeter;
           tLoudnessMeter = new Plug::LoudnessMeter();
-          //TODO: Sample Rate!
-          tLoudnessMeter->SetSampleRate(PLUG_DEFAULT_SAMPLERATE);
           tLoudnessMeter->SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER); 
+          UpdateSampleRate();
           UpdatePreMastering();
 
           // Set notch on LUFS meter
@@ -565,9 +580,8 @@ void StreamMaster::OnParamChange(int paramIdx)
         //Resetting the meter
         delete tLoudnessMeter;
         tLoudnessMeter = new Plug::LoudnessMeter();
-        //TODO: Sample Rate!
-        tLoudnessMeter->SetSampleRate(PLUG_DEFAULT_SAMPLERATE);
         tLoudnessMeter->SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER); 
+        UpdateSampleRate();
 
         fMasteringGainDb = PLUG_MASTERING_GAIN_DB_RESET;
         fTargetLufsIntegratedDb = PLUG_TARGET_LUFS_INTERGRATED_DB_RESET;

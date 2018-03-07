@@ -111,7 +111,7 @@
     <IntDir>build-win\app\$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>
     </LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);;$(ProjectDir)lib-jiixyj-ebur128\;$(ProjectDir)PLUG\;$(ProjectDir)lib-jiixyj-ebur128\queue</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);$(ProjectDir)lib-jiixyj-ebur128\;$(ProjectDir)PLUG\;$(ProjectDir)lib-jiixyj-ebur128\queue</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>build-win\app\$(Platform)\$(Configuration)\</IntDir>
@@ -125,9 +125,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>build-win\app\$(Platform)\$(Configuration)\</IntDir>
+    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);$(ProjectDir)lib-jiixyj-ebur128\;$(ProjectDir)PLUG\;$(ProjectDir)lib-jiixyj-ebur128\queue</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>build-win\app\$(Platform)\$(Configuration)\</IntDir>
+    <IncludePath>$(VC_IncludePath);$(WindowsSdk_71A_IncludePath);$(ProjectDir)lib-jiixyj-ebur128\;$(ProjectDir)PLUG\;$(ProjectDir)lib-jiixyj-ebur128\queue</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Tracer|Win32'">
     <OutDir>build-win\app\$(Platform)\bin\</OutDir>

@@ -250,11 +250,13 @@ public:
   void Reset();
   void OnParamChange(int paramIdx);
   void ProcessDoubleReplacing(double** inputs, double** outputs, int nFrames);
+
+private:
+  // Update stuff
   void UpdateGui();
   void UpdateAvailableControls();
   void UpdatePreMastering();
-
-private:
+  void UpdateSampleRate();
   // Limiter and loudness meter
   chunkware_simple::SimpleLimit* tLimiter;
   Plug::LoudnessMeter* tLoudnessMeter;
