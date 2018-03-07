@@ -363,6 +363,12 @@
 		CE4EA162204DCA360013CC4C /* StreamMasterKnob.png in Resources */ = {isa = PBXBuildFile; fileRef = CE4EA14C204DCA360013CC4C /* StreamMasterKnob.png */; };
 		CE4EA163204DCA360013CC4C /* StreamMasterKnob.png in Resources */ = {isa = PBXBuildFile; fileRef = CE4EA14C204DCA360013CC4C /* StreamMasterKnob.png */; };
 		CE4EA164204DCA360013CC4C /* StreamMasterKnob.png in Resources */ = {isa = PBXBuildFile; fileRef = CE4EA14C204DCA360013CC4C /* StreamMasterKnob.png */; };
+		CE6960B2204FD54B0013A88F /* MeterSwitchOverlay.png in Resources */ = {isa = PBXBuildFile; fileRef = CE6960B1204FD54B0013A88F /* MeterSwitchOverlay.png */; };
+		CE6960B3204FD54B0013A88F /* MeterSwitchOverlay.png in Resources */ = {isa = PBXBuildFile; fileRef = CE6960B1204FD54B0013A88F /* MeterSwitchOverlay.png */; };
+		CE6960B4204FD54B0013A88F /* MeterSwitchOverlay.png in Resources */ = {isa = PBXBuildFile; fileRef = CE6960B1204FD54B0013A88F /* MeterSwitchOverlay.png */; };
+		CE6960B5204FD54B0013A88F /* MeterSwitchOverlay.png in Resources */ = {isa = PBXBuildFile; fileRef = CE6960B1204FD54B0013A88F /* MeterSwitchOverlay.png */; };
+		CE6960B6204FD54B0013A88F /* MeterSwitchOverlay.png in Resources */ = {isa = PBXBuildFile; fileRef = CE6960B1204FD54B0013A88F /* MeterSwitchOverlay.png */; };
+		CE6960B7204FD54B0013A88F /* MeterSwitchOverlay.png in Resources */ = {isa = PBXBuildFile; fileRef = CE6960B1204FD54B0013A88F /* MeterSwitchOverlay.png */; };
 		CED0C60B204DC8DE00C5C39F /* PLUG_IControlExtras.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CED0C609204DC8DE00C5C39F /* PLUG_IControlExtras.cpp */; };
 		CED0C60C204DC8DE00C5C39F /* PLUG_IControlExtras.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CED0C609204DC8DE00C5C39F /* PLUG_IControlExtras.cpp */; };
 		CED0C60D204DC8DE00C5C39F /* PLUG_IControlExtras.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CED0C609204DC8DE00C5C39F /* PLUG_IControlExtras.cpp */; };
@@ -765,6 +771,7 @@
 		CE4EA14A204DCA360013CC4C /* PlatformSwitch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PlatformSwitch.png; path = resources/img/PlatformSwitch.png; sourceTree = "<group>"; };
 		CE4EA14B204DCA360013CC4C /* StreamMasterBG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = StreamMasterBG.png; path = resources/img/StreamMasterBG.png; sourceTree = "<group>"; };
 		CE4EA14C204DCA360013CC4C /* StreamMasterKnob.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = StreamMasterKnob.png; path = resources/img/StreamMasterKnob.png; sourceTree = "<group>"; };
+		CE6960B1204FD54B0013A88F /* MeterSwitchOverlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MeterSwitchOverlay.png; path = resources/img/MeterSwitchOverlay.png; sourceTree = "<group>"; };
 		CED0C609204DC8DE00C5C39F /* PLUG_IControlExtras.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PLUG_IControlExtras.cpp; path = PLUG/PLUG_IControlExtras.cpp; sourceTree = "<group>"; };
 		CED0C60A204DC8DE00C5C39F /* PLUG_IControlExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLUG_IControlExtras.h; path = PLUG/PLUG_IControlExtras.h; sourceTree = "<group>"; };
 		D2F7E65807B2D6F200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
@@ -1371,6 +1378,7 @@
 			isa = PBXGroup;
 			children = (
 				CE4EA149204DCA360013CC4C /* ModeSwitch.png */,
+				CE6960B1204FD54B0013A88F /* MeterSwitchOverlay.png */,
 				CE4EA14A204DCA360013CC4C /* PlatformSwitch.png */,
 				CE4EA14B204DCA360013CC4C /* StreamMasterBG.png */,
 				CE4EA14C204DCA360013CC4C /* StreamMasterKnob.png */,
@@ -1833,6 +1841,7 @@
 			files = (
 				CE4EA154204DCA360013CC4C /* PlatformSwitch.png in Resources */,
 				CE4EA14E204DCA360013CC4C /* ModeSwitch.png in Resources */,
+				CE6960B3204FD54B0013A88F /* MeterSwitchOverlay.png in Resources */,
 				CE4D3DFC204C6E5600326E42 /* SimpleGateProcess.inl in Resources */,
 				CE4EA160204DCA360013CC4C /* StreamMasterKnob.png in Resources */,
 				CE4D3DE4204C6E5600326E42 /* SimpleCompProcess.inl in Resources */,
@@ -1847,6 +1856,7 @@
 			files = (
 				CE4EA156204DCA360013CC4C /* PlatformSwitch.png in Resources */,
 				CE4EA150204DCA360013CC4C /* ModeSwitch.png in Resources */,
+				CE6960B5204FD54B0013A88F /* MeterSwitchOverlay.png in Resources */,
 				CE4D3DFE204C6E5600326E42 /* SimpleGateProcess.inl in Resources */,
 				CE4EA162204DCA360013CC4C /* StreamMasterKnob.png in Resources */,
 				CE4D3DE6204C6E5600326E42 /* SimpleCompProcess.inl in Resources */,
@@ -1861,6 +1871,7 @@
 			files = (
 				CE4EA157204DCA360013CC4C /* PlatformSwitch.png in Resources */,
 				CE4EA151204DCA360013CC4C /* ModeSwitch.png in Resources */,
+				CE6960B6204FD54B0013A88F /* MeterSwitchOverlay.png in Resources */,
 				CE4D3DFF204C6E5600326E42 /* SimpleGateProcess.inl in Resources */,
 				CE4EA163204DCA360013CC4C /* StreamMasterKnob.png in Resources */,
 				CE4D3DE7204C6E5600326E42 /* SimpleCompProcess.inl in Resources */,
@@ -1875,6 +1886,7 @@
 			files = (
 				CE4EA155204DCA360013CC4C /* PlatformSwitch.png in Resources */,
 				CE4EA14F204DCA360013CC4C /* ModeSwitch.png in Resources */,
+				CE6960B4204FD54B0013A88F /* MeterSwitchOverlay.png in Resources */,
 				CE4D3DFD204C6E5600326E42 /* SimpleGateProcess.inl in Resources */,
 				CE4EA161204DCA360013CC4C /* StreamMasterKnob.png in Resources */,
 				CE4D3DE5204C6E5600326E42 /* SimpleCompProcess.inl in Resources */,
@@ -1889,6 +1901,7 @@
 			files = (
 				CE4EA158204DCA360013CC4C /* PlatformSwitch.png in Resources */,
 				CE4EA152204DCA360013CC4C /* ModeSwitch.png in Resources */,
+				CE6960B7204FD54B0013A88F /* MeterSwitchOverlay.png in Resources */,
 				CE4D3E00204C6E5600326E42 /* SimpleGateProcess.inl in Resources */,
 				CE4EA164204DCA360013CC4C /* StreamMasterKnob.png in Resources */,
 				CE4D3DE8204C6E5600326E42 /* SimpleCompProcess.inl in Resources */,
@@ -1907,6 +1920,7 @@
 				CE4EA15F204DCA360013CC4C /* StreamMasterKnob.png in Resources */,
 				4F78D89913B639100032E0F3 /* InfoPlist.strings in Resources */,
 				CE4EA159204DCA360013CC4C /* StreamMasterBG.png in Resources */,
+				CE6960B2204FD54B0013A88F /* MeterSwitchOverlay.png in Resources */,
 				CE4EA153204DCA360013CC4C /* PlatformSwitch.png in Resources */,
 				4F78D89A13B639100032E0F3 /* MainMenu.xib in Resources */,
 				CE4D3E0B204C6E5600326E42 /* SimpleLimitProcess.inl in Resources */,
