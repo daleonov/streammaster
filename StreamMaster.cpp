@@ -54,6 +54,10 @@ void StreamMaster::UpdateAvailableControls(){
     tPlatformSelector->GrayOut(true);
     tPeakingTextControl->GrayOut(true);
     tILevelMeteringBar->GrayOut(false);
+    /* GR is blocked since there's no gain reduction applied,
+    but you can reset LUFS meter */
+    TIGrContactControl->GrayOut(true);
+    TILufsContactControl->GrayOut(false);
     break;
   case PLUG_MASTER_MODE:
     // Master mode
@@ -66,6 +70,10 @@ void StreamMaster::UpdateAvailableControls(){
       tPlatformSelector->GrayOut(true);
       tPeakingTextControl->GrayOut(true);
       tILevelMeteringBar->GrayOut(false);
+      /* Unlike learning mode, we should
+      lock both reset switches here*/
+      TIGrContactControl->GrayOut(true);
+      TILufsContactControl->GrayOut(true);
     }
     else{
       // Everything unlocked
@@ -74,6 +82,8 @@ void StreamMaster::UpdateAvailableControls(){
       tPlatformSelector->GrayOut(false);
       tPeakingTextControl->GrayOut(false);
       tILevelMeteringBar->GrayOut(false);
+      TIGrContactControl->GrayOut(false);
+      TILufsContactControl->GrayOut(false);
     }
     break;
   case PLUG_OFF_MODE:
@@ -83,7 +93,9 @@ void StreamMaster::UpdateAvailableControls(){
     tPeakingKnob->GrayOut(true);
     tPlatformSelector->GrayOut(true);
     tPeakingTextControl->GrayOut(true);
-    tILevelMeteringBar->GrayOut(true);
+    tILevelMeteringBar->GrayOut(true);    
+    TIGrContactControl->GrayOut(true);
+    TILufsContactControl->GrayOut(true);
     break;
   }
 }
@@ -162,6 +174,9 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   // Mode and platform switches
   GetParam(kModeSwitch)->InitInt("Mode", PLUG_CONVERT_PLUG_MODE_TO_SWITCH_VALUE(tPlugCurrentMode), 0, 2, "");
   GetParam(kPlatformSwitch)->InitInt("Target platform", PLUG_DEFAULT_TARGET_PLATFORM, 0, 4, "");
+  // GR and LUFS overlay switches for resetting  
+  GetParam(kIGrContactControl)->InitBool("GR meter reset", 0, "");
+  GetParam(kILufsContactControl)->InitBool("Loudness meter reset", 0, "");
 
   // *** Initing actual GUI controls
 
@@ -169,18 +184,34 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   pGraphics = MakeGraphics(this, kWidth, kHeight);
   pGraphics->AttachBackground(BG_ID, BG_FN);
   
+  // Bitmap for an invisible reset switch above metering bars
+  IBitmap tBmp = pGraphics->LoadIBitmap(
+    METEROVERLAYSWITCH_ID,
+    METEROVERLAYSWITCH_FN,
+    kIContactControl_N
+    );
+
   // LUFS meter
   tILevelMeteringBar = new Plug::ILevelMeteringBar(this, kLufsMeter_X, kLufsMeter_Y, METERING_BAR_DEFAULT_SIZE_IRECT, kILevelMeteringBar);
   tILevelMeteringBar->SetNotchValue(PLUG_LUFS_RANGE_MAX);
   pGraphics->AttachControl(tILevelMeteringBar);
+  // Same coordinates as the actial meter bar
+  TILufsContactControl = new IContactControl(
+    this, kLufsMeter_X, kLufsMeter_Y, kILufsContactControl, &tBmp);
+  pGraphics->AttachControl(TILufsContactControl);
 
   // Gain Reduction meter
   tIGrMeteringBar = new Plug::ILevelMeteringBar(this, kGrMeter_X, kGrMeter_Y, METERING_BAR_DEFAULT_SIZE_IRECT, kIGrMeteringBar, \
     true, &GR_BAR_DEFAULT_FG_ICOLOR, &GR_BAR_DEFAULT_NOTCH_ICOLOR, &METERING_BAR_ABOVE_NOTCH_ICOLOR);
   pGraphics->AttachControl(tIGrMeteringBar);
+  // Same coordinates as the actial meter bar
+  TIGrContactControl = new IContactControl(
+    this, kGrMeter_X, kGrMeter_Y, kIGrContactControl, &tBmp);
+  pGraphics->AttachControl(TIGrContactControl);
+
     
   // Limiter knob
-  IBitmap tBmp = pGraphics->LoadIBitmap(KNOB_ID, KNOB_FN, kKnobFrames);
+  tBmp = pGraphics->LoadIBitmap(KNOB_ID, KNOB_FN, kKnobFrames);
   tPeakingKnob = new IKnobMultiControl(this, kGainX, kGainY, kGain, &tBmp);
   pGraphics->AttachControl(tPeakingKnob);
   
@@ -460,10 +491,29 @@ void StreamMaster::OnParamChange(int paramIdx)
   // Locking and unlocking of controls happens in UpdateAvailableControls()
   switch (paramIdx)
   {
+    case kIGrContactControl:
+      // Just reset the peak GR value on the GR bar
+      fMaxGainReductionPerSessionDb = PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET;
+      tIGrMeteringBar->SetNotchValue(fMaxGainReductionPerSessionDb);
+    case kILufsContactControl:
+      // Resetting LUFS meter bar and the actual meter
+      /* TODO: this switch probably falsely triggers during the startup once,
+      so it's a good idea to avoid unnecessary destruction */
+      delete tLoudnessMeter;
+      tLoudnessMeter = new Plug::LoudnessMeter();
+      tLoudnessMeter->SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER); 
+      UpdateSampleRate();
+      // Set notch on LUFS meter
+      tILevelMeteringBar->SetValue(PLUG_SOURCE_LUFS_INTERGRATED_DB_RESET);
+      tILevelMeteringBar->SetNotchValue(fTargetLufsIntegratedDb);
+      // Reset source LUFS if we were measuring it
+      tPlugCurrentMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
+      if (tPlugCurrentMode == PLUG_LEARN_MODE) fSourceLufsIntegratedDb = PLUG_SOURCE_LUFS_INTERGRATED_DB_RESET;
     case kGain:
       fPeaking = PLUG_KNOB_PEAK_DOUBLE(GetParam(kGain)->Value());
       sprintf(sPeakingString, "%5.2fdB", fPeaking);
       tPeakingTextControl->SetTextFromPlug(sPeakingString);
+      tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
       if (tPlugCurrentMode == PLUG_MASTER_MODE)
         UpdatePreMastering();
       break;

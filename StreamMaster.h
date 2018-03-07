@@ -126,6 +126,8 @@ enum EParams
   kIGrMeteringBar,
   kIPeakingTextControl,
   kIModeTextControl,
+  kIGrContactControl,
+  kILufsContactControl,
   kNumParams,
   kInvisibleSwitchIndicator   // the user after kNumParams so they get a param id
 };
@@ -208,6 +210,9 @@ enum ELayout
   kTextVersion_W = 64,
   kTextVersion_H = 20,
   kTextVersion_ColorMono = 64,
+
+  // Meter reset switch
+  kIContactControl_N = 2
 };
 
 // Loudness stuff
@@ -270,6 +275,8 @@ private:
   IKnobMultiControl *tPlatformSelector;
   Plug::ILevelMeteringBar* tILevelMeteringBar;
   Plug::ILevelMeteringBar* tIGrMeteringBar;
+  IContactControl *TIGrContactControl;
+  IContactControl *TILufsContactControl;
   // Shared statistic variables
   double fMaxGainReductionPerFrame;
   double fMaxGainReductionPerSessionDb;

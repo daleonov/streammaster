@@ -58,12 +58,14 @@ instrument determined by PLUG _IS _INST
 #define KNOB_ID 101
 #define MODESWITCH_ID 102
 #define PLATFORMSWITCH_ID 103
+#define METEROVERLAYSWITCH_ID 104
 
 // Image resource locations for this plug.
-#define BG_FN             "resources/img/StreamMasterBG.png"
-#define KNOB_FN           "resources/img/StreamMasterKnob.png"
-#define MODESWITCH_FN     "resources/img/ModeSwitch.png"
-#define PLATFORMSWITCH_FN "resources/img/PlatformSwitch.png"
+#define BG_FN                 "resources/img/StreamMasterBG.png"
+#define KNOB_FN               "resources/img/StreamMasterKnob.png"
+#define MODESWITCH_FN         "resources/img/ModeSwitch.png"
+#define PLATFORMSWITCH_FN     "resources/img/PlatformSwitch.png"
+#define METEROVERLAYSWITCH_FN "resources/img/MeterSwitchOverlay.png"
 
 // GUI default dimensions
 #define GUI_WIDTH 641
