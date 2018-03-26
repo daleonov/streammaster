@@ -128,6 +128,7 @@ enum EParams
   kIGrMeteringBar,
   kIPeakingTextControl,
   kIModeTextControl,
+  kPlatformSwitchClickable,
   kNumParams, /* Anything below that line will be non-automatable */
 };
 
@@ -198,10 +199,19 @@ enum ELayout
   kModeSwitch_X = 45,
   kModeSwitch_Y = kGainY,
   
-  // Youtube-Spotify-etc.
+  /* Switches for Youtube-Spotify-etc. - start */
+  // Mode switch, rotatable
   kPlatformSwitch_N = 5,
   kPlatformSwitch_X = 226,
   kPlatformSwitch_Y = 481+PLUG_Y_OFFSET,
+  // Mode switch, clickable
+  kPlatformSwitchClickable_N = 2,
+  kPlatformSwitchClickable_W = 159,  // width of bitmap
+  kPlatformSwitchClickable_H = 59,  // height of one of the bitmap images
+  kPlatformSwitchClickable_X = 20,
+  kPlatformSwitchClickable_Y = 435,
+  kPlatformSwitchClickable_TOTAL = 5, // total number of radio buttons
+  /* Switches for Youtube-Spotify-etc. - end */
 
   // Text version label
   kTextVersion_X = 5,
@@ -212,7 +222,15 @@ enum ELayout
 
   // Meter reset switch
   kIContactControl_N = 2
+
 };
+
+const IRECT tPlatformSwitchClickableIRect(
+	kPlatformSwitchClickable_X,
+	kPlatformSwitchClickable_Y,
+	kPlatformSwitchClickable_X + kPlatformSwitchClickable_W,
+	kPlatformSwitchClickable_Y + kPlatformSwitchClickable_H * kPlatformSwitchClickable_TOTAL
+	);
 
 // Loudness stuff
 #define PLUG_PLATFORM_OPTIONS 5
@@ -276,6 +294,7 @@ private:
   Plug::ILevelMeteringBar* tIGrMeteringBar;
   IContactControl *TIGrContactControl;
   IContactControl *TILufsContactControl;
+  IRadioButtonsControl *tPlatformSelectorClickable;
   // Shared statistic variables
   double fMaxGainReductionPerFrame;
   double fMaxGainReductionPerSessionDb;

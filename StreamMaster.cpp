@@ -51,7 +51,7 @@ void StreamMaster::UpdateAvailableControls(){
     // Only mode switch and LUFS meter
     tIGrMeteringBar->GrayOut(true);
     tPeakingKnob->GrayOut(true);
-    tPlatformSelector->GrayOut(true);
+    //tPlatformSelector->GrayOut(true);
     tPeakingTextControl->GrayOut(true);
     tILevelMeteringBar->GrayOut(false);
     /* GR is blocked since there's no gain reduction applied,
@@ -67,7 +67,7 @@ void StreamMaster::UpdateAvailableControls(){
       // Only mode switch and LUFS meter
       tIGrMeteringBar->GrayOut(true);
       tPeakingKnob->GrayOut(true);
-      tPlatformSelector->GrayOut(true);
+      //tPlatformSelector->GrayOut(true);
       tPeakingTextControl->GrayOut(true);
       tILevelMeteringBar->GrayOut(false);
       /* Unlike learning mode, we should
@@ -79,7 +79,7 @@ void StreamMaster::UpdateAvailableControls(){
       // Everything unlocked
       tIGrMeteringBar->GrayOut(false);
       tPeakingKnob->GrayOut(false);
-      tPlatformSelector->GrayOut(false);
+      //tPlatformSelector->GrayOut(false);
       tPeakingTextControl->GrayOut(false);
       tILevelMeteringBar->GrayOut(false);
       TIGrContactControl->GrayOut(false);
@@ -91,7 +91,7 @@ void StreamMaster::UpdateAvailableControls(){
     // Only mode switch
     tIGrMeteringBar->GrayOut(true);
     tPeakingKnob->GrayOut(true);
-    tPlatformSelector->GrayOut(true);
+    //tPlatformSelector->GrayOut(true);
     tPeakingTextControl->GrayOut(true);
     tILevelMeteringBar->GrayOut(true);    
     TIGrContactControl->GrayOut(true);
@@ -174,6 +174,8 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   // Mode and platform switches
   GetParam(kModeSwitch)->InitInt("Mode", PLUG_CONVERT_PLUG_MODE_TO_SWITCH_VALUE(tPlugCurrentMode), 0, 2, "");
   GetParam(kPlatformSwitch)->InitInt("Target platform", PLUG_DEFAULT_TARGET_PLATFORM, 0, 4, "");
+  GetParam(kPlatformSwitchClickable)->InitInt("Target platform clickable", PLUG_DEFAULT_TARGET_PLATFORM, 0, 4, "");
+  
   // GR and LUFS overlay switches for resetting  
   GetParam(kIGrContactControl)->InitBool("GR meter reset", 0, "");
   GetParam(kILufsContactControl)->InitBool("Loudness meter reset", 0, "");
@@ -220,9 +222,16 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   pGraphics->AttachControl(new ISwitchControl(this, kModeSwitch_X, kModeSwitch_Y, kModeSwitch, &tBmp));
 
   // Platform selector (YT, spotify etc.)
+  // Rotatable control
   tBmp = pGraphics->LoadIBitmap(PLATFORMSWITCH_ID, PLATFORMSWITCH_FN, kPlatformSwitch_N);
   tPlatformSelector = new IKnobMultiControl(this, kPlatformSwitch_X, kPlatformSwitch_Y, kPlatformSwitch, &tBmp);
   pGraphics->AttachControl(tPlatformSelector);
+  // Same control, but lest user click on platform names too
+  tBmp = pGraphics->LoadIBitmap(MODESWITCHCLICKABLE_ID, MODESWITCHCLICKABLE_FN, kPlatformSwitchClickable_N);
+  tPlatformSelectorClickable = new IRadioButtonsControl(this, tPlatformSwitchClickableIRect, kPlatformSwitchClickable, kPlatformSwitchClickable_TOTAL, &tBmp);
+  //IRadioButtonsControl(this, IRECT(kIRadioButtonsControl_V_X, kIRadioButtonsControl_V_Y, kIRadioButtonsControl_V_X + (kIRBC_W*kIRBC_VN), kIRadioButtonsControl_V_Y + (kIRBC_H*kIRBC_VN)), kIRadioButtonsControl_V, kIRBC_VN, &bitmap));
+  pGraphics->AttachControl(tPlatformSelectorClickable);
+  
 
   // Text LUFS meter
   IText tDefaultLoudnessLabel = IText(PLUG_METER_TEXT_LABEL_STRING_SIZE);
@@ -636,7 +645,8 @@ void StreamMaster::OnParamChange(int paramIdx)
         // Guide message
         sprintf(sModeString, PLUG_OFF_GUIDE_MESSAGE);
         tModeTextControl->SetTextFromPlug(sModeString);
-
+      case kPlatformSwitchClickable:
+        tPlatformSelector->SetValueFromPlug(GetParam(kPlatformSwitchClickable)->Value());
         break;
       }
 
