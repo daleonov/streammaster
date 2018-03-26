@@ -21,9 +21,9 @@
 
 // http://service.steinberg.de/databases/plugin.nsf/plugIn?openForm
 // 4 chars, single quotes. At least one capital letter
-#define PLUG_UNIQUE_ID 'A3EF'
+#define PLUG_UNIQUE_ID 'STMR'
 // make sure this is not the same as BUNDLE_MFR
-#define PLUG_MFR_ID 'DF56'
+#define PLUG_MFR_ID 'DLPG'
 
 // ProTools stuff
 
@@ -33,8 +33,8 @@
   const int PLUG_TYPE_IDS_AS[2] = {'EFA1', 'EFA2'}; // AudioSuite
 #endif
 
-#define PLUG_MFR_PT "DanielLeonov\nDanielLeonov"
-#define PLUG_NAME_PT "StreamMaster\nIPEF"
+#define PLUG_MFR_PT "DanielLeonov\nDanielLeonov\nDLPG"
+#define PLUG_NAME_PT "StreamMaster\nSTMR"
 #define PLUG_TYPE_PT "Dynamics"
 #define PLUG_DOES_AUDIOSUITE 1
 
