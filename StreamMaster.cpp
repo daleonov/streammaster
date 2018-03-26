@@ -495,6 +495,7 @@ void StreamMaster::OnParamChange(int paramIdx)
   char sModeString[PLUG_MODE_TEXT_LABEL_STRING_SIZE];
   const double fMaxGainReductionPerFrameDb = LINEAR_TO_LOG(fMaxGainReductionPerFrame);
   PLUG_Mode tPlugNewMode;
+  int nModeNumber;
 
   // General control handling
   // Locking and unlocking of controls happens in UpdateAvailableControls()
@@ -530,6 +531,10 @@ void StreamMaster::OnParamChange(int paramIdx)
       break;
     //Platform control
     case kPlatformSwitch:
+
+      GetGUI()->SetParameterFromPlug(kPlatformSwitchClickable, GetParam(kPlatformSwitch)->Int(), false);
+      InformHostOfParamChange(kPlatformSwitchClickable, ((double)GetParam(kPlatformSwitch)->Int()) / 5.);
+
       // Apparently it can be falsely triggered during startup, 
       // so we have to ignore that one
       tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
@@ -546,6 +551,7 @@ void StreamMaster::OnParamChange(int paramIdx)
 
       if (tPlugCurrentMode == PLUG_MASTER_MODE)
         UpdatePreMastering();
+
       break;
       /*
       Make sure we update all following variables:
@@ -565,7 +571,9 @@ void StreamMaster::OnParamChange(int paramIdx)
           // so we have to ignore that one
           break;
       }
-      
+
+      nModeNumber = (int)GetParam(kModeSwitch)->Value();
+
       switch (tPlugNewMode){
       case PLUG_LEARN_MODE:
         // Learn mode
@@ -645,13 +653,19 @@ void StreamMaster::OnParamChange(int paramIdx)
         // Guide message
         sprintf(sModeString, PLUG_OFF_GUIDE_MESSAGE);
         tModeTextControl->SetTextFromPlug(sModeString);
-      case kPlatformSwitchClickable:
-        tPlatformSelector->SetValueFromPlug(GetParam(kPlatformSwitchClickable)->Value());
-        break;
-      }
-
+              }
       tPlugCurrentMode = tPlugNewMode;
       UpdateAvailableControls();
+      break;
+
+    case kPlatformSwitchClickable:
+      nModeNumber = (int)GetParam(kPlatformSwitchClickable)->Value();
+     
+      //GetParam(kPlatformSwitch)->InitInt("Target platform", nModeNumber, 0, 4, "");
+      //tPlatformSelector->SetDirty();
+      //GetParam(kPlatformSwitch)->Set(nModeNumber);
+      //tPlatformSelector->SetDirty();
+      //pGraphics->
       break;
 
     default:
