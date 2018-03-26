@@ -138,10 +138,10 @@ enum EParams
   kILufsContactControl,
   kILevelMeteringBar,
   kIGrMeteringBar,
-  kIPeakingTextControl,
-  kIModeTextControl,
   kPlatformSwitchClickable,
   kNumParams, /* Anything below that line will be non-automatable */
+  kIPeakingTextControl,
+  kIModeTextControl,
 };
 
 enum ELayout
@@ -270,6 +270,12 @@ char *asTargetNames[] = {
 #define PLUG_DEFAULT_TARGET_PLATFORM 1
 #define PLUG_GET_TARGET_LOUDNESS(i) (afTargetLufs[i])
 #define PLUG_DEFAULT_TARGET_LOUDNESS PLUG_GET_TARGET_LOUDNESS(PLUG_DEFAULT_TARGET_PLATFORM)
+
+char *asModeNames[] = {
+  "Learn",
+  "Master",
+  "Off",
+};
 
 typedef enum{
   PLUG_LEARN_MODE = 1,

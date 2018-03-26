@@ -138,6 +138,8 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
 
   TRACE;
 
+  int i; /* For enum inits */
+
   // Value inits
   fMaxGainReductionPerFrame = PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET;
   fMaxGainReductionPerSessionDb = PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET;
@@ -187,11 +189,20 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
     PLUG_GR_RANGE_MIN,
     0.1,
     "dB");
+
   // Mode and platform switches
-  GetParam(kModeSwitch)->InitInt("Mode", PLUG_CONVERT_PLUG_MODE_TO_SWITCH_VALUE(tPlugCurrentMode), 0, 2, "");
-  GetParam(kPlatformSwitch)->InitInt("Target platform", PLUG_DEFAULT_TARGET_PLATFORM, 0, 4, "");
-  GetParam(kPlatformSwitchClickable)->InitInt("Target platform clickable", PLUG_REVERSE_PLATFORM_SWITCH_VALUE(PLUG_DEFAULT_TARGET_PLATFORM), 0, 4, "");
-  
+  GetParam(kModeSwitch)->InitEnum("Mode", PLUG_CONVERT_PLUG_MODE_TO_SWITCH_VALUE(tPlugCurrentMode), 3);
+  for (i=0; i<3; i++)
+    GetParam(kModeSwitch)->SetDisplayText(i, asModeNames[i]);
+
+  GetParam(kPlatformSwitchClickable)->InitEnum("Target platform", PLUG_REVERSE_PLATFORM_SWITCH_VALUE(PLUG_DEFAULT_TARGET_PLATFORM), 5);
+  for (i=0; i<PLUG_PLATFORM_OPTIONS; i++)
+    GetParam(kPlatformSwitchClickable)->SetDisplayText(PLUG_REVERSE_PLATFORM_SWITCH_VALUE(i), asTargetNames[i]);
+
+  GetParam(kPlatformSwitch)->InitEnum("Target platform", PLUG_DEFAULT_TARGET_PLATFORM, PLUG_PLATFORM_OPTIONS);
+  for (i=0; i<PLUG_PLATFORM_OPTIONS; i++)
+    GetParam(kPlatformSwitch)->SetDisplayText(i, asTargetNames[i]);
+
   // GR and LUFS overlay switches for resetting  
   GetParam(kIGrContactControl)->InitBool("GR meter reset", 0, "");
   GetParam(kILufsContactControl)->InitBool("Loudness meter reset", 0, "");
