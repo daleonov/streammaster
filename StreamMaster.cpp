@@ -45,13 +45,25 @@ void StreamMaster::UpdateGui()
 \brief Locks and unlocks controls depending on current mode. Called every time the mode is changed. 
 */
 void StreamMaster::UpdateAvailableControls(){
+  #ifdef PLUG_DO_NOT_BLOCK_CONTROLS
+  // Unlock all controls in debug mode
+  tIGrMeteringBar->GrayOut(false);
+  tPeakingKnob->GrayOut(false);
+  tPlatformSelector->GrayOut(false);
+  tPlatformSelectorClickable->GrayOut(false);
+  tPeakingTextControl->GrayOut(false);
+  tILevelMeteringBar->GrayOut(false);
+  TIGrContactControl->GrayOut(false);
+  TILufsContactControl->GrayOut(false);
+  #else
   switch (tPlugCurrentMode){
   case PLUG_LEARN_MODE:
     // Learn mode
     // Only mode switch and LUFS meter
     tIGrMeteringBar->GrayOut(true);
     tPeakingKnob->GrayOut(true);
-    //tPlatformSelector->GrayOut(true);
+    tPlatformSelector->GrayOut(true);
+    tPlatformSelectorClickable->GrayOut(true);
     tPeakingTextControl->GrayOut(true);
     tILevelMeteringBar->GrayOut(false);
     /* GR is blocked since there's no gain reduction applied,
@@ -67,7 +79,8 @@ void StreamMaster::UpdateAvailableControls(){
       // Only mode switch and LUFS meter
       tIGrMeteringBar->GrayOut(true);
       tPeakingKnob->GrayOut(true);
-      //tPlatformSelector->GrayOut(true);
+      tPlatformSelector->GrayOut(true);
+      tPlatformSelectorClickable->GrayOut(true);
       tPeakingTextControl->GrayOut(true);
       tILevelMeteringBar->GrayOut(false);
       /* Unlike learning mode, we should
@@ -79,7 +92,8 @@ void StreamMaster::UpdateAvailableControls(){
       // Everything unlocked
       tIGrMeteringBar->GrayOut(false);
       tPeakingKnob->GrayOut(false);
-      //tPlatformSelector->GrayOut(false);
+      tPlatformSelector->GrayOut(false);
+      tPlatformSelectorClickable->GrayOut(false);
       tPeakingTextControl->GrayOut(false);
       tILevelMeteringBar->GrayOut(false);
       TIGrContactControl->GrayOut(false);
@@ -91,13 +105,15 @@ void StreamMaster::UpdateAvailableControls(){
     // Only mode switch
     tIGrMeteringBar->GrayOut(true);
     tPeakingKnob->GrayOut(true);
-    //tPlatformSelector->GrayOut(true);
+    tPlatformSelector->GrayOut(true);
+    tPlatformSelectorClickable->GrayOut(true);
     tPeakingTextControl->GrayOut(true);
     tILevelMeteringBar->GrayOut(true);    
     TIGrContactControl->GrayOut(true);
     TILufsContactControl->GrayOut(true);
     break;
   }
+  #endif
 }
 
 /*
@@ -358,10 +374,11 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   UpdateSampleRate();
 }
 
+StreamMaster::~StreamMaster() {}
+
 /*
 \brief DSP thread. All signall processing happens here. Also the GUI values are updated fron this thread.
 */
-StreamMaster::~StreamMaster() {}
 void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int nFrames)
 {
   // Mutex is already locked for us.
@@ -450,12 +467,12 @@ Done!
 /*
 \brief calculate all relevant values before we start mastering
 */
-void StreamMaster::UpdatePreMastering(){
-  unsigned int nIndex;
+void StreamMaster::UpdatePreMastering(PLUG_Target mPlatform){
+  //static int nIndex;
   char sModeString[PLUG_MODE_TEXT_LABEL_STRING_SIZE];
   // *** Target LUFS 
-  nIndex = (unsigned int)GetParam(kPlatformSwitch)->Value();
-  fTargetLufsIntegratedDb = PLUG_GET_TARGET_LOUDNESS(nIndex);
+  //nIndex = GetParam(kPlatformSwitch)->Int();
+  fTargetLufsIntegratedDb = PLUG_GET_TARGET_LOUDNESS((int)mPlatform);
 
   // *** Limiter ceiling
   fLimiterCeilingDb = PLUG_KNOB_PEAK_DOUBLE(GetParam(kGain)->Value());
@@ -481,6 +498,20 @@ void StreamMaster::UpdatePreMastering(){
     );
   tModeTextControl->SetTextFromPlug(sModeString);
 }
+
+void StreamMaster::UpdatePlatform(PLUG_Target mPlatform){
+  //static int nIndex = GetParam(kPlatformSwitch)->Int();
+
+  fTargetLoudness = PLUG_GET_TARGET_LOUDNESS((int)mPlatform);
+  // Update the notch on the LUFS meter
+  tILevelMeteringBar->SetNotchValue(fTargetLoudness);
+  // Reset gain reduction meter bar
+  tIGrMeteringBar->SetValue(PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET);
+  tIGrMeteringBar->SetNotchValue(PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET);
+
+  if (tPlugCurrentMode == PLUG_MASTER_MODE)
+    UpdatePreMastering((PLUG_Target)mPlatform);
+} 
 
 /*
 \brief Handles all user interactions with the controls
@@ -527,8 +558,9 @@ void StreamMaster::OnParamChange(int paramIdx)
       sprintf(sPeakingString, "%5.2fdB", fPeaking);
       tPeakingTextControl->SetTextFromPlug(sPeakingString);
       tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
+      nIndex = GetParam(kPlatformSwitch)->Int();
       if (tPlugCurrentMode == PLUG_MASTER_MODE)
-        UpdatePreMastering();
+        UpdatePreMastering((PLUG_Target)nIndex);
       break;
     //Platform control
     case kPlatformSwitch:
@@ -546,16 +578,8 @@ void StreamMaster::OnParamChange(int paramIdx)
       tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
       if (tPlugNewMode != PLUG_MASTER_MODE) break;
 
-      fTargetLoudness = PLUG_GET_TARGET_LOUDNESS(nCurrentTargetIndex);
-
-      // Update the notch on the LUFS meter
-      tILevelMeteringBar->SetNotchValue(fTargetLoudness);
-      // Reset gain reduction meter bar
-      tIGrMeteringBar->SetValue(PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET);
-      tIGrMeteringBar->SetNotchValue(PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET);
-
-      if (tPlugCurrentMode == PLUG_MASTER_MODE)
-        UpdatePreMastering();
+      // Update all related values
+      UpdatePlatform((PLUG_Target)nCurrentTargetIndex);
 
       break;
       /*
@@ -600,7 +624,20 @@ void StreamMaster::OnParamChange(int paramIdx)
         fSourceLufsIntegratedDb = tLoudnessMeter->GetLufs();
 
         // *** Check if learn mode wass successful - start
-        if(fSourceLufsIntegratedDb < PLUG_LUFS_TOO_LOW){
+        if((fSourceLufsIntegratedDb > PLUG_LUFS_TOO_LOW) || PLUG_ALWAYS_ALLOW_MASTERING){         
+          bLufsTooLow = false; 
+          delete tLoudnessMeter;
+          tLoudnessMeter = new Plug::LoudnessMeter();
+          tLoudnessMeter->SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER); 
+          UpdateSampleRate();
+          
+          nIndex = GetParam(kPlatformSwitch)->Int();
+          UpdatePreMastering((PLUG_Target)nIndex);
+
+          // Set notch on LUFS meter
+          tILevelMeteringBar->SetNotchValue(fTargetLufsIntegratedDb);
+        }
+        else{
           // In case the source LUFS was too low
           bLufsTooLow = true;
 
@@ -612,17 +649,6 @@ void StreamMaster::OnParamChange(int paramIdx)
           fLimiterCeilingDb = PLUG_LIMITER_CEILING_DB_RESET;
           fLimiterCeilingLinear = PLUG_LIMITER_CEILING_LINEAR_RESET;
           fMasteringGainLinear = PLUG_MASTERING_GAIN_LINEAR_RESET;
-        }
-        else{         
-          bLufsTooLow = false; 
-          delete tLoudnessMeter;
-          tLoudnessMeter = new Plug::LoudnessMeter();
-          tLoudnessMeter->SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER); 
-          UpdateSampleRate();
-          UpdatePreMastering();
-
-          // Set notch on LUFS meter
-          tILevelMeteringBar->SetNotchValue(fTargetLufsIntegratedDb);
         }
         // *** Check if learn mode wass successful - end
         //Resetting the meter
@@ -663,20 +689,24 @@ void StreamMaster::OnParamChange(int paramIdx)
       UpdateAvailableControls();
       break;
 
-    case kPlatformSwitchClickable:
-      nModeNumber = (int)GetParam(kPlatformSwitchClickable)->Value();
-     
-      //GetParam(kPlatformSwitch)->InitInt("Target platform", nModeNumber, 0, 4, "");
-      //tPlatformSelector->SetDirty();
-      //GetParam(kPlatformSwitch)->Set(nModeNumber);
-      //tPlatformSelector->SetDirty();
-      //pGraphics->
+    case kPlatformSwitchClickable:      
+      // Apparently it can be falsely triggered during startup, 
+      // so we have to ignore that one
+      tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
+      if (tPlugNewMode != PLUG_MASTER_MODE) break;
 
+      nModeNumber = (int)GetParam(kPlatformSwitchClickable)->Value();
       // Rotating and clickable platform switches are working together
       nConvertedModeNumber = PLUG_REVERSE_PLATFORM_SWITCH_VALUE(nModeNumber);
       fNormalizedConvertedModeNumber = PLUG_NORMALIZE_PLATFORM_SWITCH_VALUE(nConvertedModeNumber);
       GetGUI()->SetParameterFromPlug(kPlatformSwitch, nConvertedModeNumber, false);
       InformHostOfParamChange(kPlatformSwitch, fNormalizedConvertedModeNumber);
+
+      // This is a global value used by other methods. Careful with it!
+      nCurrentTargetIndex = nConvertedModeNumber;
+
+      // Update all related values      
+      UpdatePlatform((PLUG_Target)nCurrentTargetIndex);
       break;
 
     default:

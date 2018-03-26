@@ -12,6 +12,18 @@
 // or create an empty file if you don't use git. 
 #include "PLUG_Version.h"
 
+/* Build-related macros - start */
+
+// Uncomment following line if you want to tinker with controls
+// in every mode (for debug purposes)
+//#define PLUG_DO_NOT_BLOCK_CONTROLS
+
+// Set to false if you want to force user to let the plug learn
+// song loudness properly to allow him to go into mastering mode
+#define PLUG_ALWAYS_ALLOW_MASTERING true
+
+/* Build-related macros - end */
+
 #define PLUG_DEFAULT_SAMPLERATE 44100.
 #define PLUG_DEFAULT_CHANNEL_NUMBER 2
 
@@ -265,6 +277,14 @@ typedef enum{
   PLUG_OFF_MODE = 3
 }PLUG_Mode;
 
+typedef enum{
+  PLUG_Broadcast = 0,
+  PLUG_Apple = 1,
+  PLUG_Radio = 2,
+  PLUG_Spotify = 3,
+  PLUG_YouTube = 4
+}PLUG_Target;
+
 #define PLUG_INITIAL_MODE PLUG_OFF_MODE
 #define PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(idx) \
   ((PLUG_Mode)int(GetParam(idx)->Value()+1))
@@ -286,8 +306,9 @@ private:
   // Update stuff
   void UpdateGui();
   void UpdateAvailableControls();
-  void UpdatePreMastering();
+  void UpdatePreMastering(PLUG_Target mPlatform);
   void UpdateSampleRate();
+  void UpdatePlatform(PLUG_Target mPlatform);
   // Limiter and loudness meter
   chunkware_simple::SimpleLimit* tLimiter;
   Plug::LoudnessMeter* tLoudnessMeter;
