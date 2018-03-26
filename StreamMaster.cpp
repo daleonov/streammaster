@@ -341,6 +341,14 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   AttachGraphics(pGraphics);
   #endif
 
+  // Hide some parameters from DAW's automation menu
+  // (doesn't seem to hide the parameters, at least in Reaper 5.77)
+  // Bar values are not for automation obviously
+  GetParam(kILevelMeteringBar)->SetCanAutomate(false);
+  GetParam(kIGrMeteringBar)->SetCanAutomate(false);
+  // There are two linked controls for platform selection, so we disable one of them
+  GetParam(kPlatformSwitch)->SetCanAutomate(false);
+
   // Guide message
   char sModeString[] = PLUG_OFF_STARTUP_MESSAGE;
   tModeTextControl->SetTextFromPlug(sModeString);
