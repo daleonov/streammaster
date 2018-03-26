@@ -248,6 +248,13 @@ char *asTargetDescription[]={
   "Spotify and Tidal",
   "Youtube music videos"
 };
+char *asTargetNames[] = {
+  "Podcasts and general broadcast",
+  "Apple Music, SoundCheck, AES",
+  "Radio and MP3",
+  "Spotify and Tidal",
+  "Youtube",
+};
 #define PLUG_DEFAULT_TARGET_PLATFORM 1
 #define PLUG_GET_TARGET_LOUDNESS(i) (afTargetLufs[i])
 #define PLUG_DEFAULT_TARGET_LOUDNESS PLUG_GET_TARGET_LOUDNESS(PLUG_DEFAULT_TARGET_PLATFORM)
@@ -261,6 +268,8 @@ typedef enum{
 #define PLUG_INITIAL_MODE PLUG_OFF_MODE
 #define PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(idx) \
   ((PLUG_Mode)int(GetParam(idx)->Value()+1))
+#define PLUG_REVERSE_PLATFORM_SWITCH_VALUE(n) (PLUG_PLATFORM_OPTIONS - 1 - n)
+#define PLUG_NORMALIZE_PLATFORM_SWITCH_VALUE(n) (((double)n)/PLUG_PLATFORM_OPTIONS)
 
 #define PLUG_CONVERT_PLUG_MODE_TO_SWITCH_VALUE(m) (m-1)
 

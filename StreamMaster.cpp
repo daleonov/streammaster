@@ -174,7 +174,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   // Mode and platform switches
   GetParam(kModeSwitch)->InitInt("Mode", PLUG_CONVERT_PLUG_MODE_TO_SWITCH_VALUE(tPlugCurrentMode), 0, 2, "");
   GetParam(kPlatformSwitch)->InitInt("Target platform", PLUG_DEFAULT_TARGET_PLATFORM, 0, 4, "");
-  GetParam(kPlatformSwitchClickable)->InitInt("Target platform clickable", PLUG_DEFAULT_TARGET_PLATFORM, 0, 4, "");
+  GetParam(kPlatformSwitchClickable)->InitInt("Target platform clickable", PLUG_REVERSE_PLATFORM_SWITCH_VALUE(PLUG_DEFAULT_TARGET_PLATFORM), 0, 4, "");
   
   // GR and LUFS overlay switches for resetting  
   GetParam(kIGrContactControl)->InitBool("GR meter reset", 0, "");
@@ -495,7 +495,8 @@ void StreamMaster::OnParamChange(int paramIdx)
   char sModeString[PLUG_MODE_TEXT_LABEL_STRING_SIZE];
   const double fMaxGainReductionPerFrameDb = LINEAR_TO_LOG(fMaxGainReductionPerFrame);
   PLUG_Mode tPlugNewMode;
-  int nModeNumber;
+  int nModeNumber, nConvertedModeNumber;
+  double fNormalizedConvertedModeNumber;
 
   // General control handling
   // Locking and unlocking of controls happens in UpdateAvailableControls()
@@ -532,15 +533,19 @@ void StreamMaster::OnParamChange(int paramIdx)
     //Platform control
     case kPlatformSwitch:
 
-      GetGUI()->SetParameterFromPlug(kPlatformSwitchClickable, GetParam(kPlatformSwitch)->Int(), false);
-      InformHostOfParamChange(kPlatformSwitchClickable, ((double)GetParam(kPlatformSwitch)->Int()) / 5.);
+      nCurrentTargetIndex = (unsigned int)GetParam(kPlatformSwitch)->Value();
+
+      // Rotating and clickable platform switches are working together
+      nConvertedModeNumber = PLUG_REVERSE_PLATFORM_SWITCH_VALUE(nCurrentTargetIndex);
+      fNormalizedConvertedModeNumber = PLUG_NORMALIZE_PLATFORM_SWITCH_VALUE(nConvertedModeNumber);
+      GetGUI()->SetParameterFromPlug(kPlatformSwitchClickable, nConvertedModeNumber, false);
+      InformHostOfParamChange(kPlatformSwitchClickable, ((double)nCurrentTargetIndex) / 5.);
 
       // Apparently it can be falsely triggered during startup, 
       // so we have to ignore that one
       tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
       if (tPlugNewMode != PLUG_MASTER_MODE) break;
 
-      nCurrentTargetIndex = (unsigned int)GetParam(kPlatformSwitch)->Value();
       fTargetLoudness = PLUG_GET_TARGET_LOUDNESS(nCurrentTargetIndex);
 
       // Update the notch on the LUFS meter
@@ -666,6 +671,12 @@ void StreamMaster::OnParamChange(int paramIdx)
       //GetParam(kPlatformSwitch)->Set(nModeNumber);
       //tPlatformSelector->SetDirty();
       //pGraphics->
+
+      // Rotating and clickable platform switches are working together
+      nConvertedModeNumber = PLUG_REVERSE_PLATFORM_SWITCH_VALUE(nModeNumber);
+      fNormalizedConvertedModeNumber = PLUG_NORMALIZE_PLATFORM_SWITCH_VALUE(nConvertedModeNumber);
+      GetGUI()->SetParameterFromPlug(kPlatformSwitch, nConvertedModeNumber, false);
+      InformHostOfParamChange(kPlatformSwitch, fNormalizedConvertedModeNumber);
       break;
 
     default:
