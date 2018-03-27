@@ -20,7 +20,18 @@
 
 // Set to false if you want to force user to let the plug learn
 // song loudness properly to allow him to go into mastering mode
-#define PLUG_ALWAYS_ALLOW_MASTERING true
+#define PLUG_ALWAYS_ALLOW_MASTERING false
+
+/********************************************************************
+Other application level macros dependencies:
+
+__APPLE__ or _WIN32 - different text settings for each OS
+
+_PLUG_VERSION_H - if the version header is generated correctly,
+the plugin version is displayed in the GUI
+(see git_version.bat and git_version.sh scripts)
+
+********************************************************************/
 
 /* Build-related macros - end */
 
@@ -61,10 +72,6 @@ use PLUG_KNOB_PEAK_DOUBLE() to convert them to linear gain*/
 #define PLUG_KNOB_PEAK_DEFAULT -10
 #define PLUG_KNOB_PEAK_SCALE 10.
 #define PLUG_KNOB_PEAK_DOUBLE(i) ((double)i/PLUG_KNOB_PEAK_SCALE)
-
-// Aftermath of tweaking UI size
-#define PLUG_Y_OFFSET (27)
-#define PLUG_X_OFFSET (-26)
 
 #define PLUG_DEFAULT_PRESET_NAME "Default"
 #define PLUG_LIMITER_ATTACK_MILLISECONDS 0.1
@@ -130,7 +137,7 @@ Please repeat learning cycle again. \n\
 
 enum EParams
 {
-  kGain,
+  kCeiling,
   kModeSwitch,
   kPlatformSwitch,
   kIGrContactControl,
@@ -150,20 +157,20 @@ enum ELayout
 
   // LUFS meter
   kLufsMeter_X = 520-43,
-  kLufsMeter_Y = PLUG_Y_OFFSET+30,
+  kLufsMeter_Y = 27+30,
 
   // GR meter
   kGrMeter_X = kLufsMeter_X+112,
   kGrMeter_Y = kLufsMeter_Y,
   
   // Peaking knob
-  kGainX = 323+PLUG_X_OFFSET,
-  kGainY = 68+PLUG_Y_OFFSET-15,
+  kCeilingX = 297,
+  kCeilingY = 80,
   kKnobFrames = 21,
 
 #ifdef _WIN32
   // LUFS Text reading
-  kILoudnessTextControl_X = 582-112,
+  kILoudnessTextControl_X = 470,
   kILoudnessTextControl_Y = 552,
   kILoudnessTextControl_W = 80,
   kILoudnessTextControl_H = 40,
@@ -182,7 +189,7 @@ enum ELayout
 #elif defined(__APPLE__)
   // LUFS Text reading
   kILoudnessTextControl_X = kLufsMeter_X,
-  kILoudnessTextControl_Y = 692+PLUG_Y_OFFSET,
+  kILoudnessTextControl_Y = 552,
   kILoudnessTextControl_W = 80,
   kILoudnessTextControl_H = 40,
 
@@ -193,28 +200,28 @@ enum ELayout
   kIGrTextControl_H = 40,
 
   // Mode text guide
-  kIModeTextControl_X = 26,
-  kIModeTextControl_Y = 95+PLUG_Y_OFFSET,
+  kIModeTextControl_X = 13,
+  kIModeTextControl_Y = 8,
   kIModeTextControl_W = GUI_WIDTH,
   kIModeTextControl_H = 20,
 #endif
 
   // Peaking knob Text reading
-  kIPeakingTextControl_X = kGainX,
-  kIPeakingTextControl_Y = 82-15,
+  kIPeakingTextControl_X = kCeilingX,
+  kIPeakingTextControl_Y = 67,
   kIPeakingTextControl_W = 155,
   kIPeakingTextControl_H = 20,
 
   // Learn-master-off
   kModeSwitch_N = 3,
-  kModeSwitch_X = 143+PLUG_X_OFFSET,
-  kModeSwitch_Y = kGainY,
+  kModeSwitch_X = 117,
+  kModeSwitch_Y = kCeilingY,
   
   /* Switches for Youtube-Spotify-etc. - start */
   // Mode switch, rotatable
   kPlatformSwitch_N = 5,
-  kPlatformSwitch_X = 323+PLUG_X_OFFSET,
-  kPlatformSwitch_Y = 363+PLUG_Y_OFFSET-24,
+  kPlatformSwitch_X = 323-26,
+  kPlatformSwitch_Y = 366,
   // Mode switch, clickable
   kPlatformSwitchClickable_N = 2,
   kPlatformSwitchClickable_W = 159,  // width of bitmap

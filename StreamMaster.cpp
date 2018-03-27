@@ -96,7 +96,7 @@ void StreamMaster::UpdateAvailableControls(){
       TIGrContactControl->GrayOut(true);
       TILufsContactControl->GrayOut(true);
       // No gain reduction is happening in that mode
-      tLoudnessTextControl->Hide(false);
+      tLoudnessTextControl->Hide(true);
       tGrTextControl->Hide(true);
     }
     else{
@@ -186,8 +186,8 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   /* We need precise values for ceiling knob,
   so we have to use integer values and convert them into double later.
   For example, "9" represents -0.1dB, "0" is for -1.0dB etc. if the actual range is -1.0..-0.0dB*/
-  GetParam(kGain)->InitInt("Ceiling", PLUG_KNOB_PEAK_DEFAULT, PLUG_KNOB_PEAK_MIN, PLUG_KNOB_PEAK_MAX, "tenths of dB");
-  GetParam(kGain)->SetShape(1.);
+  GetParam(kCeiling)->InitInt("Ceiling", PLUG_KNOB_PEAK_DEFAULT, PLUG_KNOB_PEAK_MIN, PLUG_KNOB_PEAK_MAX, "tenths of dB");
+  GetParam(kCeiling)->SetShape(1.);
   // LUFS and GR bars
   GetParam(kILevelMeteringBar)->InitDouble(
     "Loudness",
@@ -260,7 +260,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
     
   // Limiter knob
   tBmp = pGraphics->LoadIBitmap(KNOB_ID, KNOB_FN, kKnobFrames);
-  tPeakingKnob = new IKnobMultiControl(this, kGainX, kGainY, kGain, &tBmp);
+  tPeakingKnob = new IKnobMultiControl(this, kCeilingX, kCeilingY, kCeiling, &tBmp);
   pGraphics->AttachControl(tPeakingKnob);
   
   // Mode selector (learn-master-off)
@@ -514,7 +514,7 @@ void StreamMaster::UpdatePreMastering(PLUG_Target mPlatform){
   fTargetLufsIntegratedDb = PLUG_GET_TARGET_LOUDNESS((int)mPlatform);
 
   // *** Limiter ceiling
-  fLimiterCeilingDb = PLUG_KNOB_PEAK_DOUBLE(GetParam(kGain)->Value());
+  fLimiterCeilingDb = PLUG_KNOB_PEAK_DOUBLE(GetParam(kCeiling)->Value());
   fLimiterCeilingLinear = LOG_TO_LINEAR(fLimiterCeilingDb);
 
   // *** Mastering gain in dB
@@ -538,6 +538,10 @@ void StreamMaster::UpdatePreMastering(PLUG_Target mPlatform){
   tModeTextControl->SetTextFromPlug(sModeString);
 }
 
+/*
+@brief Updates related values when user changes target platform
+@param mPlatform Target platfrom chosen by user
+*/
 void StreamMaster::UpdatePlatform(PLUG_Target mPlatform){
   //static int nIndex = GetParam(kPlatformSwitch)->Int();
 
@@ -592,8 +596,8 @@ void StreamMaster::OnParamChange(int paramIdx)
       tPlugCurrentMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
       if (tPlugCurrentMode == PLUG_LEARN_MODE) fSourceLufsIntegratedDb = PLUG_SOURCE_LUFS_INTERGRATED_DB_RESET;
       break;
-    case kGain:
-      fPeaking = PLUG_KNOB_PEAK_DOUBLE(GetParam(kGain)->Value());
+    case kCeiling:
+      fPeaking = PLUG_KNOB_PEAK_DOUBLE(GetParam(kCeiling)->Value());
       sprintf(sPeakingString, "%5.2fdB", fPeaking);
       tPeakingTextControl->SetTextFromPlug(sPeakingString);
       tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
