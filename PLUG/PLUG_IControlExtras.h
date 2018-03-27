@@ -18,7 +18,6 @@ const IColor METERING_BAR_DEFAULT_NOTCH_ICOLOR(255, 0, 96, 0);
 
 #define METERING_BAR_DEFAULT_SIZE_IRECT IRECT(0, 0, 74, 492)
 #define METERING_BAR_MIN_FG_HEIGHT 2
-#define METERING_BAR_DEFAULT_NOTCH_HEIGHT 3
 #define METERING_BAR_DEFAULT_NOTCH_VALUE -0.
 #define METERING_BAR_MAX_NAME_SIZE 64
 #define METERING_BAR_MAX_LABEL_SIZE 32
@@ -32,6 +31,12 @@ const IColor METERING_BAR_DEFAULT_NOTCH_ICOLOR(255, 0, 96, 0);
 // This define results in a small line corresponding to fNotchValue
 //#define METERING_BAR_NOTCH_2
 // Normally you would want to use only one of those two.
+
+#ifdef METERING_BAR_NOTCH_1
+#define METERING_BAR_DEFAULT_NOTCH_HEIGHT 0
+#else
+#define METERING_BAR_DEFAULT_NOTCH_HEIGHT 3
+#endif
 
 // Transparency of the bar in METERING_BAR_NOTCH_1 mode
 #define PLUG_METERING_NOTCH_1_ALPHA 64
