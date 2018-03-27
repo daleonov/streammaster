@@ -246,7 +246,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   // Same coordinates as the actial meter bar
   TILufsContactControl = new IContactControl(
     this, kLufsMeter_X, kLufsMeter_Y, kILufsContactControl, &tBmp);
-  //pGraphics->AttachControl(TILufsContactControl);
+  pGraphics->AttachControl(TILufsContactControl);
 
   // Gain Reduction meter
   tIGrMeteringBar = new Plug::ILevelMeteringBar(this, kGrMeter_X, kGrMeter_Y, METERING_BAR_DEFAULT_SIZE_IRECT, kIGrMeteringBar, \
@@ -255,7 +255,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   // Same coordinates as the actial meter bar
   TIGrContactControl = new IContactControl(
     this, kGrMeter_X, kGrMeter_Y, kIGrContactControl, &tBmp);
-  //pGraphics->AttachControl(TIGrContactControl);
+  pGraphics->AttachControl(TIGrContactControl);
 
     
   // Limiter knob
