@@ -186,7 +186,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   /* We need precise values for ceiling knob,
   so we have to use integer values and convert them into double later.
   For example, "9" represents -0.1dB, "0" is for -1.0dB etc. if the actual range is -1.0..-0.0dB*/
-  GetParam(kGain)->InitInt("Ceiling", 9, 0, 10, "dB");
+  GetParam(kGain)->InitInt("Ceiling", PLUG_KNOB_PEAK_DEFAULT, PLUG_KNOB_PEAK_MIN, PLUG_KNOB_PEAK_MAX, "tenths of dB");
   GetParam(kGain)->SetShape(1.);
   // LUFS and GR bars
   GetParam(kILevelMeteringBar)->InitDouble(

@@ -54,10 +54,13 @@ const IColor PLUG_GUIDE_TEXT_LABEL_COLOR(255, 200, 200, 200);
 #define PLUG_VERSION_TEXT_LABEL_FONT_SIZE 11
 #endif
 
-#define PLUG_KNOB_PEAK_MIN 0
-#define PLUG_KNOB_PEAK_MAX 10
-#define PLUG_KNOB_PEAK_DEFAULT 7
-#define PLUG_KNOB_PEAK_DOUBLE(i) (-1.+(i/10.))
+/* Knob values are not real-life units,
+use PLUG_KNOB_PEAK_DOUBLE() to convert them to linear gain*/
+#define PLUG_KNOB_PEAK_MIN -20
+#define PLUG_KNOB_PEAK_MAX 0
+#define PLUG_KNOB_PEAK_DEFAULT -10
+#define PLUG_KNOB_PEAK_SCALE 10.
+#define PLUG_KNOB_PEAK_DOUBLE(i) ((double)i/PLUG_KNOB_PEAK_SCALE)
 
 // Aftermath of tweaking UI size
 #define PLUG_Y_OFFSET (27)
@@ -156,7 +159,7 @@ enum ELayout
   // Peaking knob
   kGainX = 323+PLUG_X_OFFSET,
   kGainY = 68+PLUG_Y_OFFSET-15,
-  kKnobFrames = 11,
+  kKnobFrames = 21,
 
 #ifdef _WIN32
   // LUFS Text reading
