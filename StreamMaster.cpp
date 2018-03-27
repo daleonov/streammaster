@@ -49,12 +49,15 @@ void StreamMaster::UpdateAvailableControls(){
   // Unlock all controls in debug mode
   tIGrMeteringBar->GrayOut(false);
   tPeakingKnob->GrayOut(false);
+  tPeakingTextControl->Hide(false);
   tPlatformSelector->GrayOut(false);
   tPlatformSelectorClickable->GrayOut(false);
   tPeakingTextControl->GrayOut(false);
   tILevelMeteringBar->GrayOut(false);
   TIGrContactControl->GrayOut(false);
   TILufsContactControl->GrayOut(false);
+  tLoudnessTextControl->Hide(false);
+  tGrTextControl->Hide(false);
   #else
   switch (tPlugCurrentMode){
   case PLUG_LEARN_MODE:
@@ -62,6 +65,7 @@ void StreamMaster::UpdateAvailableControls(){
     // Only mode switch and LUFS meter
     tIGrMeteringBar->GrayOut(true);
     tPeakingKnob->GrayOut(true);
+    tPeakingTextControl->Hide(true);
     tPlatformSelector->GrayOut(true);
     tPlatformSelectorClickable->GrayOut(true);
     tPeakingTextControl->GrayOut(true);
@@ -70,6 +74,9 @@ void StreamMaster::UpdateAvailableControls(){
     but you can reset LUFS meter */
     TIGrContactControl->GrayOut(true);
     TILufsContactControl->GrayOut(false);
+    // Only display LUFS value
+    tLoudnessTextControl->Hide(false);
+    tGrTextControl->Hide(true);
     break;
   case PLUG_MASTER_MODE:
     // Master mode
@@ -79,6 +86,7 @@ void StreamMaster::UpdateAvailableControls(){
       // Only mode switch and LUFS meter
       tIGrMeteringBar->GrayOut(true);
       tPeakingKnob->GrayOut(true);
+      tPeakingTextControl->Hide(true);
       tPlatformSelector->GrayOut(true);
       tPlatformSelectorClickable->GrayOut(true);
       tPeakingTextControl->GrayOut(true);
@@ -87,17 +95,24 @@ void StreamMaster::UpdateAvailableControls(){
       lock both reset switches here*/
       TIGrContactControl->GrayOut(true);
       TILufsContactControl->GrayOut(true);
+      // No gain reduction is happening in that mode
+      tLoudnessTextControl->Hide(false);
+      tGrTextControl->Hide(true);
     }
     else{
       // Everything unlocked
       tIGrMeteringBar->GrayOut(false);
       tPeakingKnob->GrayOut(false);
+      tPeakingTextControl->Hide(false);
       tPlatformSelector->GrayOut(false);
       tPlatformSelectorClickable->GrayOut(false);
       tPeakingTextControl->GrayOut(false);
       tILevelMeteringBar->GrayOut(false);
       TIGrContactControl->GrayOut(false);
       TILufsContactControl->GrayOut(false);
+      // Both GR and LUFS readings are displayed
+      tLoudnessTextControl->Hide(false);
+      tGrTextControl->Hide(false);
     }
     break;
   case PLUG_OFF_MODE:
@@ -105,12 +120,16 @@ void StreamMaster::UpdateAvailableControls(){
     // Only mode switch
     tIGrMeteringBar->GrayOut(true);
     tPeakingKnob->GrayOut(true);
+    tPeakingTextControl->Hide(true);
     tPlatformSelector->GrayOut(true);
     tPlatformSelectorClickable->GrayOut(true);
     tPeakingTextControl->GrayOut(true);
     tILevelMeteringBar->GrayOut(true);    
     TIGrContactControl->GrayOut(true);
     TILufsContactControl->GrayOut(true);
+    // Both GR and LUFS readings are off
+    tLoudnessTextControl->Hide(true);
+    tGrTextControl->Hide(true);
     break;
   }
   #endif
@@ -310,6 +329,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
     &tPeakingLabel,
     "-");
   pGraphics->AttachControl(tPeakingTextControl);
+  tPeakingTextControl->Hide(true);
 
   // Text for the mastering mode
   IText tModeLabel = IText(PLUG_MODE_TEXT_LABEL_STRING_SIZE);

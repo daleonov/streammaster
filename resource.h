@@ -62,7 +62,7 @@ instrument determined by PLUG _IS _INST
 #define MODESWITCHCLICKABLE_ID 105
 
 // Image resource locations for this plug.
-#define BG_FN "resources/img/StreamMasterBG.png"
+#define BG_FN "resources/img/StreamMasterBG_RevB.png"
 #define KNOB_FN "resources/img/StreamMasterKnob.png"
 #define MODESWITCH_FN "resources/img/ModeSwitch.png"
 #define PLATFORMSWITCH_FN "resources/img/PlatformSwitch.png"
@@ -70,8 +70,8 @@ instrument determined by PLUG _IS _INST
 #define MODESWITCHCLICKABLE_FN "resources/img/ModeRadioSwitch.png"
 
 // GUI default dimensions
-#define GUI_WIDTH 641
-#define GUI_HEIGHT 747
+#define GUI_WIDTH 680
+#define GUI_HEIGHT 591
 
 // on MSVC, you must define SA_API in the resource editor preprocessor macros as well as the c++ ones
 #if defined(SA_API)
