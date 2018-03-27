@@ -162,11 +162,11 @@ enum ELayout
   kHeight = GUI_HEIGHT,
 
   // LUFS meter
-  kLufsMeter_X = 485,
+  kLufsMeter_X = 486,
   kLufsMeter_Y = 12,
 
   // GR meter
-  kGrMeter_X = kLufsMeter_X + 86,
+  kGrMeter_X = kLufsMeter_X + 87,
   kGrMeter_Y = kLufsMeter_Y,
   
   // Peaking knob
@@ -210,7 +210,7 @@ enum ELayout
 
   // Peaking knob Text reading
   kIPeakingTextControl_X = kCeilingX,
-  kIPeakingTextControl_Y = 77,
+  kIPeakingTextControl_Y = 78,
   kIPeakingTextControl_W = 155,
   kIPeakingTextControl_H = 20,
 
@@ -247,10 +247,10 @@ enum ELayout
 
   // Meter overlays
   kLoudnessLabelOverlay_X = kLufsMeter_X + 35,
-  kLoudnessLabelOverlay_Y = 442,
+  kLoudnessLabelOverlay_Y = 440,
 
   kGrLabelOverlay_X = kGrMeter_X + 35,
-  kGrLabelOverlay_Y = 385,
+  kGrLabelOverlay_Y = 383,
 };
 
 const IRECT tPlatformSwitchClickableIRect(

@@ -70,11 +70,11 @@ instrument determined by PLUG _IS _INST
 #define PLATFORMSWITCH_FN "resources/img/PlatformSwitch.png"
 #define METEROVERLAYSWITCH_FN "resources/img/MeterSwitchOverlay.png"
 #define MODESWITCHCLICKABLE_FN "resources/img/ModeRadioSwitch.png"
-#define LOUDNESSLABELOVERLAY_FN "resources/img/LoudnessOverlay.png"
-#define GRLABELOVERLAY_FN "resources/img/GrOverlay.png"
+#define LOUDNESSLABELOVERLAY_FN "resources/img/LoudnessOverlay100Percent.png"
+#define GRLABELOVERLAY_FN "resources/img/GrOverlay100Percent.png"
 
 // GUI default dimensions
-#define GUI_WIDTH 656
+#define GUI_WIDTH 657
 #define GUI_HEIGHT 591
 
 // on MSVC, you must define SA_API in the resource editor preprocessor macros as well as the c++ ones

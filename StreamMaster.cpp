@@ -247,14 +247,15 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   pGraphics->AttachControl(tIGrMeteringBar);
 
   // Overlay labels
+  // "Loudness"
   tBmp = pGraphics->LoadIBitmap(
     LOUDNESSLABELOVERLAY_ID,
     LOUDNESSLABELOVERLAY_FN,
     1
     );
   tLoudnessLabelOverlay = new IBitmapControl(this, kLoudnessLabelOverlay_X, kLoudnessLabelOverlay_Y, &tBmp);
-
   pGraphics->AttachControl(tLoudnessLabelOverlay);
+  // "Gain reduction"
   tBmp = pGraphics->LoadIBitmap(
     GRLABELOVERLAY_ID,
     GRLABELOVERLAY_FN,
