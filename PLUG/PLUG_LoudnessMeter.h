@@ -34,6 +34,12 @@ public:
 	double GetMomentaryLufs();
 
 	/*
+	@brief Short term LUFS reading
+	@retval LUFS value (in dB)
+	*/
+	double GetShortTermLufs();
+
+	/*
 	@brief LRA reading
 	@note Each call resets the meter
 	@retval LRA value

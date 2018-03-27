@@ -14,10 +14,10 @@ void StreamMaster::UpdateGui()
   char sGrString[PLUG_METER_TEXT_LABEL_STRING_SIZE];
   double fMaxGainReductionPerFrameDb = 0.;
   double fLufs = tLoudnessMeter->GetLufs();
-  double fFastLufs = tLoudnessMeter->GetMomentaryLufs();
+  double fFastLufs = tLoudnessMeter->GetShortTermLufs();
 
   // Text below LUFS meter bar
-  sprintf(sLoudnessString, "Int.: %4.1fLUFS\nMom.: %4.1fLUFS", fLufs, fFastLufs);
+  sprintf(sLoudnessString, "Int.: %4.1fLUFS\nShort: %4.1fLUFS", fLufs, fFastLufs);
   tLoudnessTextControl->SetTextFromPlug(sLoudnessString);
 
   // Updating LUFS bar values
@@ -66,7 +66,7 @@ void StreamMaster::UpdateTruePeak(){
     tTpTextControl = tTpOkTextControl;
   }
   fPreviousTruePeakingDb = fTruePeakingDb;
-  sprintf(sTpString, "TP: %4.1fdB", fTruePeakingDb);
+  sprintf(sTpString, "TP: %+4.1fdB", fTruePeakingDb);
   tTpTextControl->SetTextFromPlug(sTpString);
 
 }

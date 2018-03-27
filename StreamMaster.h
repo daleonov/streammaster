@@ -20,7 +20,7 @@
 
 // Set to false if you want to force user to let the plug learn
 // song loudness properly to allow him to go into mastering mode
-#define PLUG_ALWAYS_ALLOW_MASTERING true
+#define PLUG_ALWAYS_ALLOW_MASTERING false
 
 /********************************************************************
 Other application level macros dependencies:
@@ -69,7 +69,7 @@ const IColor PLUG_TP_LABEL_ALERT_COLOR(255, 255, 0, 49);
 #define PLUG_GUIDE_TEXT_LABEL_FONT_SIZE 15
 #define PLUG_VERSION_TEXT_LABEL_FONT_SIZE 11
 #endif
-#define PLUG_TP_LABEL_FONT_SIZE PLUG_GUIDE_TEXT_LABEL_FONT_SIZE
+#define PLUG_TP_LABEL_FONT_SIZE PLUG_METER_TEXT_LABEL_FONT_SIZE
 
 /* Knob values are not real-life units,
 use PLUG_KNOB_PEAK_DOUBLE() to convert them to linear gain*/
@@ -94,7 +94,6 @@ use PLUG_KNOB_PEAK_DOUBLE() to convert them to linear gain*/
 #define PLUG_METERING_BAR_IRECT IRECT(0, 0, PLUG_METERING_BAR_W, PLUG_METERING_BAR_H)
 
 #define PLUG_TP_ALERT_VALUE_DB -0.
-#define PLUG_TP_LABEL_IRECT IRECT(460, 14, 555, 34)
 #define PLUG_TP_LABEL_DEFAULT_TEXT "-"
 
 
@@ -143,7 +142,7 @@ Please repeat learning cycle again. \n\
 (press Mode switch twice to go to learning mode)"
 
 #define PLUG_GUIDE_TEXT_ALIGNMENT kAlignNear
-#define PLUG_TP_TEXT_ALIGNMENT kAlignFar
+#define PLUG_TP_TEXT_ALIGNMENT kAlignCenter
 
 #ifdef _WIN32
 #define PLUG_METER_TEXT_ALIGNMENT kAlignFar
@@ -263,6 +262,13 @@ enum ELayout
   kGrLabelOverlay_X = kGrMeter_X + 35,
   kGrLabelOverlay_Y = 383,
 };
+
+const IRECT PLUG_TP_LABEL_IRECT(
+	kLufsMeter_X,
+	kLufsMeter_Y+5,
+	kLufsMeter_X + 74,
+	kLufsMeter_Y+25
+	);
 
 const IRECT tPlatformSwitchClickableIRect(
 	kPlatformSwitchClickable_X,

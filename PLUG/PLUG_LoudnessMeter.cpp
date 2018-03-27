@@ -14,7 +14,7 @@ LoudnessMeter::LoudnessMeter(){
 	this->_tLoudnessMeterEbur128 = ebur128_init(
 		(unsigned) this->_nChannels,
 		(unsigned) this->_fSampleRate,
-		EBUR128_MODE_I|EBUR128_MODE_M|EBUR128_MODE_TRUE_PEAK
+		EBUR128_MODE_I|EBUR128_MODE_S|EBUR128_MODE_TRUE_PEAK
 		);
 
 	// Mono
@@ -50,10 +50,13 @@ double LoudnessMeter::GetLufs(){
 
 double LoudnessMeter::GetMomentaryLufs(){
 	double fLoudness;
-	// Options
-	// Monemtary (2sec): ebur128_loudness_momentary()
-	// LUFS short term: ebur128_loudness_shortterm()
 	ebur128_loudness_momentary(this->_tLoudnessMeterEbur128, &fLoudness);
+	return fLoudness;
+}
+
+double LoudnessMeter::GetShortTermLufs(){
+	double fLoudness;
+	ebur128_loudness_shortterm(this->_tLoudnessMeterEbur128, &fLoudness);
 	return fLoudness;
 }
 
