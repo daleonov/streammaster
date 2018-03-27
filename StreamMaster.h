@@ -33,7 +33,7 @@
 const IColor GR_BAR_DEFAULT_FG_ICOLOR(255, 200, 0, 0);
 const IColor GR_BAR_DEFAULT_NOTCH_ICOLOR(255, 128, 0, 0);
 const IColor PLUG_METER_TEXT_LABEL_COLOR(255, 255, 255, 255);
-const IColor PLUG_KNOB_TEXT_LABEL_COLOR(255, 84, 84, 84);
+const IColor PLUG_KNOB_TEXT_LABEL_COLOR(255, 110, 110, 110);
 const IColor PLUG_GUIDE_TEXT_LABEL_COLOR(255, 200, 200, 200);
 
 #define PLUG_METER_TEXT_LABEL_STRING_SIZE 64
@@ -61,6 +61,7 @@ const IColor PLUG_GUIDE_TEXT_LABEL_COLOR(255, 200, 200, 200);
 
 // Aftermath of tweaking UI size
 #define PLUG_Y_OFFSET (27)
+#define PLUG_X_OFFSET (-26)
 
 #define PLUG_DEFAULT_PRESET_NAME "Default"
 #define PLUG_LIMITER_ATTACK_MILLISECONDS 0.1
@@ -103,7 +104,7 @@ to do another song or measurement."
 "I'm ready to process the track! Mastering for:\n\
 %s\n\
 Input loudness: %0.2fLUFS, Target loudness: up to %0.2fLUFS\n\
-Limiter ceiling: %0.2fdB, applying %0.2fdB of pre-limiter gain"
+Limiter ceiling: %5.2fdB, applying %0.2fdB of pre-limiter gain"
 
 #define PLUG_LEARN_GUIDE_MESSAGE \
 "Press Play in your DAW to let me measure the song's loudness,\n\
@@ -116,12 +117,7 @@ or just show me the loudest section if you\'re in a hurry. "
 Please repeat learning cycle again. \n\
 (press Mode switch twice to go to learning mode)"
 
-// Some Mac compatibility shenanigans
-#ifdef _WIN32
-#define PLUG_GUIDE_TEXT_ALIGNMENT kAlignCenter
-#elif defined(__APPLE__)
 #define PLUG_GUIDE_TEXT_ALIGNMENT kAlignNear
-#endif
 
 #ifdef _WIN32
 #define PLUG_METER_TEXT_ALIGNMENT kAlignFar
@@ -150,34 +146,34 @@ enum ELayout
   kHeight = GUI_HEIGHT,
 
   // LUFS meter
-  kLufsMeter_X = 420,
-  kLufsMeter_Y = 197+PLUG_Y_OFFSET,
+  kLufsMeter_X = 520-43,
+  kLufsMeter_Y = PLUG_Y_OFFSET+30,
 
   // GR meter
-  kGrMeter_X = 532,
-  kGrMeter_Y = 197+PLUG_Y_OFFSET,
+  kGrMeter_X = kLufsMeter_X+112,
+  kGrMeter_Y = kLufsMeter_Y,
   
   // Peaking knob
-  kGainX = 226,
-  kGainY = 180+PLUG_Y_OFFSET,
+  kGainX = 323+PLUG_X_OFFSET,
+  kGainY = 68+PLUG_Y_OFFSET-15,
   kKnobFrames = 11,
 
 #ifdef _WIN32
   // LUFS Text reading
-  kILoudnessTextControl_X = 414,
-  kILoudnessTextControl_Y = 692+PLUG_Y_OFFSET,
+  kILoudnessTextControl_X = 582-112,
+  kILoudnessTextControl_Y = 552,
   kILoudnessTextControl_W = 80,
   kILoudnessTextControl_H = 40,
 
   // Gain reduction Text reading
-  kIGrTextControl_X = 526,
+  kIGrTextControl_X = 582,
   kIGrTextControl_Y = kILoudnessTextControl_Y,
   kIGrTextControl_W = 80,
   kIGrTextControl_H = 40,
 
   // Mode text guide
-  kIModeTextControl_X = 0,
-  kIModeTextControl_Y = 95+PLUG_Y_OFFSET,
+  kIModeTextControl_X = 13,
+  kIModeTextControl_Y = 8,
   kIModeTextControl_W = GUI_WIDTH,
   kIModeTextControl_H = 20,
 #elif defined(__APPLE__)
@@ -201,36 +197,38 @@ enum ELayout
 #endif
 
   // Peaking knob Text reading
-  kIPeakingTextControl_X = 260,
-  kIPeakingTextControl_Y = 165+PLUG_Y_OFFSET,
-  kIPeakingTextControl_W = 80,
+  kIPeakingTextControl_X = kGainX,
+  kIPeakingTextControl_Y = 82-15,
+  kIPeakingTextControl_W = 155,
   kIPeakingTextControl_H = 20,
 
   // Learn-master-off
   kModeSwitch_N = 3,
-  kModeSwitch_X = 45,
+  kModeSwitch_X = 143+PLUG_X_OFFSET,
   kModeSwitch_Y = kGainY,
   
   /* Switches for Youtube-Spotify-etc. - start */
   // Mode switch, rotatable
   kPlatformSwitch_N = 5,
-  kPlatformSwitch_X = 226,
-  kPlatformSwitch_Y = 481+PLUG_Y_OFFSET,
+  kPlatformSwitch_X = 323+PLUG_X_OFFSET,
+  kPlatformSwitch_Y = 363+PLUG_Y_OFFSET-24,
   // Mode switch, clickable
   kPlatformSwitchClickable_N = 2,
   kPlatformSwitchClickable_W = 159,  // width of bitmap
   kPlatformSwitchClickable_H = 59,  // height of one of the bitmap images
-  kPlatformSwitchClickable_X = 20,
-  kPlatformSwitchClickable_Y = 435,
+  kPlatformSwitchClickable_X = 105,
+  kPlatformSwitchClickable_Y = 293,
   kPlatformSwitchClickable_TOTAL = 5, // total number of radio buttons
   /* Switches for Youtube-Spotify-etc. - end */
 
+#ifdef _PLUG_VERSION_H 
   // Text version label
-  kTextVersion_X = 5,
-  kTextVersion_Y = GUI_HEIGHT-15,
-  kTextVersion_W = 64,
-  kTextVersion_H = 20,
+  kTextVersion_W = 128,
+  kTextVersion_H = 12,
+  kTextVersion_X = GUI_WIDTH-kTextVersion_W-1,
+  kTextVersion_Y = GUI_HEIGHT-kTextVersion_H-1,
   kTextVersion_ColorMono = 64,
+#endif
 
   // Meter reset switch
   kIContactControl_N = 2
@@ -255,8 +253,8 @@ double afTargetLufs[PLUG_PLATFORM_OPTIONS] = {
 };
 char *asTargetDescription[]={
   "Podcasts, dialogue videos etc. For sources that are mostly speech. ",
-  "Apple Music, SoundCheck standard, and general MP3. AES guideline for music loudness level. ",
-  "Platforms that don't manage loudness and let you get away with extremely loud audio",
+  "Apple Music, SoundCheck standard, and general MP3. AES guideline. ",
+  "Platforms that don't manage loudness",
   "Spotify and Tidal",
   "Youtube music videos"
 };
