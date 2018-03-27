@@ -47,11 +47,15 @@ const IColor PLUG_METER_TEXT_LABEL_COLOR(255, 255, 255, 255);
 const IColor PLUG_KNOB_TEXT_LABEL_COLOR(255, 110, 110, 110);
 const IColor PLUG_GUIDE_TEXT_LABEL_COLOR(255, 255, 255, 255);
 
+const IColor PLUG_TP_LABEL_OK_COLOR(255, 128, 128, 128);
+const IColor PLUG_TP_LABEL_ALERT_COLOR(255, 200, 0, 0);
+
 #define PLUG_METER_TEXT_LABEL_STRING_SIZE 64
 #define PLUG_KNOB_TEXT_LABEL_STRING_SIZE 16
 #define PLUG_MODE_TEXT_LABEL_STRING_SIZE 512
 #define PLUG_GUIDE_TEXT_LABEL_STRING_SIZE PLUG_MODE_TEXT_LABEL_STRING_SIZE
 #define PLUG_VERSION_TEXT_LABEL_STRING_SIZE 32
+#define PLUG_TP_LABEL_STRING_SIZE 32
 
 #ifdef _WIN32
 #define PLUG_KNOB_TEXT_LABEL_FONT_SIZE 12
@@ -64,6 +68,7 @@ const IColor PLUG_GUIDE_TEXT_LABEL_COLOR(255, 255, 255, 255);
 #define PLUG_GUIDE_TEXT_LABEL_FONT_SIZE 15
 #define PLUG_VERSION_TEXT_LABEL_FONT_SIZE 11
 #endif
+#define PLUG_TP_LABEL_FONT_SIZE PLUG_GUIDE_TEXT_LABEL_FONT_SIZE
 
 /* Knob values are not real-life units,
 use PLUG_KNOB_PEAK_DOUBLE() to convert them to linear gain*/
@@ -86,6 +91,11 @@ use PLUG_KNOB_PEAK_DOUBLE() to convert them to linear gain*/
 #define PLUG_METERING_BAR_W 74
 #define PLUG_METERING_BAR_H 537
 #define PLUG_METERING_BAR_IRECT IRECT(0, 0, PLUG_METERING_BAR_W, PLUG_METERING_BAR_H)
+
+#define PLUG_TP_ALERT_VALUE_DB -0.
+#define PLUG_TP_LABEL_IRECT IRECT(0, 57, 470, 100)
+#define PLUG_TP_LABEL_DEFAULT_TEXT "-"
+
 
 /* Defaults for:
   fMasteringGainDb,
@@ -132,6 +142,7 @@ Please repeat learning cycle again. \n\
 (press Mode switch twice to go to learning mode)"
 
 #define PLUG_GUIDE_TEXT_ALIGNMENT kAlignNear
+#define PLUG_TP_TEXT_ALIGNMENT kAlignFar
 
 #ifdef _WIN32
 #define PLUG_METER_TEXT_ALIGNMENT kAlignFar
@@ -149,11 +160,10 @@ enum EParams
   kILevelMeteringBar,
   kIGrMeteringBar,
   kPlatformSwitchClickable,
-  //kLoudnessLabelOverlay,
-  //kGrLabelOverlay,
   kNumParams, /* Anything below that line will be non-automatable */
   kIPeakingTextControl,
   kIModeTextControl,
+  kTpTextControl,
 };
 
 enum ELayout
@@ -331,6 +341,7 @@ private:
   void UpdatePreMastering(PLUG_Target mPlatform);
   void UpdateSampleRate();
   void UpdatePlatform(PLUG_Target mPlatform);
+  void UpdateTruePeak();
   // Limiter and loudness meter
   chunkware_simple::SimpleLimit* tLimiter;
   Plug::LoudnessMeter* tLoudnessMeter;
@@ -340,6 +351,9 @@ private:
   ITextControl *tGrTextControl;
   ITextControl *tPeakingTextControl;
   ITextControl *tModeTextControl;
+  ITextControl *tTpAlertTextControl;
+  ITextControl *tTpOkTextControl;
+  ITextControl *tTpTextControl;
   IKnobMultiControl *tPeakingKnob;
   IKnobMultiControl *tPlatformSelector;
   Plug::ILevelMeteringBar* tILevelMeteringBar;

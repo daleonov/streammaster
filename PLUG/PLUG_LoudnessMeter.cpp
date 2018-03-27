@@ -14,7 +14,7 @@ LoudnessMeter::LoudnessMeter(){
 	this->_tLoudnessMeterEbur128 = ebur128_init(
 		(unsigned) this->_nChannels,
 		(unsigned) this->_fSampleRate,
-		EBUR128_MODE_I
+		EBUR128_MODE_I|EBUR128_MODE_M|EBUR128_MODE_TRUE_PEAK
 		);
 
 	// Mono
@@ -71,3 +71,12 @@ void LoudnessMeter::SetNumberOfChannels(int nChannels){
 	this->_nChannels = nChannels;
 }
 
+double LoudnessMeter::GetTruePeaking(){
+	double fMaxPeakLinear = 0., fCurrentPeakLinear, fCurrentPeakLinearAbs;
+	for (int i=0; i<_nChannels; i++){
+		ebur128_true_peak(this->_tLoudnessMeterEbur128, i, &fCurrentPeakLinear);
+		fCurrentPeakLinearAbs = fabs(fCurrentPeakLinear);
+		if (fCurrentPeakLinearAbs > fMaxPeakLinear) fMaxPeakLinear = fCurrentPeakLinearAbs;
+	}
+	return fMaxPeakLinear;
+}

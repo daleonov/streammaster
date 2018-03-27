@@ -2,6 +2,7 @@
 #define _PLUG_LOUDNESSMETER_H
 
 #include "ebur128.h"
+#include <math.h>
 
 namespace Plug{
 
@@ -50,6 +51,12 @@ public:
 	@paran nChannels Nubmer of channels. E.g. "2" for stereo.
 	*/
 	void SetNumberOfChannels(int nChannels);
+
+	/*
+	@brief True peaking. 4x oversampling for fs < 96000 Hz, 2x for fs < 192000 Hz and 1x for 192000 Hz.
+	@retval Highest peak from all current samples and frames (linear, 1.0 = 0.0dB)
+	*/
+	double GetTruePeaking();
 
 private:
 	double _fSampleRate = 44100.;

@@ -39,6 +39,36 @@ void StreamMaster::UpdateGui()
     fMaxGainReductionPerFrameDb,
     fMaxGainReductionPerSessionDb);
   tGrTextControl->SetTextFromPlug(sGrString);
+
+  // True peaking text label
+  UpdateTruePeak();
+}
+
+void StreamMaster::UpdateTruePeak(){
+  static double fPreviousTruePeakingDb=LINEAR_TO_LOG(0.);
+  double fTruePeakingDb;
+  char sTpString[PLUG_TP_LABEL_STRING_SIZE];
+  IText tTpLabel;
+
+  fTruePeakingDb = LINEAR_TO_LOG(tLoudnessMeter->GetTruePeaking());
+
+  // If we crossed TP threshold up, do some alert stuff
+  if ((fTruePeakingDb >= PLUG_TP_ALERT_VALUE_DB) && (fPreviousTruePeakingDb < PLUG_TP_ALERT_VALUE_DB)){
+    tTpOkTextControl->Hide(true);
+    tTpAlertTextControl->Hide(false);
+    tTpTextControl = tTpAlertTextControl;
+  }
+
+  // If we crossed TP threshold down, undo the alert stuff
+  if ((fTruePeakingDb < PLUG_TP_ALERT_VALUE_DB) && (fPreviousTruePeakingDb > PLUG_TP_ALERT_VALUE_DB)){
+    tTpAlertTextControl->Hide(true);
+    tTpOkTextControl->Hide(false);
+    tTpTextControl = tTpOkTextControl;
+  }
+  fPreviousTruePeakingDb = fTruePeakingDb;
+  sprintf(sTpString, "TP: %4.1fdB", fTruePeakingDb);
+  tTpTextControl->SetTextFromPlug(sTpString);
+
 }
 
 /*
@@ -299,7 +329,6 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   //IRadioButtonsControl(this, IRECT(kIRadioButtonsControl_V_X, kIRadioButtonsControl_V_Y, kIRadioButtonsControl_V_X + (kIRBC_W*kIRBC_VN), kIRadioButtonsControl_V_Y + (kIRBC_H*kIRBC_VN)), kIRadioButtonsControl_V, kIRBC_VN, &bitmap));
   pGraphics->AttachControl(tPlatformSelectorClickable);
   
-
   // Text LUFS meter
   IText tDefaultLoudnessLabel = IText(PLUG_METER_TEXT_LABEL_STRING_SIZE);
   tDefaultLoudnessLabel.mColor = PLUG_METER_TEXT_LABEL_COLOR;
@@ -368,6 +397,35 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
     &tModeLabel,
     "-");
   pGraphics->AttachControl(tModeTextControl);
+
+  // True peaking label
+  // One for "okay" state, one for "alert" state (different color),
+  // and one that stores the current text label pointer
+  // for okay state
+  IText tTpOkLabel = IText(PLUG_TP_LABEL_STRING_SIZE);
+  tTpOkLabel.mColor = PLUG_TP_LABEL_OK_COLOR;
+  tTpOkLabel.mSize = PLUG_TP_LABEL_FONT_SIZE;
+  tTpOkLabel.mAlign = tTpOkLabel.PLUG_TP_TEXT_ALIGNMENT;
+  tTpOkTextControl = new ITextControl(
+    this,
+    PLUG_TP_LABEL_IRECT,
+    &tTpOkLabel,
+    PLUG_TP_LABEL_DEFAULT_TEXT);
+  // for alert state
+  IText tTpAlertLabel = IText(tTpOkLabel);
+  tTpAlertLabel.mColor = PLUG_TP_LABEL_ALERT_COLOR;
+  tTpAlertTextControl = new ITextControl(
+    this,
+    PLUG_TP_LABEL_IRECT,
+    &tTpAlertLabel,
+    PLUG_TP_LABEL_DEFAULT_TEXT);
+  // for current state
+  tTpTextControl = tTpOkTextControl;
+
+  pGraphics->AttachControl(tTpOkTextControl);
+  pGraphics->AttachControl(tTpAlertTextControl);
+  tTpOkTextControl->Hide(false);
+  tTpAlertTextControl->Hide(true);
 
   #ifdef _PLUG_VERSION_H 
   // Text label with current version of the plug
@@ -449,6 +507,7 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
   double* out1 = outputs[0];
   double* out2 = outputs[1];
   double *afInterleavedSamples = new double[nFrames * 2];
+  double fTruePeakingLinear;
 
   switch(tPlugCurrentMode){
     case PLUG_LEARN_MODE:
