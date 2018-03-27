@@ -41,7 +41,8 @@ void StreamMaster::UpdateGui()
   tGrTextControl->SetTextFromPlug(sGrString);
 
   // True peaking text label
-  UpdateTruePeak();
+  if(tPlugCurrentMode == PLUG_MASTER_MODE)
+    UpdateTruePeak();
 }
 
 void StreamMaster::UpdateTruePeak(){
@@ -51,7 +52,6 @@ void StreamMaster::UpdateTruePeak(){
   IText tTpLabel;
 
   fTruePeakingDb = LINEAR_TO_LOG(tLoudnessMeter->GetTruePeaking());
-
   // If we crossed TP threshold up, do some alert stuff
   if ((fTruePeakingDb >= PLUG_TP_ALERT_VALUE_DB) && (fPreviousTruePeakingDb < PLUG_TP_ALERT_VALUE_DB)){
     tTpOkTextControl->Hide(true);
@@ -81,13 +81,14 @@ void StreamMaster::UpdateAvailableControls(){
   tPeakingKnob->GrayOut(false);
   tPeakingTextControl->Hide(false);
   tPlatformSelector->GrayOut(false);
-  tPlatformSelectorClickable->GrayOut(false);
+  tPlatformSelectorClickable->Hide(false);
   tPeakingTextControl->GrayOut(false);
   tILevelMeteringBar->GrayOut(false);
   TIGrContactControl->GrayOut(false);
   TILufsContactControl->GrayOut(false);
   tLoudnessTextControl->Hide(false);
   tGrTextControl->Hide(false);
+  tTpTextControl->Hide(false);
   #else
   switch (tPlugCurrentMode){
   case PLUG_LEARN_MODE:
@@ -97,7 +98,7 @@ void StreamMaster::UpdateAvailableControls(){
     tPeakingKnob->GrayOut(true);
     tPeakingTextControl->Hide(true);
     tPlatformSelector->GrayOut(true);
-    tPlatformSelectorClickable->GrayOut(true);
+    tPlatformSelectorClickable->Hide(true);
     tPeakingTextControl->GrayOut(true);
     tILevelMeteringBar->GrayOut(false);
     /* GR is blocked since there's no gain reduction applied,
@@ -107,6 +108,7 @@ void StreamMaster::UpdateAvailableControls(){
     // Only display LUFS value
     tLoudnessTextControl->Hide(false);
     tGrTextControl->Hide(true);
+    tTpTextControl->Hide(true);
     break;
   case PLUG_MASTER_MODE:
     // Master mode
@@ -118,7 +120,7 @@ void StreamMaster::UpdateAvailableControls(){
       tPeakingKnob->GrayOut(true);
       tPeakingTextControl->Hide(true);
       tPlatformSelector->GrayOut(true);
-      tPlatformSelectorClickable->GrayOut(true);
+      tPlatformSelectorClickable->Hide(true);
       tPeakingTextControl->GrayOut(true);
       tILevelMeteringBar->GrayOut(false);
       /* Unlike learning mode, we should
@@ -128,6 +130,7 @@ void StreamMaster::UpdateAvailableControls(){
       // No gain reduction is happening in that mode
       tLoudnessTextControl->Hide(true);
       tGrTextControl->Hide(true);
+      tTpTextControl->Hide(true);
     }
     else{
       // Everything unlocked
@@ -135,14 +138,15 @@ void StreamMaster::UpdateAvailableControls(){
       tPeakingKnob->GrayOut(false);
       tPeakingTextControl->Hide(false);
       tPlatformSelector->GrayOut(false);
-      tPlatformSelectorClickable->GrayOut(false);
+      tPlatformSelectorClickable->Hide(false);
       tPeakingTextControl->GrayOut(false);
       tILevelMeteringBar->GrayOut(false);
       TIGrContactControl->GrayOut(false);
       TILufsContactControl->GrayOut(false);
-      // Both GR and LUFS readings are displayed
+      // GR, LUFS and TP readings are displayed
       tLoudnessTextControl->Hide(false);
       tGrTextControl->Hide(false);
+      tTpTextControl->Hide(false);
     }
     break;
   case PLUG_OFF_MODE:
@@ -152,14 +156,15 @@ void StreamMaster::UpdateAvailableControls(){
     tPeakingKnob->GrayOut(true);
     tPeakingTextControl->Hide(true);
     tPlatformSelector->GrayOut(true);
-    tPlatformSelectorClickable->GrayOut(true);
+    tPlatformSelectorClickable->Hide(true);
     tPeakingTextControl->GrayOut(true);
     tILevelMeteringBar->GrayOut(true);    
     TIGrContactControl->GrayOut(true);
     TILufsContactControl->GrayOut(true);
-    // Both GR and LUFS readings are off
+    // GR, LUFS and TP readings are off
     tLoudnessTextControl->Hide(true);
     tGrTextControl->Hide(true);
+    tTpTextControl->Hide(true);
     break;
   }
   #endif
@@ -266,14 +271,58 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
 
   /* Meters - start */
 
+  // True peaking label
+  // One for "okay" state, one for "alert" state (different color),
+  // and one that stores the current text label pointer
+  // for okay state
+  IText tTpOkLabel = IText(PLUG_TP_LABEL_STRING_SIZE);
+  tTpOkLabel.mColor = PLUG_TP_LABEL_OK_COLOR;
+  tTpOkLabel.mSize = PLUG_TP_LABEL_FONT_SIZE;
+  tTpOkLabel.mAlign = tTpOkLabel.PLUG_TP_TEXT_ALIGNMENT;
+  tTpOkTextControl = new ITextControl(
+    this,
+    PLUG_TP_LABEL_IRECT,
+    &tTpOkLabel,
+    PLUG_TP_LABEL_DEFAULT_TEXT);
+  // for alert state
+  IText tTpAlertLabel = IText(tTpOkLabel);
+  tTpAlertLabel.mColor = PLUG_TP_LABEL_ALERT_COLOR;
+  tTpAlertTextControl = new ITextControl(
+    this,
+    PLUG_TP_LABEL_IRECT,
+    &tTpAlertLabel,
+    PLUG_TP_LABEL_DEFAULT_TEXT);
+  // for current state
+  tTpTextControl = tTpOkTextControl;
+
+  // TP labels should be attached later, so they are sanwitched
+  // between meter bars and meter reset buttons. Otherwise they
+  // may get in the way of clicking. 
+
   // Bars
   // LUFS meter
-  tILevelMeteringBar = new Plug::ILevelMeteringBar(this, kLufsMeter_X, kLufsMeter_Y, PLUG_METERING_BAR_IRECT, kILevelMeteringBar);
+  tILevelMeteringBar = new Plug::ILevelMeteringBar(
+    this,
+    kLufsMeter_X,
+    kLufsMeter_Y,
+    PLUG_METERING_BAR_IRECT,
+    kILevelMeteringBar,
+    false,
+    &LOUDNESS_BAR_FG_ICOLOR
+    );
   tILevelMeteringBar->SetNotchValue(PLUG_LUFS_RANGE_MAX);
   pGraphics->AttachControl(tILevelMeteringBar);
   // Gain Reduction meter
-  tIGrMeteringBar = new Plug::ILevelMeteringBar(this, kGrMeter_X, kGrMeter_Y, PLUG_METERING_BAR_IRECT, kIGrMeteringBar, \
-    true, &GR_BAR_DEFAULT_FG_ICOLOR, &GR_BAR_DEFAULT_NOTCH_ICOLOR, &METERING_BAR_ABOVE_NOTCH_ICOLOR);
+  tIGrMeteringBar = new Plug::ILevelMeteringBar(
+    this,
+    kGrMeter_X,
+    kGrMeter_Y,
+    PLUG_METERING_BAR_IRECT,
+    kIGrMeteringBar,
+    true,
+    &GR_BAR_DEFAULT_FG_ICOLOR,
+    &GR_BAR_DEFAULT_NOTCH_ICOLOR,
+    &METERING_BAR_ABOVE_NOTCH_ICOLOR);
   pGraphics->AttachControl(tIGrMeteringBar);
 
   // Overlay labels
@@ -293,6 +342,12 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
     );
   tGrLabelOverlay = new IBitmapControl(this, kGrLabelOverlay_X, kGrLabelOverlay_Y, &tBmp);
   pGraphics->AttachControl(tGrLabelOverlay);
+
+  // Attaching TP labels so they are below reset buttons
+  pGraphics->AttachControl(tTpOkTextControl);
+  pGraphics->AttachControl(tTpAlertTextControl);
+  tTpOkTextControl->Hide(false);
+  tTpAlertTextControl->Hide(true);
 
   // Reset buttons - same coordinates as the actual meter bar
   tBmp = pGraphics->LoadIBitmap(
@@ -397,35 +452,6 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
     &tModeLabel,
     "-");
   pGraphics->AttachControl(tModeTextControl);
-
-  // True peaking label
-  // One for "okay" state, one for "alert" state (different color),
-  // and one that stores the current text label pointer
-  // for okay state
-  IText tTpOkLabel = IText(PLUG_TP_LABEL_STRING_SIZE);
-  tTpOkLabel.mColor = PLUG_TP_LABEL_OK_COLOR;
-  tTpOkLabel.mSize = PLUG_TP_LABEL_FONT_SIZE;
-  tTpOkLabel.mAlign = tTpOkLabel.PLUG_TP_TEXT_ALIGNMENT;
-  tTpOkTextControl = new ITextControl(
-    this,
-    PLUG_TP_LABEL_IRECT,
-    &tTpOkLabel,
-    PLUG_TP_LABEL_DEFAULT_TEXT);
-  // for alert state
-  IText tTpAlertLabel = IText(tTpOkLabel);
-  tTpAlertLabel.mColor = PLUG_TP_LABEL_ALERT_COLOR;
-  tTpAlertTextControl = new ITextControl(
-    this,
-    PLUG_TP_LABEL_IRECT,
-    &tTpAlertLabel,
-    PLUG_TP_LABEL_DEFAULT_TEXT);
-  // for current state
-  tTpTextControl = tTpOkTextControl;
-
-  pGraphics->AttachControl(tTpOkTextControl);
-  pGraphics->AttachControl(tTpAlertTextControl);
-  tTpOkTextControl->Hide(false);
-  tTpAlertTextControl->Hide(true);
 
   #ifdef _PLUG_VERSION_H 
   // Text label with current version of the plug
