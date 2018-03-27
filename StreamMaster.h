@@ -20,7 +20,7 @@
 
 // Set to false if you want to force user to let the plug learn
 // song loudness properly to allow him to go into mastering mode
-#define PLUG_ALWAYS_ALLOW_MASTERING false
+#define PLUG_ALWAYS_ALLOW_MASTERING true
 
 /********************************************************************
 Other application level macros dependencies:
@@ -45,7 +45,7 @@ const IColor GR_BAR_DEFAULT_FG_ICOLOR(255, 200, 0, 0);
 const IColor GR_BAR_DEFAULT_NOTCH_ICOLOR(255, 128, 0, 0);
 const IColor PLUG_METER_TEXT_LABEL_COLOR(255, 255, 255, 255);
 const IColor PLUG_KNOB_TEXT_LABEL_COLOR(255, 110, 110, 110);
-const IColor PLUG_GUIDE_TEXT_LABEL_COLOR(255, 200, 200, 200);
+const IColor PLUG_GUIDE_TEXT_LABEL_COLOR(255, 255, 255, 255);
 
 #define PLUG_METER_TEXT_LABEL_STRING_SIZE 64
 #define PLUG_KNOB_TEXT_LABEL_STRING_SIZE 16
@@ -82,6 +82,10 @@ use PLUG_KNOB_PEAK_DOUBLE() to convert them to linear gain*/
 
 #define PLUG_GR_RANGE_MIN -0.
 #define PLUG_GR_RANGE_MAX -43.
+
+#define PLUG_METERING_BAR_W 74
+#define PLUG_METERING_BAR_H 537
+#define PLUG_METERING_BAR_IRECT IRECT(0, 0, PLUG_METERING_BAR_W, PLUG_METERING_BAR_H)
 
 /* Defaults for:
   fMasteringGainDb,
@@ -145,6 +149,8 @@ enum EParams
   kILevelMeteringBar,
   kIGrMeteringBar,
   kPlatformSwitchClickable,
+  //kLoudnessLabelOverlay,
+  //kGrLabelOverlay,
   kNumParams, /* Anything below that line will be non-automatable */
   kIPeakingTextControl,
   kIModeTextControl,
@@ -156,36 +162,31 @@ enum ELayout
   kHeight = GUI_HEIGHT,
 
   // LUFS meter
-  kLufsMeter_X = 520-43,
-  kLufsMeter_Y = 27+30,
+  kLufsMeter_X = 485,
+  kLufsMeter_Y = 12,
 
   // GR meter
-  kGrMeter_X = kLufsMeter_X+112,
+  kGrMeter_X = kLufsMeter_X + 86,
   kGrMeter_Y = kLufsMeter_Y,
   
   // Peaking knob
-  kCeilingX = 297,
-  kCeilingY = 80,
+  kCeilingX = 302,
+  kCeilingY = 90,
   kKnobFrames = 21,
 
 #ifdef _WIN32
   // LUFS Text reading
-  kILoudnessTextControl_X = 470,
-  kILoudnessTextControl_Y = 552,
   kILoudnessTextControl_W = 80,
   kILoudnessTextControl_H = 40,
+  kILoudnessTextControl_X = kLufsMeter_X - (kILoudnessTextControl_W - PLUG_METERING_BAR_W),
+  kILoudnessTextControl_Y = 552,
 
   // Gain reduction Text reading
-  kIGrTextControl_X = 582,
-  kIGrTextControl_Y = kILoudnessTextControl_Y,
   kIGrTextControl_W = 80,
   kIGrTextControl_H = 40,
+  kIGrTextControl_X = kGrMeter_X - (kIGrTextControl_W - PLUG_METERING_BAR_W),
+  kIGrTextControl_Y = kILoudnessTextControl_Y,
 
-  // Mode text guide
-  kIModeTextControl_X = 13,
-  kIModeTextControl_Y = 8,
-  kIModeTextControl_W = GUI_WIDTH,
-  kIModeTextControl_H = 20,
 #elif defined(__APPLE__)
   // LUFS Text reading
   kILoudnessTextControl_X = kLufsMeter_X,
@@ -199,28 +200,29 @@ enum ELayout
   kIGrTextControl_W = 80,
   kIGrTextControl_H = 40,
 
-  // Mode text guide
-  kIModeTextControl_X = 13,
-  kIModeTextControl_Y = 8,
-  kIModeTextControl_W = GUI_WIDTH,
-  kIModeTextControl_H = 20,
 #endif
+
+  // Mode text guide
+  kIModeTextControl_X = 23,
+  kIModeTextControl_Y = 15,
+  kIModeTextControl_W = kWidth,
+  kIModeTextControl_H = 20,
 
   // Peaking knob Text reading
   kIPeakingTextControl_X = kCeilingX,
-  kIPeakingTextControl_Y = 67,
+  kIPeakingTextControl_Y = 77,
   kIPeakingTextControl_W = 155,
   kIPeakingTextControl_H = 20,
 
   // Learn-master-off
   kModeSwitch_N = 3,
-  kModeSwitch_X = 117,
+  kModeSwitch_X = 122,
   kModeSwitch_Y = kCeilingY,
   
   /* Switches for Youtube-Spotify-etc. - start */
   // Mode switch, rotatable
   kPlatformSwitch_N = 5,
-  kPlatformSwitch_X = 323-26,
+  kPlatformSwitch_X = 302,
   kPlatformSwitch_Y = 366,
   // Mode switch, clickable
   kPlatformSwitchClickable_N = 2,
@@ -235,14 +237,20 @@ enum ELayout
   // Text version label
   kTextVersion_W = 128,
   kTextVersion_H = 12,
-  kTextVersion_X = GUI_WIDTH-kTextVersion_W-1,
-  kTextVersion_Y = GUI_HEIGHT-kTextVersion_H-1,
+  kTextVersion_X = kWidth-kTextVersion_W - 1,
+  kTextVersion_Y = kHeight-kTextVersion_H - 1,
   kTextVersion_ColorMono = 64,
 #endif
 
   // Meter reset switch
-  kIContactControl_N = 2
+  kIContactControl_N = 2,
 
+  // Meter overlays
+  kLoudnessLabelOverlay_X = kLufsMeter_X + 35,
+  kLoudnessLabelOverlay_Y = 442,
+
+  kGrLabelOverlay_X = kGrMeter_X + 35,
+  kGrLabelOverlay_Y = 385,
 };
 
 const IRECT tPlatformSwitchClickableIRect(
@@ -339,6 +347,8 @@ private:
   IContactControl *TIGrContactControl;
   IContactControl *TILufsContactControl;
   IRadioButtonsControl *tPlatformSelectorClickable;
+  IBitmapControl *tLoudnessLabelOverlay;
+  IBitmapControl *tGrLabelOverlay;
   // Shared statistic variables
   double fMaxGainReductionPerFrame;
   double fMaxGainReductionPerSessionDb;

@@ -158,6 +158,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   TRACE;
 
   int i; /* For enum inits */
+  IBitmap tBmp;
 
   // Value inits
   fMaxGainReductionPerFrame = PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET;
@@ -232,31 +233,50 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   pGraphics = MakeGraphics(this, kWidth, kHeight);
   pGraphics->AttachBackground(BG_ID, BG_FN);
   
-  // Bitmap for an invisible reset switch above metering bars
-  IBitmap tBmp = pGraphics->LoadIBitmap(
+
+  /* Meters - start */
+
+  // Bars
+  // LUFS meter
+  tILevelMeteringBar = new Plug::ILevelMeteringBar(this, kLufsMeter_X, kLufsMeter_Y, PLUG_METERING_BAR_IRECT, kILevelMeteringBar);
+  tILevelMeteringBar->SetNotchValue(PLUG_LUFS_RANGE_MAX);
+  pGraphics->AttachControl(tILevelMeteringBar);
+  // Gain Reduction meter
+  tIGrMeteringBar = new Plug::ILevelMeteringBar(this, kGrMeter_X, kGrMeter_Y, PLUG_METERING_BAR_IRECT, kIGrMeteringBar, \
+    true, &GR_BAR_DEFAULT_FG_ICOLOR, &GR_BAR_DEFAULT_NOTCH_ICOLOR, &METERING_BAR_ABOVE_NOTCH_ICOLOR);
+  pGraphics->AttachControl(tIGrMeteringBar);
+
+  // Overlay labels
+  tBmp = pGraphics->LoadIBitmap(
+    LOUDNESSLABELOVERLAY_ID,
+    LOUDNESSLABELOVERLAY_FN,
+    1
+    );
+  tLoudnessLabelOverlay = new IBitmapControl(this, kLoudnessLabelOverlay_X, kLoudnessLabelOverlay_Y, &tBmp);
+
+  pGraphics->AttachControl(tLoudnessLabelOverlay);
+  tBmp = pGraphics->LoadIBitmap(
+    GRLABELOVERLAY_ID,
+    GRLABELOVERLAY_FN,
+    1
+    );
+  tGrLabelOverlay = new IBitmapControl(this, kGrLabelOverlay_X, kGrLabelOverlay_Y, &tBmp);
+  pGraphics->AttachControl(tGrLabelOverlay);
+
+  // Reset buttons - same coordinates as the actual meter bar
+  tBmp = pGraphics->LoadIBitmap(
     METEROVERLAYSWITCH_ID,
     METEROVERLAYSWITCH_FN,
     kIContactControl_N
     );
-
-  // LUFS meter
-  tILevelMeteringBar = new Plug::ILevelMeteringBar(this, kLufsMeter_X, kLufsMeter_Y, METERING_BAR_DEFAULT_SIZE_IRECT, kILevelMeteringBar);
-  tILevelMeteringBar->SetNotchValue(PLUG_LUFS_RANGE_MAX);
-  pGraphics->AttachControl(tILevelMeteringBar);
-  // Same coordinates as the actial meter bar
-  TILufsContactControl = new IContactControl(
-    this, kLufsMeter_X, kLufsMeter_Y, kILufsContactControl, &tBmp);
-  pGraphics->AttachControl(TILufsContactControl);
-
-  // Gain Reduction meter
-  tIGrMeteringBar = new Plug::ILevelMeteringBar(this, kGrMeter_X, kGrMeter_Y, METERING_BAR_DEFAULT_SIZE_IRECT, kIGrMeteringBar, \
-    true, &GR_BAR_DEFAULT_FG_ICOLOR, &GR_BAR_DEFAULT_NOTCH_ICOLOR, &METERING_BAR_ABOVE_NOTCH_ICOLOR);
-  pGraphics->AttachControl(tIGrMeteringBar);
-  // Same coordinates as the actial meter bar
   TIGrContactControl = new IContactControl(
     this, kGrMeter_X, kGrMeter_Y, kIGrContactControl, &tBmp);
   pGraphics->AttachControl(TIGrContactControl);
+    TILufsContactControl = new IContactControl(
+    this, kLufsMeter_X, kLufsMeter_Y, kILufsContactControl, &tBmp);
+  pGraphics->AttachControl(TILufsContactControl);
 
+  /* Meters - end */
     
   // Limiter knob
   tBmp = pGraphics->LoadIBitmap(KNOB_ID, KNOB_FN, kKnobFrames);

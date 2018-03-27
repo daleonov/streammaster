@@ -60,17 +60,21 @@ instrument determined by PLUG _IS _INST
 #define PLATFORMSWITCH_ID 103
 #define METEROVERLAYSWITCH_ID 104
 #define MODESWITCHCLICKABLE_ID 105
+#define LOUDNESSLABELOVERLAY_ID 106
+#define GRLABELOVERLAY_ID 107
 
 // Image resource locations for this plug.
-#define BG_FN "resources/img/StreamMasterBG_RevB.png"
+#define BG_FN "resources/img/StreamMasterBG_RevC.png"
 #define KNOB_FN "resources/img/StreamMasterKnob.png"
 #define MODESWITCH_FN "resources/img/ModeSwitch.png"
 #define PLATFORMSWITCH_FN "resources/img/PlatformSwitch.png"
 #define METEROVERLAYSWITCH_FN "resources/img/MeterSwitchOverlay.png"
 #define MODESWITCHCLICKABLE_FN "resources/img/ModeRadioSwitch.png"
+#define LOUDNESSLABELOVERLAY_FN "resources/img/LoudnessOverlay.png"
+#define GRLABELOVERLAY_FN "resources/img/GrOverlay.png"
 
 // GUI default dimensions
-#define GUI_WIDTH 680
+#define GUI_WIDTH 656
 #define GUI_HEIGHT 591
 
 // on MSVC, you must define SA_API in the resource editor preprocessor macros as well as the c++ ones
