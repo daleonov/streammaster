@@ -186,34 +186,24 @@ void StreamMaster::UpdateSampleRate(){
 /*
 \brief We set up GUI and related processing classes here. 
 */
-StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
-  :	IPLUG_CTOR(kNumParams, kNumPrograms, instanceInfo)
-{
+StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
+  IPLUG_CTOR(kNumParams, kNumPrograms, instanceInfo)
+  {
 
   TRACE;
 
   int i; /* For enum inits */
   IBitmap tBmp;
 
-  // Value inits
-  fMaxGainReductionPerFrame = PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET;
-  fMaxGainReductionPerSessionDb = PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET;
-  // Operation related stuff
-  fTargetLoudness = PLUG_DEFAULT_TARGET_LOUDNESS;
-  nCurrentTargetIndex = PLUG_DEFAULT_TARGET_PLATFORM;
-  fDefaultLimiterThreshold = PLUG_LIMITER_DEFAULT_THRESHOLD_DB;
-  // Plugin starts up in this mode
-  tPlugCurrentMode = PLUG_INITIAL_MODE;
-  // Vars for mastering mode
-  fMasteringGainDb = PLUG_MASTERING_GAIN_DB_RESET;
-  fTargetLufsIntegratedDb = PLUG_TARGET_LUFS_INTERGRATED_DB_RESET;
-  fSourceLufsIntegratedDb = PLUG_SOURCE_LUFS_INTERGRATED_DB_RESET;
-  fLimiterCeilingDb = PLUG_LIMITER_CEILING_DB_RESET;
-  fLimiterCeilingLinear = PLUG_LIMITER_CEILING_LINEAR_RESET;
-  fMasteringGainLinear = PLUG_MASTERING_GAIN_LINEAR_RESET;
-  // Low (-inf) LUFS flag. Doesn't allow user to go into mastering mode
-  // unless plugin successfully got source LUFS reading first.
-  bLufsTooLow = true; 
+  // Hide some parameters from DAW's automation menu
+  // (doesn't seem to hide the parameters, at least in Reaper 5.77)
+  // Bar values are not for automation obviously
+  GetParam(kILevelMeteringBar)->SetCanAutomate(false);
+  GetParam(kIGrMeteringBar)->SetCanAutomate(false);
+  // There are two linked controls for platform selection, so we disable one of them
+  GetParam(kPlatformSwitchClickable)->SetCanAutomate(false);
+  // Invisible storage control
+  GetParam(kSourceLufsMemory)->SetCanAutomate(false);
 
   // Setting up values for all the controls
   //arguments are: name, defaultVal, minVal, maxVal, step, label
@@ -226,7 +216,16 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   GetParam(kCeiling)->SetShape(1.);
   // LUFS and GR bars
   GetParam(kILevelMeteringBar)->InitDouble(
-    "Loudness",
+    "[Loudness]",
+    PLUG_LUFS_RANGE_MAX,
+    PLUG_LUFS_RANGE_MIN,
+    PLUG_LUFS_RANGE_MAX,
+    0.1,
+    "LUFS"
+    );
+  // Hidden LUFS meter just to let DAW store a value in it
+  GetParam(kILevelMeteringBar)->InitDouble(
+    "[Source Loudness]",
     PLUG_LUFS_RANGE_MAX,
     PLUG_LUFS_RANGE_MIN,
     PLUG_LUFS_RANGE_MAX,
@@ -238,7 +237,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   // because -6dB of gain reduction is more than -3dB,
   // but -6 is less than -3 obviously.
   GetParam(kIGrMeteringBar)->InitDouble(
-    "Gain reduction",
+    "[Gain reduction]",
     PLUG_GR_RANGE_MIN,
     PLUG_GR_RANGE_MAX,
     PLUG_GR_RANGE_MIN,
@@ -246,11 +245,11 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
     "dB");
 
   // Mode and platform switches
-  GetParam(kModeSwitch)->InitEnum("Mode", PLUG_CONVERT_PLUG_MODE_TO_SWITCH_VALUE(tPlugCurrentMode), 3);
+  GetParam(kModeSwitch)->InitEnum("Mode", PLUG_CONVERT_PLUG_MODE_TO_SWITCH_VALUE(PLUG_INITIAL_MODE), 3);
   for (i=0; i<3; i++)
     GetParam(kModeSwitch)->SetDisplayText(i, asModeNames[i]);
 
-  GetParam(kPlatformSwitchClickable)->InitEnum("Target platform", PLUG_REVERSE_PLATFORM_SWITCH_VALUE(PLUG_DEFAULT_TARGET_PLATFORM), 5);
+  GetParam(kPlatformSwitchClickable)->InitEnum("[Target platform]", PLUG_REVERSE_PLATFORM_SWITCH_VALUE(PLUG_DEFAULT_TARGET_PLATFORM), 5);
   for (i=0; i<PLUG_PLATFORM_OPTIONS; i++)
     GetParam(kPlatformSwitchClickable)->SetDisplayText(PLUG_REVERSE_PLATFORM_SWITCH_VALUE(i), asTargetNames[i]);
 
@@ -259,15 +258,14 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
     GetParam(kPlatformSwitch)->SetDisplayText(i, asTargetNames[i]);
 
   // GR and LUFS overlay switches for resetting  
-  GetParam(kIGrContactControl)->InitBool("GR meter reset", 0, "");
-  GetParam(kILufsContactControl)->InitBool("Loudness meter reset", 0, "");
+  GetParam(kIGrContactControl)->InitBool("[GR meter reset]", 0, "");
+  GetParam(kILufsContactControl)->InitBool("[Loudness meter reset]", 0, "");
 
   // *** Initing actual GUI controls
 
   // Plug window, background
   pGraphics = MakeGraphics(this, kWidth, kHeight);
   pGraphics->AttachBackground(BG_ID, BG_FN);
-  
 
   /* Meters - start */
 
@@ -324,6 +322,22 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
     &GR_BAR_DEFAULT_NOTCH_ICOLOR,
     &METERING_BAR_ABOVE_NOTCH_ICOLOR);
   pGraphics->AttachControl(tIGrMeteringBar);
+
+  /* This is a fake invisible control to store source LUFS value
+  So when a user recalls a project that was saved while the plugin
+  was in "master" mode, we can still remember source's loudness
+  because DAW stores the value of that meter. 
+  */
+  tSourceLufsMemory = new Plug::ILevelMeteringBar(
+    this,
+    0,
+    kLufsMeter_Y,
+    PLUG_METERING_BAR_IRECT,
+    kSourceLufsMemory
+    );
+  tILevelMeteringBar->SetNotchValue(PLUG_LUFS_RANGE_MAX);
+  pGraphics->AttachControl(tSourceLufsMemory);
+  tSourceLufsMemory->Hide(true);
 
   // Overlay labels
   // "Loudness"
@@ -477,30 +491,25 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
   AttachGraphics(pGraphics);
   #endif
 
-  // Hide some parameters from DAW's automation menu
-  // (doesn't seem to hide the parameters, at least in Reaper 5.77)
-  // Bar values are not for automation obviously
-  GetParam(kILevelMeteringBar)->SetCanAutomate(false);
-  GetParam(kIGrMeteringBar)->SetCanAutomate(false);
-  // There are two linked controls for platform selection, so we disable one of them
-  GetParam(kPlatformSwitch)->SetCanAutomate(false);
-
   // Guide message
   char sModeString[] = PLUG_OFF_STARTUP_MESSAGE;
   tModeTextControl->SetTextFromPlug(sModeString);
-  
+
   // Finally - feed all the controls to IPlug's graphics gizmo
   AttachGraphics(pGraphics);
   // *** Initing actual GUI controls - end
-  
+
   // *** Stuff for signal processing
   //Limiter 
   tLimiter = new chunkware_simple::SimpleLimit();
-  tLimiter->setThresh(fDefaultLimiterThreshold);
+  /* Limiter's threshold is always PLUG_LIMITER_DEFAULT_THRESHOLD_DB,
+  which is 0dB by default. The actual threshold is controlled by pre-
+  and post-limiter gain. */
+  tLimiter->setThresh(PLUG_LIMITER_DEFAULT_THRESHOLD_DB);
   tLimiter->setAttack(PLUG_LIMITER_ATTACK_MILLISECONDS);
   tLimiter->initRuntime();
 
-  //LUFS loudness meter 
+  // LUFS loudness meter 
   tLoudnessMeter = new Plug::LoudnessMeter();
   tLoudnessMeter->SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER); 
 
@@ -516,6 +525,57 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo)
 
   // Tell DSP related objects what the current sample rate is
   UpdateSampleRate();
+
+  /*
+  Value inits
+  Since we have to consider not only the case when user adds the plugin
+  for the first time, but also the case when user recalls previously saved
+  session, we have to be careful with which walues we should reset excplicitly,
+  and which ones we should leave to host (DAW) to initiate.
+  
+  Recallable parameters:
+  fTargetLoudness - updated in UpdatePlatform()
+  nCurrentTargetIndex - dealt with below
+  fMasteringGainDb - updated in UpdatePreMastering() called from UpdatePlatform()
+  fTargetLufsIntegratedDb - updated in UpdatePreMastering() called from UpdatePlatform()
+  fSourceLufsIntegratedDb - dealt with below
+  fLimiterCeilingDb - updated in UpdatePreMastering() called from UpdatePlatform()
+  fLimiterCeilingLinear - updated in UpdatePreMastering() called from UpdatePlatform()
+  fMasteringGainLinear - updated in UpdatePreMastering() called from UpdatePlatform()
+  tPlugCurrentMode - dealt with below
+  bLufsTooLow - dealt with below
+  */
+
+  // GR meter values - non-recallable
+  fMaxGainReductionPerFrame = PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET;
+  fMaxGainReductionPerSessionDb = PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET;
+
+  /* Plugin starts up in this mode */
+  tPlugCurrentMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
+  if(tPlugCurrentMode == PLUG_MASTER_MODE){
+    // Recalling source's LUFS from a hidden control
+    fSourceLufsIntegratedDb = \
+      (tPlugCurrentMode==PLUG_MASTER_MODE) ? \
+      GetParam(kSourceLufsMemory)->Value() : \
+      PLUG_SOURCE_LUFS_INTERGRATED_DB_RESET;
+    // Target platform
+    nCurrentTargetIndex = (unsigned short)GetParam(kPlatformSwitch)->Int();
+
+    /* Low (-inf) LUFS flag. Doesn't allow user to go into mastering mode
+    unless plugin successfully got source LUFS reading first. */
+    bLufsTooLow = !((fSourceLufsIntegratedDb > PLUG_LUFS_TOO_LOW) || PLUG_ALWAYS_ALLOW_MASTERING);
+
+    /* Updates: 
+    fTargetLoudness
+    fTargetLufsIntegratedDb
+    fLimiterCeilingDb
+    fLimiterCeilingLinear
+    fMasteringGainDb
+    fMasteringGainLinear
+    */
+    UpdatePlatform((PLUG_Target)nCurrentTargetIndex);
+  }
+
 }
 
 StreamMaster::~StreamMaster() {}

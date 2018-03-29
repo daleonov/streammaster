@@ -81,7 +81,7 @@ use PLUG_KNOB_PEAK_DOUBLE() to convert them to linear gain*/
 
 #define PLUG_DEFAULT_PRESET_NAME "Default"
 #define PLUG_LIMITER_ATTACK_MILLISECONDS 0.1
-#define PLUG_LIMITER_DEFAULT_THRESHOLD_DB 0.;
+#define PLUG_LIMITER_DEFAULT_THRESHOLD_DB 0.
 
 #define PLUG_LUFS_RANGE_MIN -40.
 #define PLUG_LUFS_RANGE_MAX 3.
@@ -160,6 +160,7 @@ enum EParams
   kILevelMeteringBar,
   kIGrMeteringBar,
   kPlatformSwitchClickable,
+  kSourceLufsMemory,
   kNumParams, /* Anything below that line will be non-automatable */
   kIPeakingTextControl,
   kIModeTextControl,
@@ -326,7 +327,7 @@ typedef enum{
 
 #define PLUG_INITIAL_MODE PLUG_OFF_MODE
 #define PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(idx) \
-  ((PLUG_Mode)int(GetParam(idx)->Value()+1))
+  ((PLUG_Mode)(GetParam(idx)->Int()+1))
 #define PLUG_REVERSE_PLATFORM_SWITCH_VALUE(n) (PLUG_PLATFORM_OPTIONS - 1 - n)
 #define PLUG_NORMALIZE_PLATFORM_SWITCH_VALUE(n) (((double)n)/PLUG_PLATFORM_OPTIONS)
 
@@ -365,6 +366,7 @@ private:
   IKnobMultiControl *tPlatformSelector;
   Plug::ILevelMeteringBar* tILevelMeteringBar;
   Plug::ILevelMeteringBar* tIGrMeteringBar;
+  Plug::ILevelMeteringBar* tSourceLufsMemory;
   IContactControl *TIGrContactControl;
   IContactControl *TILufsContactControl;
   IRadioButtonsControl *tPlatformSelectorClickable;
@@ -377,7 +379,6 @@ private:
   // Operation related stuff
   double fTargetLoudness;
   unsigned short nCurrentTargetIndex;
-  double fDefaultLimiterThreshold;
   // Plugin starts up in this mode
   PLUG_Mode tPlugCurrentMode;
   // Vars for mastering mode
