@@ -85,6 +85,8 @@ use PLUG_KNOB_PEAK_DOUBLE() to convert them to linear gain*/
 
 #define PLUG_LUFS_RANGE_MIN -40.
 #define PLUG_LUFS_RANGE_MAX 3.
+#define PLUG_LUFS_NORMALIZED(l) \
+(((double)(l - PLUG_LUFS_RANGE_MIN)) / (PLUG_LUFS_RANGE_MAX - PLUG_LUFS_RANGE_MIN))
 
 #define PLUG_GR_RANGE_MIN -0.
 #define PLUG_GR_RANGE_MAX -43.
@@ -366,7 +368,7 @@ private:
   IKnobMultiControl *tPlatformSelector;
   Plug::ILevelMeteringBar* tILevelMeteringBar;
   Plug::ILevelMeteringBar* tIGrMeteringBar;
-  Plug::ILevelMeteringBar* tSourceLufsMemory;
+  IKnobLineControl* tSourceLufsMemory;
   IContactControl *TIGrContactControl;
   IContactControl *TILufsContactControl;
   IRadioButtonsControl *tPlatformSelectorClickable;

@@ -203,7 +203,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   // There are two linked controls for platform selection, so we disable one of them
   GetParam(kPlatformSwitchClickable)->SetCanAutomate(false);
   // Invisible storage control
-  GetParam(kSourceLufsMemory)->SetCanAutomate(false);
+  //GetParam(kSourceLufsMemory)->SetCanAutomate(false);
 
   // Setting up values for all the controls
   //arguments are: name, defaultVal, minVal, maxVal, step, label
@@ -214,28 +214,32 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   For example, "9" represents -0.1dB, "0" is for -1.0dB etc. if the actual range is -1.0..-0.0dB*/
   GetParam(kCeiling)->InitInt("Ceiling", PLUG_KNOB_PEAK_DEFAULT, PLUG_KNOB_PEAK_MIN, PLUG_KNOB_PEAK_MAX, "tenths of dB");
   GetParam(kCeiling)->SetShape(1.);
-  // LUFS and GR bars
+
+  /* LUFS and GR bars */
+  // Loudness meter
   GetParam(kILevelMeteringBar)->InitDouble(
     "[Loudness]",
-    PLUG_LUFS_RANGE_MAX,
     PLUG_LUFS_RANGE_MIN,
-    PLUG_LUFS_RANGE_MAX,
-    0.1,
-    "LUFS"
-    );
-  // Hidden LUFS meter just to let DAW store a value in it
-  GetParam(kILevelMeteringBar)->InitDouble(
-    "[Source Loudness]",
-    PLUG_LUFS_RANGE_MAX,
     PLUG_LUFS_RANGE_MIN,
     PLUG_LUFS_RANGE_MAX,
     0.1,
     "LUFS"
     );
 
-  // Min and max values are the other way around here
-  // because -6dB of gain reduction is more than -3dB,
-  // but -6 is less than -3 obviously.
+  // Hidden LUFS meter just to let DAW store a value in it
+  GetParam(kSourceLufsMemory)->InitDouble(
+    "[Source Loudness]",
+    PLUG_LUFS_RANGE_MIN,
+    PLUG_LUFS_RANGE_MIN,
+    PLUG_LUFS_RANGE_MAX,
+    0.1,
+    "LUFS"
+    );
+
+  /* GR meter
+  Min and max values are the other way around here
+  because -6dB of gain reduction is more than -3dB,
+  but -6 is less than -3 obviously. */
   GetParam(kIGrMeteringBar)->InitDouble(
     "[Gain reduction]",
     PLUG_GR_RANGE_MIN,
@@ -310,6 +314,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
     );
   tILevelMeteringBar->SetNotchValue(PLUG_LUFS_RANGE_MAX);
   pGraphics->AttachControl(tILevelMeteringBar);
+
   // Gain Reduction meter
   tIGrMeteringBar = new Plug::ILevelMeteringBar(
     this,
@@ -328,14 +333,13 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   was in "master" mode, we can still remember source's loudness
   because DAW stores the value of that meter. 
   */
-  tSourceLufsMemory = new Plug::ILevelMeteringBar(
+  const IColor tInvisibleLineColor = IColor(0, 0, 0, 0);
+  tSourceLufsMemory = new IKnobLineControl(
     this,
-    0,
-    kLufsMeter_Y,
-    PLUG_METERING_BAR_IRECT,
-    kSourceLufsMemory
+    IRECT(0, 0, 4, 4),
+    kSourceLufsMemory,
+    &tInvisibleLineColor
     );
-  tILevelMeteringBar->SetNotchValue(PLUG_LUFS_RANGE_MAX);
   pGraphics->AttachControl(tSourceLufsMemory);
   tSourceLufsMemory->Hide(true);
 
@@ -513,19 +517,6 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   tLoudnessMeter = new Plug::LoudnessMeter();
   tLoudnessMeter->SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER); 
 
-  // *** General plugin shenanigans
-  // Presets displayed in the plugin's hosts
-  // We have only one preset
-  MakeDefaultPreset((char *)PLUG_DEFAULT_PRESET_NAME, kNumPrograms);
-
-  // *** Interface stuff
-  // Set initial values to controls that can't be handled
-  // in the "GetParam()->Init...() section of this constructor"
-  UpdateAvailableControls();
-
-  // Tell DSP related objects what the current sample rate is
-  UpdateSampleRate();
-
   /*
   Value inits
   Since we have to consider not only the case when user adds the plugin
@@ -552,30 +543,44 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
 
   /* Plugin starts up in this mode */
   tPlugCurrentMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
-  if(tPlugCurrentMode == PLUG_MASTER_MODE){
-    // Recalling source's LUFS from a hidden control
-    fSourceLufsIntegratedDb = \
-      (tPlugCurrentMode==PLUG_MASTER_MODE) ? \
-      GetParam(kSourceLufsMemory)->Value() : \
-      PLUG_SOURCE_LUFS_INTERGRATED_DB_RESET;
-    // Target platform
-    nCurrentTargetIndex = (unsigned short)GetParam(kPlatformSwitch)->Int();
 
-    /* Low (-inf) LUFS flag. Doesn't allow user to go into mastering mode
-    unless plugin successfully got source LUFS reading first. */
-    bLufsTooLow = !((fSourceLufsIntegratedDb > PLUG_LUFS_TOO_LOW) || PLUG_ALWAYS_ALLOW_MASTERING);
+  // Recalling source's LUFS from a hidden control
+  fSourceLufsIntegratedDb = \
+    (tPlugCurrentMode == PLUG_MASTER_MODE) ? \
+    GetParam(kSourceLufsMemory)->Value() : \
+    2.28;
+  //  PLUG_SOURCE_LUFS_INTERGRATED_DB_RESET;
 
-    /* Updates: 
-    fTargetLoudness
-    fTargetLufsIntegratedDb
-    fLimiterCeilingDb
-    fLimiterCeilingLinear
-    fMasteringGainDb
-    fMasteringGainLinear
-    */
+  // Target platform
+  nCurrentTargetIndex = (unsigned short)GetParam(kPlatformSwitch)->Int();
+
+  /* Low (-inf) LUFS flag. Doesn't allow user to go into mastering mode
+  unless plugin successfully got source LUFS reading first. */
+  bLufsTooLow = !((fSourceLufsIntegratedDb > PLUG_LUFS_TOO_LOW) || PLUG_ALWAYS_ALLOW_MASTERING);
+
+  /* Calling UpdatePlatform() updates:
+  fTargetLoudness
+  fTargetLufsIntegratedDb
+  fLimiterCeilingDb
+  fLimiterCeilingLinear
+  fMasteringGainDb
+  fMasteringGainLinear
+  */
+  if(tPlugCurrentMode == PLUG_MASTER_MODE)
     UpdatePlatform((PLUG_Target)nCurrentTargetIndex);
-  }
 
+  // *** General plugin shenanigans
+  // Presets displayed in the plugin's hosts
+  // We have only one preset
+  MakeDefaultPreset((char *)PLUG_DEFAULT_PRESET_NAME, kNumPrograms);
+
+  // *** Interface stuff
+  // Set initial values to controls that can't be handled
+  // in the "GetParam()->Init...() section of this constructor"
+  UpdateAvailableControls();
+
+  // Tell DSP related objects what the current sample rate is
+  UpdateSampleRate();
 }
 
 StreamMaster::~StreamMaster() {}
@@ -831,6 +836,18 @@ void StreamMaster::OnParamChange(int paramIdx)
 
         // Storing source Loudness value
         fSourceLufsIntegratedDb = tLoudnessMeter->GetLufs();
+        /* And storing it in the invisible bar so it can be recalled by the DAW
+        when user opens a saved project. So far the only way to really store it
+        is to re-initiate the control. SetValueFromPlug() or ...FromGUI() don't
+        work properly. */
+        GetParam(kSourceLufsMemory)->InitDouble(
+          "[Source Loudness]",
+          fSourceLufsIntegratedDb,
+          PLUG_LUFS_RANGE_MIN,
+          PLUG_LUFS_RANGE_MAX,
+          0.1,
+          "LUFS"
+          );
 
         // *** Check if learn mode wass successful - start
         if((fSourceLufsIntegratedDb > PLUG_LUFS_TOO_LOW) || PLUG_ALWAYS_ALLOW_MASTERING){         
