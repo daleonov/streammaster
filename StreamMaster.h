@@ -20,7 +20,7 @@
 
 // Set to false if you want to force user to let the plug learn
 // song loudness properly to allow him to go into mastering mode
-#define PLUG_ALWAYS_ALLOW_MASTERING false
+#define PLUG_ALWAYS_ALLOW_MASTERING true
 
 /********************************************************************
 Other application level macros dependencies:
@@ -118,6 +118,8 @@ use PLUG_KNOB_PEAK_DOUBLE() to convert them to linear gain*/
 #define PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET -0.
 
 #define PLUG_LUFS_TOO_LOW -500.
+#define PLUG_LUFS_RECALL_ME -39.123456
+#define PLUG_LUFS_RECALL_ME_DELTA 0.0000001
 
 #define PLUG_OFF_STARTUP_MESSAGE \
 "\nPress Mode switch to start adjusting song's loudness"
@@ -381,6 +383,7 @@ private:
   // Operation related stuff
   double fTargetLoudness;
   unsigned short nCurrentTargetIndex;
+  bool bNeedToRecallSourceLufs;
   // Plugin starts up in this mode
   PLUG_Mode tPlugCurrentMode;
   // Vars for mastering mode

@@ -229,7 +229,9 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   // Hidden LUFS meter just to let DAW store a value in it
   GetParam(kSourceLufsMemory)->InitDouble(
     "[Source Loudness]",
-    PLUG_LUFS_RANGE_MIN,
+// #####    
+//    PLUG_LUFS_RANGE_MIN,
+    -12.34,
     PLUG_LUFS_RANGE_MIN,
     PLUG_LUFS_RANGE_MAX,
     0.1,
@@ -249,7 +251,9 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
     "dB");
 
   // Mode and platform switches
-  GetParam(kModeSwitch)->InitEnum("Mode", PLUG_CONVERT_PLUG_MODE_TO_SWITCH_VALUE(PLUG_INITIAL_MODE), 3);
+  GetParam(kModeSwitch)->InitEnum("Mode", PLUG_CONVERT_PLUG_MODE_TO_SWITCH_VALUE(PLUG_MASTER_MODE), 3);
+  // ####
+  //GetParam(kModeSwitch)->InitEnum("Mode", PLUG_CONVERT_PLUG_MODE_TO_SWITCH_VALUE(PLUG_INITIAL_MODE), 3);
   for (i=0; i<3; i++)
     GetParam(kModeSwitch)->SetDisplayText(i, asModeNames[i]);
 
@@ -541,15 +545,19 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   fMaxGainReductionPerFrame = PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET;
   fMaxGainReductionPerSessionDb = PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET;
 
-  /* Plugin starts up in this mode */
+  // Off, Learn or Master
+  // ####
   tPlugCurrentMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
+  //tPlugCurrentMode = PLUG_MASTER_MODE;
 
-  // Recalling source's LUFS from a hidden control
-  fSourceLufsIntegratedDb = \
-    (tPlugCurrentMode == PLUG_MASTER_MODE) ? \
-    GetParam(kSourceLufsMemory)->Value() : \
-    2.28;
-  //  PLUG_SOURCE_LUFS_INTERGRATED_DB_RESET;
+  /* Source LUFS
+  If the mode on startup is "master", i.e. not the default one, that means that
+  the plugin is being recalled from a previously saved project. In that case we
+  pull the value from a hidden control, but not in this constructor. Instead,
+  we set a respective flag so that LUFS value isn't pulled from an obviously
+  empty tLoudnessMeter instance */
+  bNeedToRecallSourceLufs = (tPlugCurrentMode == PLUG_MASTER_MODE);
+  fSourceLufsIntegratedDb = PLUG_SOURCE_LUFS_INTERGRATED_DB_RESET;
 
   // Target platform
   nCurrentTargetIndex = (unsigned short)GetParam(kPlatformSwitch)->Int();
@@ -805,17 +813,20 @@ void StreamMaster::OnParamChange(int paramIdx)
         v fLimiterCeilingLinear,
         v fMasteringGainLinear;
       */
+    case kSourceLufsMemory:
+          fSourceLufsIntegratedDb = GetParam(kSourceLufsMemory)->Int();
+          break;
     case kModeSwitch:
       // Converting switch's value to mode
       tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
 
-      if (tPlugNewMode == tPlugCurrentMode){
+      if ((tPlugNewMode == tPlugCurrentMode) && !bNeedToRecallSourceLufs){
           // Apparently it can be falsely triggered during startup, 
           // so we have to ignore that one
           break;
       }
 
-      nModeNumber = (int)GetParam(kModeSwitch)->Value();
+      //nModeNumber = (int)GetParam(kModeSwitch)->Value();
 
       switch (tPlugNewMode){
       case PLUG_LEARN_MODE:
@@ -834,24 +845,34 @@ void StreamMaster::OnParamChange(int paramIdx)
 
         // Store source Loudness and other values 
 
-        // Storing source Loudness value
-        fSourceLufsIntegratedDb = tLoudnessMeter->GetLufs();
-        /* And storing it in the invisible bar so it can be recalled by the DAW
-        when user opens a saved project. So far the only way to really store it
-        is to re-initiate the control. SetValueFromPlug() or ...FromGUI() don't
-        work properly. */
-        GetParam(kSourceLufsMemory)->InitDouble(
-          "[Source Loudness]",
-          fSourceLufsIntegratedDb,
-          PLUG_LUFS_RANGE_MIN,
-          PLUG_LUFS_RANGE_MAX,
-          0.1,
-          "LUFS"
-          );
+        if(bNeedToRecallSourceLufs){
+          // Recalling source's LUFS from a hidden control
+          // ###
+          bNeedToRecallSourceLufs = false;
+          fSourceLufsIntegratedDb = GetParam(kSourceLufsMemory)->Value();
+        }
+        else{
+          // Getting loudness value from LUFS meter gizmo
+          fSourceLufsIntegratedDb = tLoudnessMeter->GetLufs();
+          /* And storing it in the invisible bar so it can be recalled by the DAW
+          when user opens a saved project. So far the only way to really store it
+          is to re-initiate the control. SetValueFromPlug() or ...FromGUI() don't
+          work properly. */
+          GetParam(kSourceLufsMemory)->InitDouble(
+            "[Source Loudness]",
+            fSourceLufsIntegratedDb,
+            PLUG_LUFS_RANGE_MIN,
+            PLUG_LUFS_RANGE_MAX,
+            0.1,
+            "LUFS"
+            );
+        }
 
         // *** Check if learn mode wass successful - start
         if((fSourceLufsIntegratedDb > PLUG_LUFS_TOO_LOW) || PLUG_ALWAYS_ALLOW_MASTERING){         
           bLufsTooLow = false; 
+
+          //Resetting the meter
           delete tLoudnessMeter;
           tLoudnessMeter = new Plug::LoudnessMeter();
           tLoudnessMeter->SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER); 
@@ -877,7 +898,6 @@ void StreamMaster::OnParamChange(int paramIdx)
           fMasteringGainLinear = PLUG_MASTERING_GAIN_LINEAR_RESET;
         }
         // *** Check if learn mode wass successful - end
-        //Resetting the meter
 
         // The rest is handled in kPlatformSwitch part
         // Since we can switch it multiple times in that mode
