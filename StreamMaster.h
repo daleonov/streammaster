@@ -347,6 +347,9 @@ public:
   void ProcessDoubleReplacing(double** inputs, double** outputs, int nFrames);
 
 private:
+  // Storing/recalling some hidden data
+  bool SerializeState(ByteChunk* pChunk);
+  int UnserializeState(ByteChunk* pChunk, int startPos);
   // Update stuff
   void UpdateGui();
   void UpdateAvailableControls();

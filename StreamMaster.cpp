@@ -202,8 +202,6 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   GetParam(kIGrMeteringBar)->SetCanAutomate(false);
   // There are two linked controls for platform selection, so we disable one of them
   GetParam(kPlatformSwitchClickable)->SetCanAutomate(false);
-  // Invisible storage control
-  //GetParam(kSourceLufsMemory)->SetCanAutomate(false);
 
   // Setting up values for all the controls
   //arguments are: name, defaultVal, minVal, maxVal, step, label
@@ -227,6 +225,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
     );
 
   // Hidden LUFS meter just to let DAW store a value in it
+  /*
   GetParam(kSourceLufsMemory)->InitDouble(
     "[Source Loudness]",
 // #####    
@@ -236,7 +235,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
     PLUG_LUFS_RANGE_MAX,
     0.1,
     "LUFS"
-    );
+    );*/
 
   /* GR meter
   Min and max values are the other way around here
@@ -336,7 +335,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   So when a user recalls a project that was saved while the plugin
   was in "master" mode, we can still remember source's loudness
   because DAW stores the value of that meter. 
-  */
+  *//*
   const IColor tInvisibleLineColor = IColor(0, 0, 0, 0);
   tSourceLufsMemory = new IKnobLineControl(
     this,
@@ -345,7 +344,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
     &tInvisibleLineColor
     );
   pGraphics->AttachControl(tSourceLufsMemory);
-  tSourceLufsMemory->Hide(true);
+  tSourceLufsMemory->Hide(true);*/
 
   // Overlay labels
   // "Loudness"
@@ -556,8 +555,10 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   pull the value from a hidden control, but not in this constructor. Instead,
   we set a respective flag so that LUFS value isn't pulled from an obviously
   empty tLoudnessMeter instance */
+  //###
   bNeedToRecallSourceLufs = (tPlugCurrentMode == PLUG_MASTER_MODE);
-  fSourceLufsIntegratedDb = PLUG_SOURCE_LUFS_INTERGRATED_DB_RESET;
+  if (tPlugCurrentMode == PLUG_INITIAL_MODE)
+    fSourceLufsIntegratedDb = PLUG_SOURCE_LUFS_INTERGRATED_DB_RESET;
 
   // Target platform
   nCurrentTargetIndex = (unsigned short)GetParam(kPlatformSwitch)->Int();
@@ -813,9 +814,7 @@ void StreamMaster::OnParamChange(int paramIdx)
         v fLimiterCeilingLinear,
         v fMasteringGainLinear;
       */
-    case kSourceLufsMemory:
-          fSourceLufsIntegratedDb = GetParam(kSourceLufsMemory)->Int();
-          break;
+
     case kModeSwitch:
       // Converting switch's value to mode
       tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
@@ -849,7 +848,7 @@ void StreamMaster::OnParamChange(int paramIdx)
           // Recalling source's LUFS from a hidden control
           // ###
           bNeedToRecallSourceLufs = false;
-          fSourceLufsIntegratedDb = GetParam(kSourceLufsMemory)->Value();
+          //fSourceLufsIntegratedDb = GetParam(kSourceLufsMemory)->Value();
         }
         else{
           // Getting loudness value from LUFS meter gizmo
@@ -857,7 +856,8 @@ void StreamMaster::OnParamChange(int paramIdx)
           /* And storing it in the invisible bar so it can be recalled by the DAW
           when user opens a saved project. So far the only way to really store it
           is to re-initiate the control. SetValueFromPlug() or ...FromGUI() don't
-          work properly. */
+          work properly. *//*
+          ###
           GetParam(kSourceLufsMemory)->InitDouble(
             "[Source Loudness]",
             fSourceLufsIntegratedDb,
@@ -865,7 +865,7 @@ void StreamMaster::OnParamChange(int paramIdx)
             PLUG_LUFS_RANGE_MAX,
             0.1,
             "LUFS"
-            );
+            );*/
         }
 
         // *** Check if learn mode wass successful - start
@@ -958,4 +958,28 @@ void StreamMaster::OnParamChange(int paramIdx)
     default:
       break;
   }
+}
+
+/*
+@brief Storing some hidden data when the project is saved in a host
+*/
+bool StreamMaster::SerializeState(ByteChunk* pChunk)
+{
+  TRACE;
+  IMutexLock lock(this);
+  pChunk->Put(&fSourceLufsIntegratedDb);
+  return IPlugBase::SerializeParams(pChunk); // must remember to call SerializeParams at the end
+}
+
+/*
+@brief Recalling some hidden data when the saved project with this plugin is re-opened
+*/ 
+int StreamMaster::UnserializeState(ByteChunk* pChunk, int nStartPos)
+{
+  TRACE;
+  IMutexLock lock(this);
+
+  nStartPos = pChunk->Get(&fSourceLufsIntegratedDb, nStartPos);
+
+  return IPlugBase::UnserializeParams(pChunk, nStartPos); // must remember to call UnserializeParams at the end
 }
