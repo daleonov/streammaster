@@ -62,12 +62,12 @@ const IColor PLUG_TP_LABEL_ALERT_COLOR(255, 255, 0, 49);
 #define PLUG_KNOB_TEXT_LABEL_FONT_SIZE 12
 #define PLUG_METER_TEXT_LABEL_FONT_SIZE 12
 #define PLUG_GUIDE_TEXT_LABEL_FONT_SIZE 14
-#define PLUG_VERSION_TEXT_LABEL_FONT_SIZE 10
+#define PLUG_VERSION_TEXT_LABEL_FONT_SIZE 14
 #elif defined(__APPLE__)
 #define PLUG_KNOB_TEXT_LABEL_FONT_SIZE 13
 #define PLUG_METER_TEXT_LABEL_FONT_SIZE 13
 #define PLUG_GUIDE_TEXT_LABEL_FONT_SIZE 15
-#define PLUG_VERSION_TEXT_LABEL_FONT_SIZE 11
+#define PLUG_VERSION_TEXT_LABEL_FONT_SIZE 15
 #endif
 #define PLUG_TP_LABEL_FONT_SIZE PLUG_METER_TEXT_LABEL_FONT_SIZE
 
@@ -121,6 +121,18 @@ use PLUG_KNOB_PEAK_DOUBLE() to convert them to linear gain*/
 #define PLUG_LUFS_RECALL_ME -39.123456
 #define PLUG_LUFS_RECALL_ME_DELTA 0.0000001
 
+#ifdef _PLUG_VERSION_H 
+#define PLUG_VERSTION_TEXT \
+"StreamMaster v.%s\n\
+by Daniel Leonov Plugs\n\
+danielleonovplugs.com\n\
+(%s@%s)"
+#else
+"by Daniel Leonov Plugs\n
+danielleonovplugs.com\n
+ver. %s\n"
+#endif
+
 #define PLUG_OFF_STARTUP_MESSAGE \
 "\nPress Mode switch to start adjusting song's loudness"
 
@@ -156,6 +168,8 @@ Please repeat learning cycle again. \n\
 
 enum EParams
 {
+  kBypassSwitch,
+  kAdjust,
   kCeiling,
   kModeSwitch,
   kPlatformSwitch,
@@ -166,6 +180,7 @@ enum EParams
   kPlatformSwitchClickable,
   kNumParams, /* Anything below that line will be non-automatable */
   kIPeakingTextControl,
+  kAdjustTextControl,
   kIModeTextControl,
   kTpTextControl,
 };
@@ -176,7 +191,7 @@ enum ELayout
   kHeight = GUI_HEIGHT,
 
   // LUFS meter
-  kLufsMeter_X = 486,
+  kLufsMeter_X = 665,
   kLufsMeter_Y = 12,
 
   // GR meter
@@ -184,9 +199,19 @@ enum ELayout
   kGrMeter_Y = kLufsMeter_Y,
   
   // Peaking knob
-  kCeilingX = 302,
+  kCeilingX = 302 + (302-122),
   kCeilingY = 90,
   kKnobFrames = 21,
+
+  // Bypass switch
+  kBypassSwitchX = 122,
+  kBypassSwitchY = 90,
+  kBypassSwitchFrames = 2,
+
+  // Adjust knob
+  kAdjustX = kCeilingX,
+  kAdjustY = 365,
+  kAdjustFrames = 100,
 
 #ifdef _WIN32
   // LUFS Text reading
@@ -228,9 +253,15 @@ enum ELayout
   kIPeakingTextControl_W = 155,
   kIPeakingTextControl_H = 20,
 
+  // Adjust knob Text reading
+  kAdjustTextControlX = kAdjustX,
+  kAdjustTextControlY = 353,
+  kAdjustTextControlW = kIPeakingTextControl_W,
+  kAdjustTextControlH = kIPeakingTextControl_H,
+
   // Learn-master-off
   kModeSwitch_N = 3,
-  kModeSwitch_X = 122,
+  kModeSwitch_X = 302,
   kModeSwitch_Y = kCeilingY,
   
   /* Switches for Youtube-Spotify-etc. - start */
@@ -247,14 +278,12 @@ enum ELayout
   kPlatformSwitchClickable_TOTAL = 5, // total number of radio buttons
   /* Switches for Youtube-Spotify-etc. - end */
 
-#ifdef _PLUG_VERSION_H 
   // Text version label
   kTextVersion_W = 128,
   kTextVersion_H = 12,
-  kTextVersion_X = kWidth-kTextVersion_W - 1,
-  kTextVersion_Y = kHeight-kTextVersion_H - 1,
-  kTextVersion_ColorMono = 64,
-#endif
+  kTextVersion_X = 480,
+  kTextVersion_Y = 15,
+  kTextVersion_ColorMono = 110,
 
   // Meter reset switch
   kIContactControl_N = 2,
@@ -366,12 +395,15 @@ private:
   ITextControl *tLoudnessTextControl;
   ITextControl *tGrTextControl;
   ITextControl *tPeakingTextControl;
+  ITextControl *tAdjustTextControl;
   ITextControl *tModeTextControl;
   ITextControl *tTpAlertTextControl;
   ITextControl *tTpOkTextControl;
   ITextControl *tTpTextControl;
+  ISwitchControl *tBypassSwitch;
   IKnobMultiControl *tPeakingKnob;
   IKnobMultiControl *tPlatformSelector;
+  IKnobMultiControl *tAdjustKnob;
   Plug::ILevelMeteringBar* tILevelMeteringBar;
   Plug::ILevelMeteringBar* tIGrMeteringBar;
   IContactControl *TIGrContactControl;

@@ -205,12 +205,19 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   // Setting up values for all the controls
   // arguments are: name, defaultVal, minVal, maxVal, step, label
 
+  // Bypass switch
+  GetParam(kBypassSwitch)->InitBool("OnOff", 1, "");
+
   // Ceiling knob
   /* We need precise values for ceiling knob,
   so we have to use integer values and convert them into double later.
   For example, "9" represents -0.1dB, "0" is for -1.0dB etc. if the actual range is -1.0..-0.0dB*/
   GetParam(kCeiling)->InitInt("Ceiling", PLUG_KNOB_PEAK_DEFAULT, PLUG_KNOB_PEAK_MIN, PLUG_KNOB_PEAK_MAX, "tenths of dB");
   GetParam(kCeiling)->SetShape(1.);
+
+  // Adjust knob
+  GetParam(kAdjust)->InitInt("Adjust", 0., -6., 0., "LUFS");
+  GetParam(kAdjust)->SetShape(1.);
 
   /* LUFS and GR bars */
   // Loudness meter
@@ -353,11 +360,21 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   pGraphics->AttachControl(TILufsContactControl);
 
   /* Meters - end */
-    
+
+  // Bypass switch
+  tBmp = pGraphics->LoadIBitmap(BYPASSSWITCH_ID, BYPASSSWITCH_FN, kBypassSwitchFrames);
+  tBypassSwitch = new ISwitchControl(this, kBypassSwitchX, kBypassSwitchY, kBypassSwitch, &tBmp);
+  pGraphics->AttachControl(tBypassSwitch);
+
   // Limiter knob
   tBmp = pGraphics->LoadIBitmap(KNOB_ID, KNOB_FN, kKnobFrames);
   tPeakingKnob = new IKnobMultiControl(this, kCeilingX, kCeilingY, kCeiling, &tBmp);
   pGraphics->AttachControl(tPeakingKnob);
+
+  // Adjust knob
+  tBmp = pGraphics->LoadIBitmap(ADJUST_ID, ADJUST_FN, kAdjustFrames);
+  tAdjustKnob = new IKnobMultiControl(this, kAdjustX, kAdjustY, kAdjust, &tBmp);
+  pGraphics->AttachControl(tAdjustKnob);
   
   // Mode selector (learn-master-off)
   tBmp = pGraphics->LoadIBitmap(MODESWITCH_ID, MODESWITCH_FN, kModeSwitch_N);
@@ -426,6 +443,24 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   pGraphics->AttachControl(tPeakingTextControl);
   tPeakingTextControl->Hide(true);
 
+  // Text Adjust knob guide
+  IText tAdjustLabel = IText(PLUG_KNOB_TEXT_LABEL_STRING_SIZE);
+  tAdjustLabel.mColor = PLUG_KNOB_TEXT_LABEL_COLOR;
+  tAdjustLabel.mSize = PLUG_KNOB_TEXT_LABEL_FONT_SIZE;
+  tAdjustLabel.mAlign = tPeakingLabel.kAlignCenter;
+  tAdjustTextControl = new ITextControl(
+    this,
+    IRECT(
+      kAdjustTextControlX,
+      kAdjustTextControlY,
+      (kAdjustTextControlX + kAdjustTextControlW),
+      (kAdjustTextControlY + kAdjustTextControlH)
+    ),
+    &tAdjustLabel,
+    "-");
+  pGraphics->AttachControl(tAdjustTextControl);
+  tAdjustTextControl->Hide(true);
+
   // Text for the mastering mode
   IText tModeLabel = IText(PLUG_MODE_TEXT_LABEL_STRING_SIZE);
   tModeLabel.mColor = PLUG_GUIDE_TEXT_LABEL_COLOR;
@@ -459,10 +494,16 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
     (kTextVersion_X + kTextVersion_W),
     (kTextVersion_Y + kTextVersion_H)
     );
-  sprintf(sDisplayedVersion, "Ver. %s (%s)", &sPlugVersionGitHead, &sPlugVersionDate);
+  sprintf(
+    sDisplayedVersion,
+    PLUG_VERSTION_TEXT,
+    VST3_VER_STR,
+    &sPlugVersionGitHead,
+    &sPlugVersionDate
+    );
   tTextVersion.mColor = tTextVersionColor;
   tTextVersion.mSize = PLUG_VERSION_TEXT_LABEL_FONT_SIZE;
-  tTextVersion.mAlign = tTextVersion.kAlignFar;
+  tTextVersion.mAlign = tTextVersion.kAlignNear;
   pGraphics->AttachControl(new ITextControl(this, tTextVersionRect, &tTextVersion, (const char*)&sDisplayedVersion));
   AttachGraphics(pGraphics);
   #endif

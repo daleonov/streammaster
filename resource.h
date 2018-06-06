@@ -16,8 +16,8 @@
 #define VIEW_CLASS_STR "StreamMaster_View"
 
 // Format        0xMAJR.MN.BG - in HEX! so version 10.1.5 would be 0x000A0105
-#define PLUG_VER 0x00010000
-#define VST3_VER_STR "1.0.0"
+#define PLUG_VER 0x00020000
+#define VST3_VER_STR "2.0.0"
 
 // http://service.steinberg.de/databases/plugin.nsf/plugIn?openForm
 // 4 chars, single quotes. At least one capital letter
@@ -64,9 +64,11 @@ instrument determined by PLUG _IS _INST
 #define MODESWITCHCLICKABLE_ID 105
 #define LOUDNESSLABELOVERLAY_ID 106
 #define GRLABELOVERLAY_ID 107
+#define BYPASSSWITCH_ID 108
+#define ADJUST_ID 109
 
 // Image resource locations for this plug.
-#define BG_FN "resources/img/StreamMasterBG_RevC.png"
+#define BG_FN "resources/img/StreamMasterBG_RevD.png"
 #define KNOB_FN "resources/img/StreamMasterKnob.png"
 #define MODESWITCH_FN "resources/img/ModeSwitch.png"
 #define PLATFORMSWITCH_FN "resources/img/PlatformSwitch.png"
@@ -74,9 +76,11 @@ instrument determined by PLUG _IS _INST
 #define MODESWITCHCLICKABLE_FN "resources/img/ModeRadioSwitch.png"
 #define LOUDNESSLABELOVERLAY_FN "resources/img/LoudnessOverlay100Percent.png"
 #define GRLABELOVERLAY_FN "resources/img/GrOverlay100Percent.png"
+#define BYPASSSWITCH_FN "resources/img/Switch.png"
+#define ADJUST_FN "resources/img/StreamMasterKnob100.png"
 
 // GUI default dimensions
-#define GUI_WIDTH 657
+#define GUI_WIDTH 871
 #define GUI_HEIGHT 591
 
 // on MSVC, you must define SA_API in the resource editor preprocessor macros as well as the c++ ones
