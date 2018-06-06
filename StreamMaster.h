@@ -108,8 +108,8 @@ use PLUG_KNOB_PEAK_DOUBLE() to convert them to linear gain*/
   fMasteringGainLinear
 */
 #define PLUG_MASTERING_GAIN_DB_RESET 0.
-#define PLUG_TARGET_LUFS_INTERGRATED_DB_RESET PLUG_LUFS_RANGE_MAX
-#define PLUG_SOURCE_LUFS_INTERGRATED_DB_RESET -60.
+#define PLUG_TARGET_LUFS_INTEGRATED_DB_RESET PLUG_LUFS_RANGE_MAX
+#define PLUG_SOURCE_LUFS_INTEGRATED_DB_RESET -60.
 #define PLUG_LIMITER_CEILING_DB_RESET 0.
 #define PLUG_MASTERING_GAIN_LINEAR_RESET 1.
 #define PLUG_LIMITER_CEILING_LINEAR_RESET 1.
@@ -164,7 +164,6 @@ enum EParams
   kILevelMeteringBar,
   kIGrMeteringBar,
   kPlatformSwitchClickable,
-  kSourceLufsMemory,
   kNumParams, /* Anything below that line will be non-automatable */
   kIPeakingTextControl,
   kIModeTextControl,
@@ -350,6 +349,8 @@ private:
   // Storing/recalling some hidden data
   bool SerializeState(ByteChunk* pChunk);
   int UnserializeState(ByteChunk* pChunk, int startPos);
+  void PresetsChangedByHost();
+  bool CompareState(const unsigned char* incomingState, int startPos);
   // Update stuff
   void UpdateGui();
   void UpdateAvailableControls();
@@ -373,7 +374,6 @@ private:
   IKnobMultiControl *tPlatformSelector;
   Plug::ILevelMeteringBar* tILevelMeteringBar;
   Plug::ILevelMeteringBar* tIGrMeteringBar;
-  IKnobLineControl* tSourceLufsMemory;
   IContactControl *TIGrContactControl;
   IContactControl *TILufsContactControl;
   IRadioButtonsControl *tPlatformSelectorClickable;
@@ -387,6 +387,7 @@ private:
   double fTargetLoudness;
   unsigned short nCurrentTargetIndex;
   bool bNeedToRecallSourceLufs;
+  bool bJustRecalledSourceLufs;
   // Plugin starts up in this mode
   PLUG_Mode tPlugCurrentMode;
   // Vars for mastering mode
