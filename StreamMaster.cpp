@@ -74,14 +74,16 @@ void StreamMaster::UpdateTruePeak(){
 \brief Locks and unlocks controls depending on current mode. Called every time the mode is changed. 
 */
 void StreamMaster::UpdateAvailableControls(){
+  // TODO: Make more elegant implementation, while still keeping it well readable?
   #ifdef PLUG_DO_NOT_BLOCK_CONTROLS
   // Unlock all controls in debug mode
+  tModeSwitch->GrayOut(false);
   tIGrMeteringBar->GrayOut(false);
   tPeakingKnob->GrayOut(false);
+  tAdjustKnob->GrayOut(false);
   tPeakingTextControl->Hide(false);
   tPlatformSelector->GrayOut(false);
   tPlatformSelectorClickable->Hide(false);
-  tPeakingTextControl->GrayOut(false);
   tILevelMeteringBar->GrayOut(false);
   TIGrContactControl->GrayOut(false);
   TILufsContactControl->GrayOut(false);
@@ -89,83 +91,114 @@ void StreamMaster::UpdateAvailableControls(){
   tGrTextControl->Hide(false);
   tTpTextControl->Hide(false);
   #else
-  switch (tPlugCurrentMode){
-  case PLUG_LEARN_MODE:
-    // Learn mode
-    // Only mode switch and LUFS meter
+  if(bIsBypassed){
+    // Everything is locked if the plug is bypassed
+    tModeSwitch->GrayOut(true);
     tIGrMeteringBar->GrayOut(true);
     tPeakingKnob->GrayOut(true);
     tPeakingTextControl->Hide(true);
+    tAdjustKnob->GrayOut(true);
+    tAdjustTextControl->Hide(true);
     tPlatformSelector->GrayOut(true);
     tPlatformSelectorClickable->Hide(true);
-    tPeakingTextControl->GrayOut(true);
-    tILevelMeteringBar->GrayOut(false);
-    /* GR is blocked since there's no gain reduction applied,
-    but you can reset LUFS meter */
-    TIGrContactControl->GrayOut(true);
-    TILufsContactControl->GrayOut(false);
-    // Only display LUFS value
-    tLoudnessTextControl->Hide(false);
-    tGrTextControl->Hide(true);
-    tTpTextControl->Hide(true);
-    break;
-  case PLUG_MASTER_MODE:
-    // Master mode
-    if(bLufsTooLow)
-    {
-      // If LUFS was too low in learning mode...
-      // Only mode switch and LUFS meter
-      tIGrMeteringBar->GrayOut(true);
-      tPeakingKnob->GrayOut(true);
-      tPeakingTextControl->Hide(true);
-      tPlatformSelector->GrayOut(true);
-      tPlatformSelectorClickable->Hide(true);
-      tPeakingTextControl->GrayOut(true);
-      tILevelMeteringBar->GrayOut(false);
-      /* Unlike learning mode, we should
-      lock both reset switches here*/
-      TIGrContactControl->GrayOut(true);
-      TILufsContactControl->GrayOut(true);
-      // No gain reduction is happening in that mode
-      tLoudnessTextControl->Hide(true);
-      tGrTextControl->Hide(true);
-      tTpTextControl->Hide(true);
-    }
-    else{
-      // Everything unlocked
-      tIGrMeteringBar->GrayOut(false);
-      tPeakingKnob->GrayOut(false);
-      tPeakingTextControl->Hide(false);
-      tPlatformSelector->GrayOut(false);
-      tPlatformSelectorClickable->Hide(false);
-      tPeakingTextControl->GrayOut(false);
-      tILevelMeteringBar->GrayOut(false);
-      TIGrContactControl->GrayOut(false);
-      TILufsContactControl->GrayOut(false);
-      // GR, LUFS and TP readings are displayed
-      tLoudnessTextControl->Hide(false);
-      tGrTextControl->Hide(false);
-      tTpTextControl->Hide(false);
-    }
-    break;
-  case PLUG_OFF_MODE:
-    // Learn mode
-    // Only mode switch
-    tIGrMeteringBar->GrayOut(true);
-    tPeakingKnob->GrayOut(true);
-    tPeakingTextControl->Hide(true);
-    tPlatformSelector->GrayOut(true);
-    tPlatformSelectorClickable->Hide(true);
-    tPeakingTextControl->GrayOut(true);
-    tILevelMeteringBar->GrayOut(true);    
+    tILevelMeteringBar->GrayOut(true);
     TIGrContactControl->GrayOut(true);
     TILufsContactControl->GrayOut(true);
-    // GR, LUFS and TP readings are off
     tLoudnessTextControl->Hide(true);
     tGrTextControl->Hide(true);
     tTpTextControl->Hide(true);
-    break;
   }
+  else{
+    // Not bypassed
+    switch (tPlugCurrentMode){
+    case PLUG_LEARN_MODE:
+      // Learn mode
+      // Only mode switch and LUFS meter
+      tModeSwitch->GrayOut(false);
+      tIGrMeteringBar->GrayOut(true);
+      tPeakingKnob->GrayOut(true);
+      tPeakingTextControl->Hide(true);
+      tAdjustKnob->GrayOut(true);
+      tAdjustTextControl->Hide(true);
+      tPlatformSelector->GrayOut(true);
+      tPlatformSelectorClickable->Hide(true);
+      tILevelMeteringBar->GrayOut(false);
+      /* GR is blocked since there's no gain reduction applied,
+      but you can reset LUFS meter */
+      TIGrContactControl->GrayOut(true);
+      TILufsContactControl->GrayOut(false);
+      // Only display LUFS value
+      tLoudnessTextControl->Hide(false);
+      tGrTextControl->Hide(true);
+      tTpTextControl->Hide(true);
+      break;
+    case PLUG_MASTER_MODE:
+      // Master mode
+      if(bLufsTooLow)
+      {
+        // If LUFS was too low in learning mode...
+        // Only mode switch and LUFS meter
+        tModeSwitch->GrayOut(false);
+        tIGrMeteringBar->GrayOut(true);
+        tPeakingKnob->GrayOut(true);
+        tPeakingTextControl->Hide(true);
+        tAdjustKnob->GrayOut(true);
+        tAdjustTextControl->Hide(true);
+        tPlatformSelector->GrayOut(true);
+        tPlatformSelectorClickable->Hide(true);
+        //tPeakingTextControl->GrayOut(true);
+        tILevelMeteringBar->GrayOut(false);
+        /* Unlike learning mode, we should
+        lock both reset switches here*/
+        TIGrContactControl->GrayOut(true);
+        TILufsContactControl->GrayOut(true);
+        // No gain reduction is happening in that mode
+        tLoudnessTextControl->Hide(true);
+        tGrTextControl->Hide(true);
+        tTpTextControl->Hide(true);
+      }
+      else{
+        // Everything unlocked
+        tModeSwitch->GrayOut(false);
+        tIGrMeteringBar->GrayOut(false);
+        tPeakingKnob->GrayOut(false);
+        tPeakingTextControl->Hide(false);
+        tAdjustKnob->GrayOut(false);
+        tAdjustTextControl->Hide(false);
+        tPlatformSelector->GrayOut(false);
+        tPlatformSelectorClickable->Hide(false);
+        //tPeakingTextControl->GrayOut(false);
+        tILevelMeteringBar->GrayOut(false);
+        TIGrContactControl->GrayOut(false);
+        TILufsContactControl->GrayOut(false);
+        // GR, LUFS and TP readings are displayed
+        tLoudnessTextControl->Hide(false);
+        tGrTextControl->Hide(false);
+        tTpTextControl->Hide(false);
+      }
+      break;
+    case PLUG_OFF_MODE:
+      // Learn mode
+      // Only mode switch
+      tModeSwitch->GrayOut(false);
+      tIGrMeteringBar->GrayOut(true);
+      tPeakingKnob->GrayOut(true);
+      tPeakingTextControl->Hide(true);
+      tAdjustKnob->GrayOut(true);
+      tAdjustTextControl->Hide(true);
+      tPlatformSelector->GrayOut(true);
+      tPlatformSelectorClickable->Hide(true);
+      tPeakingTextControl->GrayOut(true);
+      tILevelMeteringBar->GrayOut(true);
+      TIGrContactControl->GrayOut(true);
+      TILufsContactControl->GrayOut(true);
+      // GR, LUFS and TP readings are off
+      tLoudnessTextControl->Hide(true);
+      tGrTextControl->Hide(true);
+      tTpTextControl->Hide(true);
+      break;
+    } //switch
+  } // bIsBypassed
   #endif
 }
 
@@ -206,7 +239,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   // arguments are: name, defaultVal, minVal, maxVal, step, label
 
   // Bypass switch
-  GetParam(kBypassSwitch)->InitBool("OnOff", 1, "");
+  GetParam(kBypassSwitch)->InitBool("OnOff", 0, "");
 
   // Ceiling knob
   /* We need precise values for ceiling knob,
@@ -216,7 +249,14 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   GetParam(kCeiling)->SetShape(1.);
 
   // Adjust knob
-  GetParam(kAdjust)->InitInt("Adjust", 0., -6., 0., "LUFS");
+  GetParam(kAdjust)->InitDouble(
+    "Target LUFS Adjust",
+    PLUG_ADJUST_KNOB_PEAK_DEFAULT,
+    PLUG_ADJUST_KNOB_PEAK_MIN,
+    PLUG_ADJUST_KNOB_PEAK_MAX,
+    PLUG_ADJUST_KNOB_PEAK_STEP,
+    "LUFS"
+    );
   GetParam(kAdjust)->SetShape(1.);
 
   /* LUFS and GR bars */
@@ -378,7 +418,8 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   
   // Mode selector (learn-master-off)
   tBmp = pGraphics->LoadIBitmap(MODESWITCH_ID, MODESWITCH_FN, kModeSwitch_N);
-  pGraphics->AttachControl(new ISwitchControl(this, kModeSwitch_X, kModeSwitch_Y, kModeSwitch, &tBmp));
+  tModeSwitch = new ISwitchControl(this, kModeSwitch_X, kModeSwitch_Y, kModeSwitch, &tBmp);
+  pGraphics->AttachControl(tModeSwitch);
 
   // Platform selector (YT, spotify etc.)
   // Rotatable control
@@ -478,8 +519,8 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
     "-");
   pGraphics->AttachControl(tModeTextControl);
 
-  #ifdef _PLUG_VERSION_H 
   // Text label with current version of the plug
+  // TODO: Make it clickable so it leads to a website or something
   IText tTextVersion = IText(PLUG_VERSION_TEXT_LABEL_STRING_SIZE);
   char sDisplayedVersion[PLUG_VERSION_TEXT_LABEL_STRING_SIZE];
   const IColor tTextVersionColor(
@@ -494,6 +535,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
     (kTextVersion_X + kTextVersion_W),
     (kTextVersion_Y + kTextVersion_H)
     );
+  #ifdef _PLUG_VERSION_H
   sprintf(
     sDisplayedVersion,
     PLUG_VERSTION_TEXT,
@@ -501,12 +543,25 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
     &sPlugVersionGitHead,
     &sPlugVersionDate
     );
+  #else
+  sprintf(
+    sDisplayedVersion,
+    PLUG_VERSTION_TEXT,
+    VST3_VER_STR
+    );
+  #endif
   tTextVersion.mColor = tTextVersionColor;
   tTextVersion.mSize = PLUG_VERSION_TEXT_LABEL_FONT_SIZE;
   tTextVersion.mAlign = tTextVersion.kAlignNear;
-  pGraphics->AttachControl(new ITextControl(this, tTextVersionRect, &tTextVersion, (const char*)&sDisplayedVersion));
+  pGraphics->AttachControl(
+    new ITextControl(
+      this,
+      tTextVersionRect,
+      &tTextVersion,
+      (const char*)&sDisplayedVersion
+      )
+    );
   AttachGraphics(pGraphics);
-  #endif
 
   // Guide message
   char sModeString[] = PLUG_OFF_STARTUP_MESSAGE;
@@ -548,7 +603,11 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   fMasteringGainLinear - updated in UpdatePreMastering() called from UpdatePlatform()
   tPlugCurrentMode - dealt with below
   bLufsTooLow - dealt with below
+  bIsBypassed - dealt with below
   */
+
+  // Bypass switch state
+  bIsBypassed = (bool)GetParam(kBypassSwitch)->Bool();
 
   // GR meter values - non-recallable
   fMaxGainReductionPerFrame = PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET;
@@ -752,9 +811,10 @@ void StreamMaster::OnParamChange(int paramIdx)
 {
   IMutexLock lock(this);
 
-  double fPeaking;
+  double fPeaking, fAdjust;
   unsigned int nIndex;
   char sPeakingString[PLUG_KNOB_TEXT_LABEL_STRING_SIZE];
+  char sAdjustString[PLUG_KNOB_TEXT_LABEL_STRING_SIZE];
   char sModeString[PLUG_MODE_TEXT_LABEL_STRING_SIZE];
   const double fMaxGainReductionPerFrameDb = LINEAR_TO_LOG(fMaxGainReductionPerFrame);
   PLUG_Mode tPlugNewMode;
@@ -789,6 +849,15 @@ void StreamMaster::OnParamChange(int paramIdx)
       fPeaking = PLUG_KNOB_PEAK_DOUBLE(GetParam(kCeiling)->Value());
       sprintf(sPeakingString, "%5.2fdB", fPeaking);
       tPeakingTextControl->SetTextFromPlug(sPeakingString);
+      tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
+      nIndex = GetParam(kPlatformSwitch)->Int();
+      if (tPlugCurrentMode == PLUG_MASTER_MODE)
+        UpdatePreMastering((PLUG_Target)nIndex);
+      break;
+    case kAdjust:
+      fAdjust = GetParam(kAdjust)->Value();
+      sprintf(sAdjustString, "%5.2fLUFS", fAdjust);
+      tAdjustTextControl->SetTextFromPlug(sAdjustString);
       tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
       nIndex = GetParam(kPlatformSwitch)->Int();
       if (tPlugCurrentMode == PLUG_MASTER_MODE)
@@ -964,6 +1033,9 @@ void StreamMaster::OnParamChange(int paramIdx)
       UpdatePlatform((PLUG_Target)nCurrentTargetIndex);
       break;
 
+    case kBypassSwitch:
+      bIsBypassed = (bool)GetParam(kBypassSwitch)->Bool();
+      UpdateAvailableControls();
     default:
       break;
   }

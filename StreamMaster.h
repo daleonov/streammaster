@@ -79,6 +79,12 @@ use PLUG_KNOB_PEAK_DOUBLE() to convert them to linear gain*/
 #define PLUG_KNOB_PEAK_SCALE 10.
 #define PLUG_KNOB_PEAK_DOUBLE(i) ((double)i/PLUG_KNOB_PEAK_SCALE)
 
+// Adjust knob values, these are real life ones (LUFS)
+#define PLUG_ADJUST_KNOB_PEAK_MIN -12.
+#define PLUG_ADJUST_KNOB_PEAK_MAX 0.
+#define PLUG_ADJUST_KNOB_PEAK_STEP .1
+#define PLUG_ADJUST_KNOB_PEAK_DEFAULT 0.
+
 #define PLUG_DEFAULT_PRESET_NAME "Default"
 #define PLUG_LIMITER_ATTACK_MILLISECONDS 0.1
 #define PLUG_LIMITER_DEFAULT_THRESHOLD_DB 0.
@@ -123,14 +129,14 @@ use PLUG_KNOB_PEAK_DOUBLE() to convert them to linear gain*/
 
 #ifdef _PLUG_VERSION_H 
 #define PLUG_VERSTION_TEXT \
-"StreamMaster v.%s\n\
+"StreamMaster v%s\n\
 by Daniel Leonov Plugs\n\
 danielleonovplugs.com\n\
 (%s@%s)"
 #else
-"by Daniel Leonov Plugs\n
-danielleonovplugs.com\n
-ver. %s\n"
+"StreamMaster v%s\n\
+by Daniel Leonov Plugs\n
+danielleonovplugs.com"
 #endif
 
 #define PLUG_OFF_STARTUP_MESSAGE \
@@ -401,6 +407,7 @@ private:
   ITextControl *tTpOkTextControl;
   ITextControl *tTpTextControl;
   ISwitchControl *tBypassSwitch;
+  ISwitchControl *tModeSwitch;
   IKnobMultiControl *tPeakingKnob;
   IKnobMultiControl *tPlatformSelector;
   IKnobMultiControl *tAdjustKnob;
@@ -420,6 +427,7 @@ private:
   unsigned short nCurrentTargetIndex;
   bool bNeedToRecallSourceLufs;
   bool bJustRecalledSourceLufs;
+  bool bIsBypassed;
   // Plugin starts up in this mode
   PLUG_Mode tPlugCurrentMode;
   // Vars for mastering mode
@@ -429,6 +437,7 @@ private:
   double fLimiterCeilingDb;
   double fLimiterCeilingLinear;
   double fMasteringGainLinear;
+  double fAdjustLufs;
 
 }; //class StreamMaster
 
