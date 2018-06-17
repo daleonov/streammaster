@@ -66,6 +66,7 @@ instrument determined by PLUG _IS _INST
 #define GRLABELOVERLAY_ID 107
 #define BYPASSSWITCH_ID 108
 #define ADJUST_ID 109
+#define MODERADIOSWITCHGREYOUT_ID 110
 
 // Image resource locations for this plug.
 #define BG_FN "resources/img/StreamMasterBG_RevD.png"
@@ -78,6 +79,7 @@ instrument determined by PLUG _IS _INST
 #define GRLABELOVERLAY_FN "resources/img/GrOverlay100Percent.png"
 #define BYPASSSWITCH_FN "resources/img/Switch.png"
 #define ADJUST_FN "resources/img/StreamMasterKnob100.png"
+#define MODERADIOSWITCHGREYOUT_FN  "resources/img/ModeRadioSwitchGreyOut.png"
 
 // GUI default dimensions
 #define GUI_WIDTH 843

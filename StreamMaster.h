@@ -130,9 +130,8 @@ use PLUG_KNOB_PEAK_DOUBLE() to convert them to linear gain*/
 #define PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET -0.
 #define PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET -0.
 
+// TODO: setting it to -INF would be smarter, but would need careful testing
 #define PLUG_LUFS_TOO_LOW -500.
-#define PLUG_LUFS_RECALL_ME -39.123456
-#define PLUG_LUFS_RECALL_ME_DELTA 0.0000001
 
 #ifdef _PLUG_VERSION_H 
 #define PLUG_VERSTION_TEXT \
@@ -289,6 +288,9 @@ enum ELayout
   kPlatformSwitchClickable_X = 105,
   kPlatformSwitchClickable_Y = 293,
   kPlatformSwitchClickable_TOTAL = 5, // total number of radio buttons
+  // Grey out overlay over platform names
+  kModeRadioSwitchGreyOut_X = kPlatformSwitchClickable_X,
+  kModeRadioSwitchGreyOut_Y = kPlatformSwitchClickable_Y,
   /* Switches for Youtube-Spotify-etc. - end */
 
   // Text version label
@@ -425,6 +427,7 @@ private:
   IRadioButtonsControl *tPlatformSelectorClickable;
   IBitmapControl *tLoudnessLabelOverlay;
   IBitmapControl *tGrLabelOverlay;
+  IBitmapControl *tModeRadioSwitchGreyOut;
   // Shared statistic variables
   double fMaxGainReductionPerFrame;
   double fMaxGainReductionPerSessionDb;

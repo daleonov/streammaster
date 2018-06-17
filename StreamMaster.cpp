@@ -84,6 +84,7 @@ void StreamMaster::UpdateAvailableControls(){
   tPeakingTextControl->Hide(false);
   tPlatformSelector->GrayOut(false);
   tPlatformSelectorClickable->Hide(false);
+  tModeRadioSwitchGreyOut->Hide(true);
   tILevelMeteringBar->GrayOut(false);
   TIGrContactControl->GrayOut(false);
   TILufsContactControl->GrayOut(false);
@@ -101,6 +102,7 @@ void StreamMaster::UpdateAvailableControls(){
     tAdjustTextControl->Hide(true);
     tPlatformSelector->GrayOut(true);
     tPlatformSelectorClickable->Hide(true);
+    tModeRadioSwitchGreyOut->Hide(false);
     tILevelMeteringBar->GrayOut(true);
     TIGrContactControl->GrayOut(true);
     TILufsContactControl->GrayOut(true);
@@ -122,6 +124,7 @@ void StreamMaster::UpdateAvailableControls(){
       tAdjustTextControl->Hide(true);
       tPlatformSelector->GrayOut(true);
       tPlatformSelectorClickable->Hide(true);
+      tModeRadioSwitchGreyOut->Hide(false);
       tILevelMeteringBar->GrayOut(false);
       /* GR is blocked since there's no gain reduction applied,
       but you can reset LUFS meter */
@@ -146,6 +149,7 @@ void StreamMaster::UpdateAvailableControls(){
         tAdjustTextControl->Hide(true);
         tPlatformSelector->GrayOut(true);
         tPlatformSelectorClickable->Hide(true);
+        tModeRadioSwitchGreyOut->Hide(false);
         //tPeakingTextControl->GrayOut(true);
         tILevelMeteringBar->GrayOut(false);
         /* Unlike learning mode, we should
@@ -167,6 +171,7 @@ void StreamMaster::UpdateAvailableControls(){
         tAdjustTextControl->Hide(false);
         tPlatformSelector->GrayOut(false);
         tPlatformSelectorClickable->Hide(false);
+        tModeRadioSwitchGreyOut->Hide(true);
         //tPeakingTextControl->GrayOut(false);
         tILevelMeteringBar->GrayOut(false);
         TIGrContactControl->GrayOut(false);
@@ -188,6 +193,7 @@ void StreamMaster::UpdateAvailableControls(){
       tAdjustTextControl->Hide(true);
       tPlatformSelector->GrayOut(true);
       tPlatformSelectorClickable->Hide(true);
+      tModeRadioSwitchGreyOut->Hide(false);
       tPeakingTextControl->GrayOut(true);
       tILevelMeteringBar->GrayOut(true);
       TIGrContactControl->GrayOut(true);
@@ -227,13 +233,20 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   int i; /* For enum inits */
   IBitmap tBmp;
 
-  // Hide some parameters from DAW's automation menu
-  // (doesn't seem to hide the parameters, at least in Reaper 5.77)
+  /*
+  Hide some parameters from DAW's automation menu; this also affects
+  whether or not the parameters are displayed in generic UI view.
+  Note: this does not affect all plugins formats. For instance, it works
+  in VST3, it should work in AAX, AU and RTAS, but is ignored in VST2.
+  */
   // Bar values are not for automation obviously
   GetParam(kILevelMeteringBar)->SetCanAutomate(false);
   GetParam(kIGrMeteringBar)->SetCanAutomate(false);
   // There are two linked controls for platform selection, so we disable one of them
   GetParam(kPlatformSwitchClickable)->SetCanAutomate(false);
+  // Meter reset buttons are not necessary for automation as well
+  GetParam(kIGrContactControl)->SetCanAutomate(false);
+  GetParam(kILufsContactControl)->SetCanAutomate(false);
 
   // Setting up values for all the controls
   // arguments are: name, defaultVal, minVal, maxVal, step, label
@@ -446,13 +459,35 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   // Platform selector (YT, spotify etc.)
   // Rotatable control
   tBmp = pGraphics->LoadIBitmap(PLATFORMSWITCH_ID, PLATFORMSWITCH_FN, kPlatformSwitch_N);
-  tPlatformSelector = new IKnobMultiControl(this, kPlatformSwitch_X, kPlatformSwitch_Y, kPlatformSwitch, &tBmp);
+  tPlatformSelector = new IKnobMultiControl(
+    this,
+    kPlatformSwitch_X,
+    kPlatformSwitch_Y,
+    kPlatformSwitch,
+    &tBmp
+    );
   pGraphics->AttachControl(tPlatformSelector);
   // Same control, but lest user click on platform names too
   tBmp = pGraphics->LoadIBitmap(MODESWITCHCLICKABLE_ID, MODESWITCHCLICKABLE_FN, kPlatformSwitchClickable_N);
-  tPlatformSelectorClickable = new IRadioButtonsControl(this, tPlatformSwitchClickableIRect, kPlatformSwitchClickable, kPlatformSwitchClickable_TOTAL, &tBmp);
+  tPlatformSelectorClickable = new IRadioButtonsControl(
+    this,
+    tPlatformSwitchClickableIRect,
+    kPlatformSwitchClickable,
+    kPlatformSwitchClickable_TOTAL,
+    &tBmp
+    );
   //IRadioButtonsControl(this, IRECT(kIRadioButtonsControl_V_X, kIRadioButtonsControl_V_Y, kIRadioButtonsControl_V_X + (kIRBC_W*kIRBC_VN), kIRadioButtonsControl_V_Y + (kIRBC_H*kIRBC_VN)), kIRadioButtonsControl_V, kIRBC_VN, &bitmap));
   pGraphics->AttachControl(tPlatformSelectorClickable);
+  // Grey out overlay over platform names
+  tBmp = pGraphics->LoadIBitmap(MODERADIOSWITCHGREYOUT_ID, MODERADIOSWITCHGREYOUT_FN, 1);
+  tModeRadioSwitchGreyOut = new IBitmapControl(
+    this,
+    kModeRadioSwitchGreyOut_X,
+    kModeRadioSwitchGreyOut_Y,
+    &tBmp
+    );
+  pGraphics->AttachControl(tModeRadioSwitchGreyOut);
+  tModeRadioSwitchGreyOut->Hide(true);
   
   // Text LUFS meter
   static IText tDefaultLoudnessLabel = IText(PLUG_METER_TEXT_LABEL_STRING_SIZE);
