@@ -697,9 +697,10 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
 
   if(bIsBypassed){
     // True bypass
-    for (int frame = 0; frame < nFrames; ++frame){
-      *(++out1) = *(++in1);
-      *(++out2) = *(++in2);
+    for (int frame = 0; frame < nFrames; ++frame, ++in1, ++in2, ++out1, ++out2)
+    {
+      *out1 = *in1;
+      *out2 = *in2;
     }
   }
   else{
