@@ -437,7 +437,7 @@ private:
   double fLimiterCeilingDb;
   double fLimiterCeilingLinear;
   double fMasteringGainLinear;
-  double fAdjustLufs;
+  double fAdjustLufsDb;
 
 }; //class StreamMaster
 

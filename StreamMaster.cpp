@@ -629,7 +629,10 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   // Target platform
   nCurrentTargetIndex = (unsigned short)GetParam(kPlatformSwitch)->Int();
 
- // ###
+  // Target loudness user adjustement
+  fAdjustLufsDb = GetParam(kAdjust)->Value();
+
+  // ###
   /* Low (-inf) LUFS flag. Doesn't allow user to go into mastering mode
   unless plugin successfully got source LUFS reading first. */
   //bLufsTooLow = !((fSourceLufsIntegratedDb > PLUG_LUFS_TOO_LOW) || PLUG_ALWAYS_ALLOW_MASTERING);
@@ -645,7 +648,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   /*
   if(tPlugCurrentMode == PLUG_MASTER_MODE)
     UpdatePlatform((PLUG_Target)nCurrentTargetIndex);
-*/
+  */
   // *** General plugin shenanigans
   // Presets displayed in the plugin's hosts
   // We have only one preset
@@ -677,59 +680,69 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
   double *afInterleavedSamples = new double[nFrames * 2];
   double fTruePeakingLinear;
 
-  switch(tPlugCurrentMode){
-    case PLUG_LEARN_MODE:
-    // Learn mode
-    // Feed in the audio into the LUFS meter, but not changing it
-    for (int frame = 0, sample = 0; frame < nFrames; ++frame, ++in1, ++in2, ++out1, ++out2, sample += 2)
-    {
-      *out1 = *in1;
-      *out2 = *in2;
-      afInterleavedSamples[sample]   = *in1;
-      afInterleavedSamples[sample+1] = *in2;
+  if(bIsBypassed){
+    // True bypass
+    for (int frame = 0; frame < nFrames; ++frame){
+      *(++out1) = *(++in1);
+      *(++out2) = *(++in2);
     }
-    tLoudnessMeter->AddSamples(afInterleavedSamples, nFrames);
-    delete[] afInterleavedSamples;
-    break;
-
-    case PLUG_MASTER_MODE:
-    // Master mode
-    // Process the audio, then feed it to the meter
-    // Make sure unprocessed audio's loudness is stored in fSourceLufsIntegratedDb once
-    // after switching the mode and not changed until the mode in changed to "off"!
-    for (int frame = 0, sample = 0; frame < nFrames; ++frame, ++in1, ++in2, ++out1, ++out2, sample += 2)
-    {
-      // Apply gain to the samples 
-      *out1 = fMasteringGainLinear * *in1;
-      *out2 = fMasteringGainLinear * *in2;
-
-      // Feed them to the limiter and read GR value
-      tLimiter->process(*out1, *out2);
-      tLimiter->getGr(&fMaxGainReductionPerFrame);
-
-      // Applying ceiling value (post-limiter gain)
-      *out1 *= fLimiterCeilingLinear;
-      *out2 *= fLimiterCeilingLinear;
-
-      // Collect samples for loudness measurement. After limiter obviously. 
-      afInterleavedSamples[sample]   = *out1;
-      afInterleavedSamples[sample+1] = *out2;
-    }
-    tLoudnessMeter->AddSamples(afInterleavedSamples, nFrames);
-    delete[] afInterleavedSamples;
-    break;
-
-    case PLUG_OFF_MODE:
-    // Off mode
-    // Do nothing to the audio
-    for (int frame = 0; frame < nFrames; ++frame, ++in1, ++in2, ++out1, ++out2)
-    {
-      *out1 = *in1;
-      *out2 = *in2;
-    }    
-
-    break;
   }
+  else{
+    // If plugin is active
+    switch(tPlugCurrentMode){
+      case PLUG_LEARN_MODE:
+      // Learn mode
+      // Feed in the audio into the LUFS meter, but not changing it
+      for (int frame = 0, sample = 0; frame < nFrames; ++frame, ++in1, ++in2, ++out1, ++out2, sample += 2)
+      {
+        *out1 = *in1;
+        *out2 = *in2;
+        afInterleavedSamples[sample]   = *in1;
+        afInterleavedSamples[sample+1] = *in2;
+      }
+      tLoudnessMeter->AddSamples(afInterleavedSamples, nFrames);
+      delete[] afInterleavedSamples;
+      break;
+
+      case PLUG_MASTER_MODE:
+      // Master mode
+      // Process the audio, then feed it to the meter
+      // Make sure unprocessed audio's loudness is stored in fSourceLufsIntegratedDb once
+      // after switching the mode and not changed until the mode in changed to "off"!
+      for (int frame = 0, sample = 0; frame < nFrames; ++frame, ++in1, ++in2, ++out1, ++out2, sample += 2)
+      {
+        // Apply gain to the samples
+        *out1 = fMasteringGainLinear * *in1;
+        *out2 = fMasteringGainLinear * *in2;
+
+        // Feed them to the limiter and read GR value
+        tLimiter->process(*out1, *out2);
+        tLimiter->getGr(&fMaxGainReductionPerFrame);
+
+        // Applying ceiling value (post-limiter gain)
+        *out1 *= fLimiterCeilingLinear;
+        *out2 *= fLimiterCeilingLinear;
+
+        // Collect samples for loudness measurement, post-limiter
+        afInterleavedSamples[sample]   = *out1;
+        afInterleavedSamples[sample+1] = *out2;
+      }
+      tLoudnessMeter->AddSamples(afInterleavedSamples, nFrames);
+      delete[] afInterleavedSamples;
+      break;
+
+      case PLUG_OFF_MODE:
+      // Off mode
+      // Do nothing to the audio
+      for (int frame = 0; frame < nFrames; ++frame, ++in1, ++in2, ++out1, ++out2)
+      {
+        *out1 = *in1;
+        *out2 = *in2;
+      }
+
+      break;
+    } //switch
+  } // if(bIsBypassed)
 
   // GUI also updates in this thread. So make sure it's simple. 
   UpdateGui();
@@ -744,7 +757,7 @@ void StreamMaster::Reset()
 
 /*
 Quick maths:
-MasteringGainDb = TargetLufsIntegratedDb - SourceLufsIntegratedDb - LimiterCeilingDb,
+MasteringGainDb = (TargetLufsIntegratedDb + AdjustLufsDb) - SourceLufsIntegratedDb - LimiterCeilingDb,
 Where LimiterCeilingDb is a negative value. Loudness (in dB) is usually negative too, although it can be above zero.
 MasteringGainLinear = LOG_TO_LINEAR(MasteringGainDb)
 SignalOutLinear = MasteringGainLinear * SignalInLinear, pre-limiter!
@@ -757,6 +770,8 @@ Done!
 void StreamMaster::UpdatePreMastering(PLUG_Target mPlatform){
   //static int nIndex;
   char sModeString[PLUG_MODE_TEXT_LABEL_STRING_SIZE];
+  double fAdjustedTargetLufsIntegratedDb;
+
   // *** Target LUFS 
   //nIndex = GetParam(kPlatformSwitch)->Int();
   fTargetLufsIntegratedDb = PLUG_GET_TARGET_LOUDNESS((int)mPlatform);
@@ -765,21 +780,25 @@ void StreamMaster::UpdatePreMastering(PLUG_Target mPlatform){
   fLimiterCeilingDb = PLUG_KNOB_PEAK_DOUBLE(GetParam(kCeiling)->Value());
   fLimiterCeilingLinear = LOG_TO_LINEAR(fLimiterCeilingDb);
 
+  // *** Target loudness user adjustement
+  fAdjustLufsDb = GetParam(kAdjust)->Value();
+  fAdjustedTargetLufsIntegratedDb = fTargetLufsIntegratedDb + fAdjustLufsDb;
+
   // *** Mastering gain in dB
-  fMasteringGainDb = fTargetLufsIntegratedDb - fSourceLufsIntegratedDb - fLimiterCeilingDb;
+  fMasteringGainDb = \
+    fAdjustedTargetLufsIntegratedDb - fSourceLufsIntegratedDb - fLimiterCeilingDb;
 
   // *** Mastering gain in linear
   fMasteringGainLinear = LOG_TO_LINEAR(fMasteringGainDb);
 
   // Now that we know mastering gain, we just apply it so the audio stream
   // and feed it into the limiter afterwards
-
   // ...but before, let's output some text
   sprintf(sModeString,
     PLUG_MASTER_GUIDE_MESSAGE,
     asTargetDescription[nCurrentTargetIndex],
     fSourceLufsIntegratedDb,
-    fTargetLufsIntegratedDb,
+    fAdjustedTargetLufsIntegratedDb,
     fLimiterCeilingDb,
     fMasteringGainDb
     );
@@ -825,11 +844,14 @@ void StreamMaster::OnParamChange(int paramIdx)
   // Locking and unlocking of controls happens in UpdateAvailableControls()
   switch (paramIdx)
   {
+    // Clicked on GR bar
     case kIGrContactControl:
       // Just reset the peak GR value on the GR bar
       fMaxGainReductionPerSessionDb = PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET;
       tIGrMeteringBar->SetNotchValue(fMaxGainReductionPerSessionDb);
       break;
+
+    // Clicked on Loudness bar
     case kILufsContactControl:
       // Resetting LUFS meter bar and the actual meter
       /* TODO: this switch probably falsely triggers during the startup once,
@@ -845,27 +867,37 @@ void StreamMaster::OnParamChange(int paramIdx)
       tPlugCurrentMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
       if (tPlugCurrentMode == PLUG_LEARN_MODE) fSourceLufsIntegratedDb = PLUG_SOURCE_LUFS_INTEGRATED_DB_RESET;
       break;
+
+    // Tweaked ceiling knob
     case kCeiling:
       fPeaking = PLUG_KNOB_PEAK_DOUBLE(GetParam(kCeiling)->Value());
+
+      // Text label of knob's value
       sprintf(sPeakingString, "%5.2fdB", fPeaking);
       tPeakingTextControl->SetTextFromPlug(sPeakingString);
+
       tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
       nIndex = GetParam(kPlatformSwitch)->Int();
       if (tPlugCurrentMode == PLUG_MASTER_MODE)
         UpdatePreMastering((PLUG_Target)nIndex);
       break;
+
+    // Tweaked adjust knob
     case kAdjust:
       fAdjust = GetParam(kAdjust)->Value();
+
+      // Text label of knob's value
       sprintf(sAdjustString, "%5.2fLUFS", fAdjust);
       tAdjustTextControl->SetTextFromPlug(sAdjustString);
+
       tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
       nIndex = GetParam(kPlatformSwitch)->Int();
       if (tPlugCurrentMode == PLUG_MASTER_MODE)
         UpdatePreMastering((PLUG_Target)nIndex);
       break;
-    //Platform control
-    case kPlatformSwitch:
 
+    // Changed target platform via rotary switch
+    case kPlatformSwitch:
       nCurrentTargetIndex = (unsigned int)GetParam(kPlatformSwitch)->Value();
 
       // Rotating and clickable platform switches are working together
@@ -893,6 +925,7 @@ void StreamMaster::OnParamChange(int paramIdx)
         v fMasteringGainLinear;
       */
 
+    // Clicked mode switch
     case kModeSwitch:
       // Converting switch's value to mode
       tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
@@ -1013,6 +1046,7 @@ void StreamMaster::OnParamChange(int paramIdx)
       UpdateAvailableControls();
       break;
 
+    // Changed target platform via clicking on a platfom's name
     case kPlatformSwitchClickable:      
       // Apparently it can be falsely triggered during startup, 
       // so we have to ignore that one
@@ -1033,6 +1067,7 @@ void StreamMaster::OnParamChange(int paramIdx)
       UpdatePlatform((PLUG_Target)nCurrentTargetIndex);
       break;
 
+    // Clicked On/off bypass switch
     case kBypassSwitch:
       bIsBypassed = (bool)GetParam(kBypassSwitch)->Bool();
       UpdateAvailableControls();
