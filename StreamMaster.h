@@ -51,11 +51,16 @@ const IColor LOUDNESS_BAR_FG_ICOLOR(255, 0, 184, 67);
 const IColor PLUG_TP_LABEL_OK_COLOR(255, 0, 184, 67);
 const IColor PLUG_TP_LABEL_ALERT_COLOR(255, 255, 0, 49);
 
+/*
+Those are the lengths for classic "char[]" strings,
+so make sure keep them up to date whith whatever
+strings you want them to fit
+*/
 #define PLUG_METER_TEXT_LABEL_STRING_SIZE 64
 #define PLUG_KNOB_TEXT_LABEL_STRING_SIZE 16
 #define PLUG_MODE_TEXT_LABEL_STRING_SIZE 512
 #define PLUG_GUIDE_TEXT_LABEL_STRING_SIZE PLUG_MODE_TEXT_LABEL_STRING_SIZE
-#define PLUG_VERSION_TEXT_LABEL_STRING_SIZE 32
+#define PLUG_VERSION_TEXT_LABEL_STRING_SIZE 96
 #define PLUG_TP_LABEL_STRING_SIZE 32
 
 #ifdef _WIN32
@@ -106,7 +111,6 @@ use PLUG_KNOB_PEAK_DOUBLE() to convert them to linear gain*/
 
 #define PLUG_TP_ALERT_VALUE_DB -0.
 #define PLUG_TP_LABEL_DEFAULT_TEXT "-"
-
 
 /* Defaults for:
   fMasteringGainDb,

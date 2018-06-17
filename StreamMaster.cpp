@@ -249,7 +249,13 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   For example, "9" represents -0.1dB, "0" is for -1.0dB etc.
   if the actual range is -1.0..0.0dB
   */
-  GetParam(kCeiling)->InitInt("Ceiling", PLUG_KNOB_PEAK_DEFAULT, PLUG_KNOB_PEAK_MIN, PLUG_KNOB_PEAK_MAX, "tenths of dB");
+  GetParam(kCeiling)->InitInt(
+    "Ceiling",
+    PLUG_KNOB_PEAK_DEFAULT,
+    PLUG_KNOB_PEAK_MIN,
+    PLUG_KNOB_PEAK_MAX,
+    "tenths of dB"
+    );
   GetParam(kCeiling)->SetShape(1.);
 
   // Adjust knob
@@ -287,15 +293,27 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
     "dB");
 
   // Mode and platform switches
-  GetParam(kModeSwitch)->InitEnum("Mode", PLUG_CONVERT_PLUG_MODE_TO_SWITCH_VALUE(PLUG_INITIAL_MODE), 3);
+  GetParam(kModeSwitch)->InitEnum(
+    "Mode",
+    PLUG_CONVERT_PLUG_MODE_TO_SWITCH_VALUE(PLUG_INITIAL_MODE),
+    3
+    );
   for (i=0; i<3; i++)
     GetParam(kModeSwitch)->SetDisplayText(i, asModeNames[i]);
 
-  GetParam(kPlatformSwitchClickable)->InitEnum("[Target platform]", PLUG_REVERSE_PLATFORM_SWITCH_VALUE(PLUG_DEFAULT_TARGET_PLATFORM), 5);
+  GetParam(kPlatformSwitchClickable)->InitEnum(
+    "[Target platform]",
+    PLUG_REVERSE_PLATFORM_SWITCH_VALUE(PLUG_DEFAULT_TARGET_PLATFORM),
+    5
+    );
   for (i=0; i<PLUG_PLATFORM_OPTIONS; i++)
     GetParam(kPlatformSwitchClickable)->SetDisplayText(PLUG_REVERSE_PLATFORM_SWITCH_VALUE(i), asTargetNames[i]);
 
-  GetParam(kPlatformSwitch)->InitEnum("Target platform", PLUG_DEFAULT_TARGET_PLATFORM, PLUG_PLATFORM_OPTIONS);
+  GetParam(kPlatformSwitch)->InitEnum(
+    "Target platform",
+    PLUG_DEFAULT_TARGET_PLATFORM,
+    PLUG_PLATFORM_OPTIONS
+    );
   for (i=0; i<PLUG_PLATFORM_OPTIONS; i++)
     GetParam(kPlatformSwitch)->SetDisplayText(i, asTargetNames[i]);
 
@@ -335,7 +353,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   // for current state
   tTpTextControl = tTpOkTextControl;
 
-  // TP labels should be attached later, so they are sanwitched
+  // TP labels should be attached later, so they are sandwitched
   // between meter bars and meter reset buttons. Otherwise they
   // may get in the way of clicking. 
 
@@ -437,7 +455,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   pGraphics->AttachControl(tPlatformSelectorClickable);
   
   // Text LUFS meter
-  IText tDefaultLoudnessLabel = IText(PLUG_METER_TEXT_LABEL_STRING_SIZE);
+  static IText tDefaultLoudnessLabel = IText(PLUG_METER_TEXT_LABEL_STRING_SIZE);
   tDefaultLoudnessLabel.mColor = PLUG_METER_TEXT_LABEL_COLOR;
   tDefaultLoudnessLabel.mSize = PLUG_METER_TEXT_LABEL_FONT_SIZE;
   tDefaultLoudnessLabel.mAlign = tDefaultLoudnessLabel.PLUG_METER_TEXT_ALIGNMENT;
@@ -454,7 +472,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   pGraphics->AttachControl(tLoudnessTextControl);
 
   // Text GR meter
-  IText tGrLabel = IText(PLUG_METER_TEXT_LABEL_STRING_SIZE);  
+  static IText tGrLabel = IText(PLUG_METER_TEXT_LABEL_STRING_SIZE);  
   tGrLabel.mColor = PLUG_METER_TEXT_LABEL_COLOR;
   tGrLabel.mSize = PLUG_METER_TEXT_LABEL_FONT_SIZE;
   tGrLabel.mAlign = tGrLabel.PLUG_METER_TEXT_ALIGNMENT;
@@ -471,7 +489,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   pGraphics->AttachControl(tGrTextControl);
 
   // Text Peaking knob guide
-  IText tPeakingLabel = IText(PLUG_KNOB_TEXT_LABEL_STRING_SIZE);
+  static IText tPeakingLabel = IText(PLUG_KNOB_TEXT_LABEL_STRING_SIZE);
   tPeakingLabel.mColor = PLUG_KNOB_TEXT_LABEL_COLOR;
   tPeakingLabel.mSize = PLUG_KNOB_TEXT_LABEL_FONT_SIZE;
   tPeakingLabel.mAlign = tPeakingLabel.kAlignCenter;
@@ -489,7 +507,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   tPeakingTextControl->Hide(true);
 
   // Text Adjust knob guide
-  IText tAdjustLabel = IText(PLUG_KNOB_TEXT_LABEL_STRING_SIZE);
+  static IText tAdjustLabel = IText(PLUG_KNOB_TEXT_LABEL_STRING_SIZE);
   tAdjustLabel.mColor = PLUG_KNOB_TEXT_LABEL_COLOR;
   tAdjustLabel.mSize = PLUG_KNOB_TEXT_LABEL_FONT_SIZE;
   tAdjustLabel.mAlign = tPeakingLabel.kAlignCenter;
@@ -507,7 +525,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   tAdjustTextControl->Hide(true);
 
   // Text for the mastering mode
-  IText tModeLabel = IText(PLUG_MODE_TEXT_LABEL_STRING_SIZE);
+  static IText tModeLabel = IText(PLUG_MODE_TEXT_LABEL_STRING_SIZE);
   tModeLabel.mColor = PLUG_GUIDE_TEXT_LABEL_COLOR;
   tModeLabel.mSize = PLUG_GUIDE_TEXT_LABEL_FONT_SIZE;
   tModeLabel.mAlign = tModeLabel.PLUG_GUIDE_TEXT_ALIGNMENT;
@@ -525,7 +543,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
 
   // Text label with current version of the plug
   // TODO: Make it clickable so it leads to a website or something
-  IText tTextVersion = IText(PLUG_VERSION_TEXT_LABEL_STRING_SIZE);
+  static IText tTextVersion = IText(PLUG_VERSION_TEXT_LABEL_STRING_SIZE);
   char sDisplayedVersion[PLUG_VERSION_TEXT_LABEL_STRING_SIZE];
   const IColor tTextVersionColor(
     255,
@@ -565,7 +583,6 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
       (const char*)&sDisplayedVersion
       )
     );
-  AttachGraphics(pGraphics);
 
   // Guide message
   char sModeString[] = PLUG_OFF_STARTUP_MESSAGE;
@@ -581,6 +598,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   /* Limiter's threshold is always PLUG_LIMITER_DEFAULT_THRESHOLD_DB,
   which is 0dB by default. The actual threshold is controlled by pre-
   and post-limiter gain. */
+  
   tLimiter->setThresh(PLUG_LIMITER_DEFAULT_THRESHOLD_DB);
   tLimiter->setAttack(PLUG_LIMITER_ATTACK_MILLISECONDS);
   tLimiter->initRuntime();
@@ -588,7 +606,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   // LUFS loudness meter 
   tLoudnessMeter = new Plug::LoudnessMeter();
   tLoudnessMeter->SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER); 
-
+  
   /*
   Value inits
   Since we have to consider not only the case when user adds the plugin
@@ -676,7 +694,7 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
 {
   // Mutex is already locked for us.
 
-  // Assuming we're wirking with a stereo signal
+  // Assuming we're working with a stereo signal
   double* in1 = inputs[0];
   double* in2 = inputs[1];
   double* out1 = outputs[0];

@@ -80,8 +80,8 @@ instrument determined by PLUG _IS _INST
 #define ADJUST_FN "resources/img/StreamMasterKnob100.png"
 
 // GUI default dimensions
-#define GUI_WIDTH 871
-#define GUI_HEIGHT 591
+#define GUI_WIDTH 843
+#define GUI_HEIGHT 590
 
 // on MSVC, you must define SA_API in the resource editor preprocessor macros as well as the c++ ones
 #if defined(SA_API)
@@ -89,8 +89,8 @@ instrument determined by PLUG _IS _INST
 #endif
 
 // vst3 stuff
-#define MFR_URL "www.olilarkin.co.uk"
-#define MFR_EMAIL "spam@me.com"
+#define MFR_URL "danielleonovplugs.com"
+#define MFR_EMAIL "daleonov@yandex.ru"
 #define EFFECT_TYPE_VST3 "Fx"
 
 /* "Fx|Analyzer"", "Fx|Delay", "Fx|Distortion", "Fx|Dynamics", "Fx|EQ", "Fx|Filter",

@@ -248,9 +248,10 @@ if exist "%programfiles(x86)%" (copy /y "$(TargetPath)" "$(VST3_64_PATH)\StreamM
       <ModuleDefinitionFile>$(WDL_PATH)\IPlug\IPlugVST3.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>echo Post-Build: copy 64bit binary to 64bit VST3 Plugins folder ...
-if exist "%programfiles(x86)%" (copy /y "$(TargetPath)" "$(VST3_64_PATH)\StreamMaster.vst3") else (echo Not copying 64bit binary - 32bit OS detected)</Command>
-      <Message>Copy VST3 Binary to VST3 Plugins folder</Message>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>git_version.bat</Command>
