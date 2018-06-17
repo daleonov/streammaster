@@ -427,7 +427,7 @@ private:
   IRadioButtonsControl *tPlatformSelectorClickable;
   IBitmapControl *tLoudnessLabelOverlay;
   IBitmapControl *tGrLabelOverlay;
-  IBitmapControl *tModeRadioSwitchGreyOut;
+  IBitmapControl *tPlatformSelectorClickableGreyOut;
   // Shared statistic variables
   double fMaxGainReductionPerFrame;
   double fMaxGainReductionPerSessionDb;

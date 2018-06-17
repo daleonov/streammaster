@@ -74,41 +74,31 @@ void StreamMaster::UpdateTruePeak(){
 \brief Locks and unlocks controls depending on current mode. Called every time the mode is changed. 
 */
 void StreamMaster::UpdateAvailableControls(){
-  // TODO: Make more elegant implementation, while still keeping it well readable?
+  bool
+    bIsModeSwitchDisabled,
+    bIsGrMeteringDisabled,
+    bIsLoudnessMeteringDisabled,
+    bIsMasteringKnobsDisabled,
+    bIsPlatformSwitchesDisabled,
+    bIsTpMeteringDisabled;
+
   #ifdef PLUG_DO_NOT_BLOCK_CONTROLS
   // Unlock all controls in debug mode
-  tModeSwitch->GrayOut(false);
-  tIGrMeteringBar->GrayOut(false);
-  tPeakingKnob->GrayOut(false);
-  tAdjustKnob->GrayOut(false);
-  tPeakingTextControl->Hide(false);
-  tPlatformSelector->GrayOut(false);
-  tPlatformSelectorClickable->Hide(false);
-  tModeRadioSwitchGreyOut->Hide(true);
-  tILevelMeteringBar->GrayOut(false);
-  TIGrContactControl->GrayOut(false);
-  TILufsContactControl->GrayOut(false);
-  tLoudnessTextControl->Hide(false);
-  tGrTextControl->Hide(false);
-  tTpTextControl->Hide(false);
+  bIsModeSwitchDisabled = false;
+  bIsGrMeteringDisabled = false;
+  bIsLoudnessMeteringDisabled = false;
+  bIsMasteringKnobsDisabled = false;
+  bIsPlatformSwitchesDisabled = false;
+  bIsTpMeteringDisabled = false;
   #else
   if(bIsBypassed){
     // Everything is locked if the plug is bypassed
-    tModeSwitch->GrayOut(true);
-    tIGrMeteringBar->GrayOut(true);
-    tPeakingKnob->GrayOut(true);
-    tPeakingTextControl->Hide(true);
-    tAdjustKnob->GrayOut(true);
-    tAdjustTextControl->Hide(true);
-    tPlatformSelector->GrayOut(true);
-    tPlatformSelectorClickable->Hide(true);
-    tModeRadioSwitchGreyOut->Hide(false);
-    tILevelMeteringBar->GrayOut(true);
-    TIGrContactControl->GrayOut(true);
-    TILufsContactControl->GrayOut(true);
-    tLoudnessTextControl->Hide(true);
-    tGrTextControl->Hide(true);
-    tTpTextControl->Hide(true);
+    bIsModeSwitchDisabled = true;
+    bIsGrMeteringDisabled = true;
+    bIsLoudnessMeteringDisabled = true;
+    bIsMasteringKnobsDisabled = true;
+    bIsPlatformSwitchesDisabled = true;
+    bIsTpMeteringDisabled = true;
   }
   else{
     // Not bypassed
@@ -116,96 +106,64 @@ void StreamMaster::UpdateAvailableControls(){
     case PLUG_LEARN_MODE:
       // Learn mode
       // Only mode switch and LUFS meter
-      tModeSwitch->GrayOut(false);
-      tIGrMeteringBar->GrayOut(true);
-      tPeakingKnob->GrayOut(true);
-      tPeakingTextControl->Hide(true);
-      tAdjustKnob->GrayOut(true);
-      tAdjustTextControl->Hide(true);
-      tPlatformSelector->GrayOut(true);
-      tPlatformSelectorClickable->Hide(true);
-      tModeRadioSwitchGreyOut->Hide(false);
-      tILevelMeteringBar->GrayOut(false);
-      /* GR is blocked since there's no gain reduction applied,
-      but you can reset LUFS meter */
-      TIGrContactControl->GrayOut(true);
-      TILufsContactControl->GrayOut(false);
-      // Only display LUFS value
-      tLoudnessTextControl->Hide(false);
-      tGrTextControl->Hide(true);
-      tTpTextControl->Hide(true);
+      bIsModeSwitchDisabled = false;
+      bIsGrMeteringDisabled = true;
+      bIsLoudnessMeteringDisabled = false;
+      bIsMasteringKnobsDisabled = true;
+      bIsPlatformSwitchesDisabled = true;
+      bIsTpMeteringDisabled = true;
       break;
     case PLUG_MASTER_MODE:
       // Master mode
       if(bLufsTooLow)
       {
         // If LUFS was too low in learning mode...
-        // Only mode switch and LUFS meter
-        tModeSwitch->GrayOut(false);
-        tIGrMeteringBar->GrayOut(true);
-        tPeakingKnob->GrayOut(true);
-        tPeakingTextControl->Hide(true);
-        tAdjustKnob->GrayOut(true);
-        tAdjustTextControl->Hide(true);
-        tPlatformSelector->GrayOut(true);
-        tPlatformSelectorClickable->Hide(true);
-        tModeRadioSwitchGreyOut->Hide(false);
-        //tPeakingTextControl->GrayOut(true);
-        tILevelMeteringBar->GrayOut(false);
-        /* Unlike learning mode, we should
-        lock both reset switches here*/
-        TIGrContactControl->GrayOut(true);
-        TILufsContactControl->GrayOut(true);
-        // No gain reduction is happening in that mode
-        tLoudnessTextControl->Hide(true);
-        tGrTextControl->Hide(true);
-        tTpTextControl->Hide(true);
+        // Only mode switch
+        // TODO: Do we need to show LUFS meter?
+        bIsModeSwitchDisabled = false;
+        bIsGrMeteringDisabled = true;
+        bIsLoudnessMeteringDisabled = false;
+        bIsMasteringKnobsDisabled = true;
+        bIsPlatformSwitchesDisabled = true;
+        bIsTpMeteringDisabled = true;
       }
       else{
         // Everything unlocked
-        tModeSwitch->GrayOut(false);
-        tIGrMeteringBar->GrayOut(false);
-        tPeakingKnob->GrayOut(false);
-        tPeakingTextControl->Hide(false);
-        tAdjustKnob->GrayOut(false);
-        tAdjustTextControl->Hide(false);
-        tPlatformSelector->GrayOut(false);
-        tPlatformSelectorClickable->Hide(false);
-        tModeRadioSwitchGreyOut->Hide(true);
-        //tPeakingTextControl->GrayOut(false);
-        tILevelMeteringBar->GrayOut(false);
-        TIGrContactControl->GrayOut(false);
-        TILufsContactControl->GrayOut(false);
-        // GR, LUFS and TP readings are displayed
-        tLoudnessTextControl->Hide(false);
-        tGrTextControl->Hide(false);
-        tTpTextControl->Hide(false);
+        bIsModeSwitchDisabled = false;
+        bIsGrMeteringDisabled = false;
+        bIsLoudnessMeteringDisabled = false;
+        bIsMasteringKnobsDisabled = false;
+        bIsPlatformSwitchesDisabled = false;
+        bIsTpMeteringDisabled = false;
       }
       break;
     case PLUG_OFF_MODE:
       // Learn mode
       // Only mode switch
-      tModeSwitch->GrayOut(false);
-      tIGrMeteringBar->GrayOut(true);
-      tPeakingKnob->GrayOut(true);
-      tPeakingTextControl->Hide(true);
-      tAdjustKnob->GrayOut(true);
-      tAdjustTextControl->Hide(true);
-      tPlatformSelector->GrayOut(true);
-      tPlatformSelectorClickable->Hide(true);
-      tModeRadioSwitchGreyOut->Hide(false);
-      tPeakingTextControl->GrayOut(true);
-      tILevelMeteringBar->GrayOut(true);
-      TIGrContactControl->GrayOut(true);
-      TILufsContactControl->GrayOut(true);
-      // GR, LUFS and TP readings are off
-      tLoudnessTextControl->Hide(true);
-      tGrTextControl->Hide(true);
-      tTpTextControl->Hide(true);
+      bIsModeSwitchDisabled = false;
+      bIsGrMeteringDisabled = true;
+      bIsLoudnessMeteringDisabled = true;
+      bIsMasteringKnobsDisabled = true;
+      bIsPlatformSwitchesDisabled = true;
+      bIsTpMeteringDisabled = true;
       break;
     } //switch
   } // bIsBypassed
   #endif
+  tModeSwitch->GrayOut(bIsModeSwitchDisabled);
+  tIGrMeteringBar->GrayOut(bIsGrMeteringDisabled);
+  tPeakingKnob->GrayOut(bIsMasteringKnobsDisabled);
+  tAdjustKnob->GrayOut(bIsMasteringKnobsDisabled);
+  tPeakingTextControl->Hide(bIsMasteringKnobsDisabled);
+  tPlatformSelector->GrayOut(bIsPlatformSwitchesDisabled);
+  tPlatformSelectorClickable->Hide(bIsPlatformSwitchesDisabled);
+  tPlatformSelectorClickableGreyOut->Hide(!bIsPlatformSwitchesDisabled);
+  tILevelMeteringBar->GrayOut(bIsLoudnessMeteringDisabled);
+  TIGrContactControl->GrayOut(bIsGrMeteringDisabled);
+  TILufsContactControl->GrayOut(bIsLoudnessMeteringDisabled);
+  tLoudnessTextControl->Hide(bIsLoudnessMeteringDisabled);
+  tGrTextControl->Hide(bIsGrMeteringDisabled);
+  tTpTextControl->Hide(bIsTpMeteringDisabled);
 }
 
 /*
@@ -480,14 +438,14 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   pGraphics->AttachControl(tPlatformSelectorClickable);
   // Grey out overlay over platform names
   tBmp = pGraphics->LoadIBitmap(MODERADIOSWITCHGREYOUT_ID, MODERADIOSWITCHGREYOUT_FN, 1);
-  tModeRadioSwitchGreyOut = new IBitmapControl(
+  tPlatformSelectorClickableGreyOut = new IBitmapControl(
     this,
     kModeRadioSwitchGreyOut_X,
     kModeRadioSwitchGreyOut_Y,
     &tBmp
     );
-  pGraphics->AttachControl(tModeRadioSwitchGreyOut);
-  tModeRadioSwitchGreyOut->Hide(true);
+  pGraphics->AttachControl(tPlatformSelectorClickableGreyOut);
+  tPlatformSelectorClickableGreyOut->Hide(true);
   
   // Text LUFS meter
   static IText tDefaultLoudnessLabel = IText(PLUG_METER_TEXT_LABEL_STRING_SIZE);
