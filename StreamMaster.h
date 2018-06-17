@@ -132,6 +132,7 @@ use PLUG_KNOB_PEAK_DOUBLE() to convert them to linear gain*/
 
 // TODO: setting it to -INF would be smarter, but would need careful testing
 #define PLUG_LUFS_TOO_LOW -500.
+#define PLUG_EPSILON (std::numeric_limits<double>::epsilon())
 
 #ifdef _PLUG_VERSION_H 
 #define PLUG_VERSTION_TEXT \

@@ -994,8 +994,15 @@ void StreamMaster::OnParamChange(int paramIdx)
           */
         }
 
-        // *** Check if learn mode wass successful - start
-        if((fSourceLufsIntegratedDb > PLUG_LUFS_TOO_LOW) || PLUG_ALWAYS_ALLOW_MASTERING){         
+        // *** Check if learn mode was successful - start
+        /*
+        We check if source loudness is -oo, or equals to default value,
+        or there's a debug flag that tells us to ignore that step
+        */
+        if(((fSourceLufsIntegratedDb > PLUG_LUFS_TOO_LOW) &&
+          (fSourceLufsIntegratedDb > PLUG_SOURCE_LUFS_INTEGRATED_DB_RESET + PLUG_EPSILON))
+          || PLUG_ALWAYS_ALLOW_MASTERING){
+
           bLufsTooLow = false; 
 
           // Resetting the meter
