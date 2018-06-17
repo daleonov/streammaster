@@ -80,10 +80,13 @@ use PLUG_KNOB_PEAK_DOUBLE() to convert them to linear gain*/
 #define PLUG_KNOB_PEAK_DOUBLE(i) ((double)i/PLUG_KNOB_PEAK_SCALE)
 
 // Adjust knob values, these are real life ones (LUFS)
-#define PLUG_ADJUST_KNOB_PEAK_MIN -12.
-#define PLUG_ADJUST_KNOB_PEAK_MAX 0.
-#define PLUG_ADJUST_KNOB_PEAK_STEP .1
-#define PLUG_ADJUST_KNOB_PEAK_DEFAULT 0.
+/* Step doesn't seep to matter in this version of framework,
+   so we have to round it via PLUG_KNOB_ADJUST_ROUND every time we read it */
+#define PLUG_KNOB_ADJUST_MIN -6.
+#define PLUG_KNOB_ADJUST_MAX 6.
+#define PLUG_KNOB_ADJUST_STEP .1
+#define PLUG_KNOB_ADJUST_DEFAULT 0.
+#define PLUG_KNOB_ADJUST_ROUND(i) (std::floor((i * 10.) + .5) / 10.)
 
 #define PLUG_DEFAULT_PRESET_NAME "Default"
 #define PLUG_LIMITER_ATTACK_MILLISECONDS 0.1
@@ -205,7 +208,7 @@ enum ELayout
   kGrMeter_Y = kLufsMeter_Y,
   
   // Peaking knob
-  kCeilingX = 302 + (302-122),
+  kCeilingX = 482,
   kCeilingY = 90,
   kKnobFrames = 21,
 
@@ -224,7 +227,7 @@ enum ELayout
   kILoudnessTextControl_W = 80,
   kILoudnessTextControl_H = 40,
   kILoudnessTextControl_X = kLufsMeter_X - (kILoudnessTextControl_W - PLUG_METERING_BAR_W),
-  kILoudnessTextControl_Y = 552,
+  kILoudnessTextControl_Y = 554,
 
   // Gain reduction Text reading
   kIGrTextControl_W = 80,
@@ -235,7 +238,7 @@ enum ELayout
 #elif defined(__APPLE__)
   // LUFS Text reading
   kILoudnessTextControl_X = kLufsMeter_X,
-  kILoudnessTextControl_Y = 552,
+  kILoudnessTextControl_Y = 554,
   kILoudnessTextControl_W = 80,
   kILoudnessTextControl_H = 40,
 

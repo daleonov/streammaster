@@ -242,19 +242,23 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   GetParam(kBypassSwitch)->InitBool("OnOff", 0, "");
 
   // Ceiling knob
-  /* We need precise values for ceiling knob,
+  /*
+  We want to only have values with 0.1 step for ceiling knob,
+  plus make it feel "clicky" opposed to a usual smooth knob,
   so we have to use integer values and convert them into double later.
-  For example, "9" represents -0.1dB, "0" is for -1.0dB etc. if the actual range is -1.0..-0.0dB*/
+  For example, "9" represents -0.1dB, "0" is for -1.0dB etc.
+  if the actual range is -1.0..0.0dB
+  */
   GetParam(kCeiling)->InitInt("Ceiling", PLUG_KNOB_PEAK_DEFAULT, PLUG_KNOB_PEAK_MIN, PLUG_KNOB_PEAK_MAX, "tenths of dB");
   GetParam(kCeiling)->SetShape(1.);
 
   // Adjust knob
   GetParam(kAdjust)->InitDouble(
     "Target LUFS Adjust",
-    PLUG_ADJUST_KNOB_PEAK_DEFAULT,
-    PLUG_ADJUST_KNOB_PEAK_MIN,
-    PLUG_ADJUST_KNOB_PEAK_MAX,
-    PLUG_ADJUST_KNOB_PEAK_STEP,
+    PLUG_KNOB_ADJUST_DEFAULT,
+    PLUG_KNOB_ADJUST_MIN,
+    PLUG_KNOB_ADJUST_MAX,
+    PLUG_KNOB_ADJUST_STEP,
     "LUFS"
     );
   GetParam(kAdjust)->SetShape(1.);
@@ -630,7 +634,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   nCurrentTargetIndex = (unsigned short)GetParam(kPlatformSwitch)->Int();
 
   // Target loudness user adjustement
-  fAdjustLufsDb = GetParam(kAdjust)->Value();
+  fAdjustLufsDb = PLUG_KNOB_ADJUST_ROUND(GetParam(kAdjust)->Value());
 
   // ###
   /* Low (-inf) LUFS flag. Doesn't allow user to go into mastering mode
@@ -781,7 +785,7 @@ void StreamMaster::UpdatePreMastering(PLUG_Target mPlatform){
   fLimiterCeilingLinear = LOG_TO_LINEAR(fLimiterCeilingDb);
 
   // *** Target loudness user adjustement
-  fAdjustLufsDb = GetParam(kAdjust)->Value();
+  fAdjustLufsDb = PLUG_KNOB_ADJUST_ROUND(GetParam(kAdjust)->Value());
   fAdjustedTargetLufsIntegratedDb = fTargetLufsIntegratedDb + fAdjustLufsDb;
 
   // *** Mastering gain in dB
@@ -884,10 +888,10 @@ void StreamMaster::OnParamChange(int paramIdx)
 
     // Tweaked adjust knob
     case kAdjust:
-      fAdjust = GetParam(kAdjust)->Value();
+      fAdjust = PLUG_KNOB_ADJUST_ROUND(GetParam(kAdjust)->Value());
 
       // Text label of knob's value
-      sprintf(sAdjustString, "%5.2fLUFS", fAdjust);
+      sprintf(sAdjustString, "%+5.2fLUFS", fAdjust);
       tAdjustTextControl->SetTextFromPlug(sAdjustString);
 
       tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
