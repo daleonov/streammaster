@@ -921,12 +921,12 @@ void StreamMaster::OnParamChange(int paramIdx)
       Since rotary and clickable controls are bonded with each other,
       we have to notify the other control of the change, but make sure
       it doesn't cause an infinite loop between them (hence use two flags).
-      Plus VST2 needs slightly different implementation to work properly.
+      Plus VST and AU needs slightly different implementation to work properly.
       */
       nConvertedModeNumber = PLUG_REVERSE_PLATFORM_SWITCH_VALUE(nCurrentTargetIndex);
 
-      #ifdef VST_API
-      // VST2
+      #if defined(VST_API) || defined(AU_API)
+      // VST2 and AU
       fNormalizedConvertedModeNumber = PLUG_NORMALIZE_PLATFORM_SWITCH_VALUE(nCurrentTargetIndex);
       bPlatformSwitchClickableSentMe = false;
       #else
@@ -961,13 +961,13 @@ void StreamMaster::OnParamChange(int paramIdx)
       Since rotary and clickable controls are bonded with each other,
       we have to notify the other control of the change, but make sure
       it doesn't cause an infinite loop between them (hence use two flags).
-      Plus VST2 needs slightly different implementation to work properly.
+      Plus VST2 and AU needs slightly different implementation to work properly.
       */
       nModeNumber = GetParam(kPlatformSwitchClickable)->Int();
       nConvertedModeNumber = PLUG_REVERSE_PLATFORM_SWITCH_VALUE(nModeNumber);
 
-      #ifdef VST_API
-      // VST2
+      #if defined(VST_API) || defined(AU_API)
+      // VST2 and AU
       fNormalizedConvertedModeNumber = PLUG_NORMALIZE_PLATFORM_SWITCH_VALUE(nModeNumber);
       bPlatformSwitchRotarySentMe = false;
       #else

@@ -380,9 +380,9 @@ typedef enum{
 
 /*
 For VST3 we use GetNormalized() method, but it
-doesn't work well for VST2, hence this macro.
+doesn't work well for VST2 and AU, hence this macro.
 */
-#ifdef VST_API
+#if defined(VST_API) || defined(AU_API)
 #define PLUG_NORMALIZE_PLATFORM_SWITCH_VALUE(n) (((double)n)/PLUG_PLATFORM_OPTIONS)
 #endif
 
