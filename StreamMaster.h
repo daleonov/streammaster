@@ -170,6 +170,8 @@ or just show me the loudest section if you\'re in a hurry. "
 Please repeat learning cycle again. \n\
 (press Mode switch twice to go to learning mode)"
 
+char* sBypassString = "\nBypassed";
+
 #define PLUG_GUIDE_TEXT_ALIGNMENT kAlignNear
 #define PLUG_TP_TEXT_ALIGNMENT kAlignCenter
 
@@ -456,6 +458,8 @@ private:
   double fLimiterCeilingLinear;
   double fMasteringGainLinear;
   double fAdjustLufsDb;
+  // Text guide message
+  char* sModeString;
 
 }; //class StreamMaster
 

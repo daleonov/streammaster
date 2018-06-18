@@ -579,7 +579,8 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
     );
 
   // Guide message
-  char sModeString[] = PLUG_OFF_STARTUP_MESSAGE;
+  sModeString = new char[PLUG_MODE_TEXT_LABEL_STRING_SIZE];
+  sprintf(sModeString, PLUG_OFF_STARTUP_MESSAGE);
   tModeTextControl->SetTextFromPlug(sModeString);
 
   // Finally - feed all the controls to IPlug's graphics gizmo
@@ -785,8 +786,6 @@ Done!
 \brief calculate all relevant values before we start mastering
 */
 void StreamMaster::UpdatePreMastering(PLUG_Target mPlatform){
-  //static int nIndex;
-  char sModeString[PLUG_MODE_TEXT_LABEL_STRING_SIZE];
   double fAdjustedTargetLufsIntegratedDb;
 
   // *** Target LUFS 
@@ -848,13 +847,13 @@ void StreamMaster::OnParamChange(int paramIdx)
   unsigned int nIndex;
   char sPeakingString[PLUG_KNOB_TEXT_LABEL_STRING_SIZE];
   char sAdjustString[PLUG_KNOB_TEXT_LABEL_STRING_SIZE];
-  char sModeString[PLUG_MODE_TEXT_LABEL_STRING_SIZE];
   const double fMaxGainReductionPerFrameDb = LINEAR_TO_LOG(fMaxGainReductionPerFrame);
   PLUG_Mode tPlugNewMode;
   int nModeNumber, nConvertedModeNumber;
   double fNormalizedConvertedModeNumber;
   static bool bPlatformSwitchClickableSentMe = false;
   static bool bPlatformSwitchRotarySentMe = false;
+  char* psMessageToDisplay;
 
   // General control handling
   // Locking and unlocking of controls happens in UpdateAvailableControls()
@@ -1130,6 +1129,8 @@ void StreamMaster::OnParamChange(int paramIdx)
     // Clicked On/off bypass switch
     case kBypassSwitch:
       bIsBypassed = (bool)GetParam(kBypassSwitch)->Bool();
+      psMessageToDisplay = bIsBypassed ? sBypassString : sModeString;
+      tModeTextControl->SetTextFromPlug(psMessageToDisplay);
       UpdateAvailableControls();
     default:
       break;
