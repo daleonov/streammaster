@@ -377,7 +377,14 @@ typedef enum{
 #define PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(idx) \
   ((PLUG_Mode)(GetParam(idx)->Int()+1))
 #define PLUG_REVERSE_PLATFORM_SWITCH_VALUE(n) (PLUG_PLATFORM_OPTIONS - 1 - n)
+
+/*
+For VST3 we use GetNormalized() method, but it
+doesn't work well for VST2, hence this macro.
+*/
+#ifdef VST_API
 #define PLUG_NORMALIZE_PLATFORM_SWITCH_VALUE(n) (((double)n)/PLUG_PLATFORM_OPTIONS)
+#endif
 
 #define PLUG_CONVERT_PLUG_MODE_TO_SWITCH_VALUE(m) (m-1)
 

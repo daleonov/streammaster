@@ -275,7 +275,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   GetParam(kPlatformSwitchClickable)->InitEnum(
     "[Target platform]",
     PLUG_REVERSE_PLATFORM_SWITCH_VALUE(PLUG_DEFAULT_TARGET_PLATFORM),
-    5
+    PLUG_PLATFORM_OPTIONS
     );
   for (i=0; i<PLUG_PLATFORM_OPTIONS; i++)
     GetParam(kPlatformSwitchClickable)->SetDisplayText(PLUG_REVERSE_PLATFORM_SWITCH_VALUE(i), asTargetNames[i]);
@@ -789,7 +789,6 @@ void StreamMaster::UpdatePreMastering(PLUG_Target mPlatform){
   double fAdjustedTargetLufsIntegratedDb;
 
   // *** Target LUFS 
-  //nIndex = GetParam(kPlatformSwitch)->Int();
   fTargetLufsIntegratedDb = PLUG_GET_TARGET_LOUDNESS((int)mPlatform);
 
   // *** Limiter ceiling
@@ -826,8 +825,6 @@ void StreamMaster::UpdatePreMastering(PLUG_Target mPlatform){
 @param mPlatform Target platfrom chosen by user
 */
 void StreamMaster::UpdatePlatform(PLUG_Target mPlatform){
-  //static int nIndex = GetParam(kPlatformSwitch)->Int();
-
   fTargetLoudness = PLUG_GET_TARGET_LOUDNESS((int)mPlatform);
   // Update the notch on the LUFS meter
   tILevelMeteringBar->SetNotchValue(fTargetLoudness);
@@ -855,6 +852,8 @@ void StreamMaster::OnParamChange(int paramIdx)
   PLUG_Mode tPlugNewMode;
   int nModeNumber, nConvertedModeNumber;
   double fNormalizedConvertedModeNumber;
+  static bool bPlatformSwitchClickableSentMe = false;
+  static bool bPlatformSwitchRotarySentMe = false;
 
   // General control handling
   // Locking and unlocking of controls happens in UpdateAvailableControls()
@@ -914,35 +913,93 @@ void StreamMaster::OnParamChange(int paramIdx)
 
     // Changed target platform via rotary switch
     case kPlatformSwitch:
-      nCurrentTargetIndex = (unsigned int)GetParam(kPlatformSwitch)->Value();
 
-      // Rotating and clickable platform switches are working together
+      nCurrentTargetIndex = (unsigned int)GetParam(kPlatformSwitch)->Int();
+
+      /*
+      Since rotary and clickable controls are bonded with each other,
+      we have to notify the other control of the change, but make sure
+      it doesn't cause an infinite loop between them (hence use two flags).
+      Plus VST2 needs slightly different implementation to work properly.
+      */
       nConvertedModeNumber = PLUG_REVERSE_PLATFORM_SWITCH_VALUE(nCurrentTargetIndex);
-      fNormalizedConvertedModeNumber = PLUG_NORMALIZE_PLATFORM_SWITCH_VALUE(nConvertedModeNumber);
-      GetGUI()->SetParameterFromPlug(kPlatformSwitchClickable, nConvertedModeNumber, false);
-      InformHostOfParamChange(kPlatformSwitchClickable, ((double)nCurrentTargetIndex) / 5.);
 
-      // Apparently it can be falsely triggered during startup, 
-      // so we have to ignore that one
-      tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
-      if (tPlugNewMode != PLUG_MASTER_MODE) break;
+      #ifdef VST_API
+      // VST2
+      fNormalizedConvertedModeNumber = PLUG_NORMALIZE_PLATFORM_SWITCH_VALUE(nCurrentTargetIndex);
+      bPlatformSwitchClickableSentMe = false;
+      #else
+      // VST3
+      fNormalizedConvertedModeNumber = GetParam(kPlatformSwitch)->GetNormalized();
+      #endif
+      bPlatformSwitchRotarySentMe = true;
+      if(bPlatformSwitchClickableSentMe){
+        bPlatformSwitchClickableSentMe = false;
+        break;
+      }
+      else{
+        GetGUI()->SetParameterFromPlug(kPlatformSwitchClickable, nConvertedModeNumber, false);
+        InformHostOfParamChange(kPlatformSwitchClickable, 1.-fNormalizedConvertedModeNumber);
+      }
 
       // Update all related values
       UpdatePlatform((PLUG_Target)nCurrentTargetIndex);
 
       break;
+
+    // Changed target platform via clicking on a platfom's name
+    case kPlatformSwitchClickable:
       /*
-      Make sure we update all following variables:
-        v fMasteringGainDb,
-        v fTargetLufsIntegratedDb,
-        v fSourceLufsIntegratedDb,
-        v fLimiterCeilingDb,
-        v fLimiterCeilingLinear,
-        v fMasteringGainLinear;
+      Apparently it can be falsely triggered during startup,
+      so we have to ignore that one
       */
+      tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
+      if (tPlugNewMode != PLUG_MASTER_MODE) break;
+
+      /*
+      Since rotary and clickable controls are bonded with each other,
+      we have to notify the other control of the change, but make sure
+      it doesn't cause an infinite loop between them (hence use two flags).
+      Plus VST2 needs slightly different implementation to work properly.
+      */
+      nModeNumber = GetParam(kPlatformSwitchClickable)->Int();
+      nConvertedModeNumber = PLUG_REVERSE_PLATFORM_SWITCH_VALUE(nModeNumber);
+
+      #ifdef VST_API
+      // VST2
+      fNormalizedConvertedModeNumber = PLUG_NORMALIZE_PLATFORM_SWITCH_VALUE(nModeNumber);
+      bPlatformSwitchRotarySentMe = false;
+      #else
+      // VST3
+      fNormalizedConvertedModeNumber = GetParam(kPlatformSwitchClickable)->GetNormalized();
+      #endif
+      bPlatformSwitchClickableSentMe = true;
+      if(bPlatformSwitchRotarySentMe){
+        bPlatformSwitchRotarySentMe = false;
+        break;
+      }
+      else{
+        GetGUI()->SetParameterFromPlug(kPlatformSwitch, nConvertedModeNumber, false);
+        InformHostOfParamChange(kPlatformSwitch, 1.-fNormalizedConvertedModeNumber);
+      }
+      // This is a global value used by other methods. Careful with it!
+      nCurrentTargetIndex = nConvertedModeNumber;
+
+      // Update all related values
+      UpdatePlatform((PLUG_Target)nCurrentTargetIndex);
+      break;
 
     // Clicked mode switch
     case kModeSwitch:
+      /*
+      Make sure we update all following variables:
+      v fMasteringGainDb,
+      v fTargetLufsIntegratedDb,
+      v fSourceLufsIntegratedDb,
+      v fLimiterCeilingDb,
+      v fLimiterCeilingLinear,
+      v fMasteringGainLinear;
+      */
       // Converting switch's value to mode
       tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
 
@@ -1067,27 +1124,6 @@ void StreamMaster::OnParamChange(int paramIdx)
               }
       tPlugCurrentMode = tPlugNewMode;
       UpdateAvailableControls();
-      break;
-
-    // Changed target platform via clicking on a platfom's name
-    case kPlatformSwitchClickable:      
-      // Apparently it can be falsely triggered during startup, 
-      // so we have to ignore that one
-      tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
-      if (tPlugNewMode != PLUG_MASTER_MODE) break;
-
-      nModeNumber = (int)GetParam(kPlatformSwitchClickable)->Value();
-      // Rotating and clickable platform switches are working together
-      nConvertedModeNumber = PLUG_REVERSE_PLATFORM_SWITCH_VALUE(nModeNumber);
-      fNormalizedConvertedModeNumber = PLUG_NORMALIZE_PLATFORM_SWITCH_VALUE(nConvertedModeNumber);
-      GetGUI()->SetParameterFromPlug(kPlatformSwitch, nConvertedModeNumber, false);
-      InformHostOfParamChange(kPlatformSwitch, fNormalizedConvertedModeNumber);
-
-      // This is a global value used by other methods. Careful with it!
-      nCurrentTargetIndex = nConvertedModeNumber;
-
-      // Update all related values      
-      UpdatePlatform((PLUG_Target)nCurrentTargetIndex);
       break;
 
     // Clicked On/off bypass switch
