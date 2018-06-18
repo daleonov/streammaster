@@ -271,12 +271,6 @@
 		CE35F0BC2052E1460099F7B3 /* lice_lcf.h in Headers */ = {isa = PBXBuildFile; fileRef = CE35F0B42052E1460099F7B3 /* lice_lcf.h */; };
 		CE35F0BD2052E1460099F7B3 /* lice_text.h in Headers */ = {isa = PBXBuildFile; fileRef = CE35F0B52052E1460099F7B3 /* lice_text.h */; };
 		CE35F0BE2052E1460099F7B3 /* lice.h in Headers */ = {isa = PBXBuildFile; fileRef = CE35F0B62052E1460099F7B3 /* lice.h */; };
-		CE36A8F7206A5950005124DF /* StreamMasterBG_RevB.png in Resources */ = {isa = PBXBuildFile; fileRef = CE36A8F6206A5950005124DF /* StreamMasterBG_RevB.png */; };
-		CE36A8F8206A5950005124DF /* StreamMasterBG_RevB.png in Resources */ = {isa = PBXBuildFile; fileRef = CE36A8F6206A5950005124DF /* StreamMasterBG_RevB.png */; };
-		CE36A8F9206A5950005124DF /* StreamMasterBG_RevB.png in Resources */ = {isa = PBXBuildFile; fileRef = CE36A8F6206A5950005124DF /* StreamMasterBG_RevB.png */; };
-		CE36A8FA206A5950005124DF /* StreamMasterBG_RevB.png in Resources */ = {isa = PBXBuildFile; fileRef = CE36A8F6206A5950005124DF /* StreamMasterBG_RevB.png */; };
-		CE36A8FB206A5950005124DF /* StreamMasterBG_RevB.png in Resources */ = {isa = PBXBuildFile; fileRef = CE36A8F6206A5950005124DF /* StreamMasterBG_RevB.png */; };
-		CE36A8FC206A5950005124DF /* StreamMasterBG_RevB.png in Resources */ = {isa = PBXBuildFile; fileRef = CE36A8F6206A5950005124DF /* StreamMasterBG_RevB.png */; };
 		CE36A8FE206A595A005124DF /* ModeRadioSwitch.png in Resources */ = {isa = PBXBuildFile; fileRef = CE36A8FD206A595A005124DF /* ModeRadioSwitch.png */; };
 		CE36A8FF206A595A005124DF /* ModeRadioSwitch.png in Resources */ = {isa = PBXBuildFile; fileRef = CE36A8FD206A595A005124DF /* ModeRadioSwitch.png */; };
 		CE36A900206A595A005124DF /* ModeRadioSwitch.png in Resources */ = {isa = PBXBuildFile; fileRef = CE36A8FD206A595A005124DF /* ModeRadioSwitch.png */; };
@@ -377,6 +371,42 @@
 		CE6960B5204FD54B0013A88F /* MeterSwitchOverlay.png in Resources */ = {isa = PBXBuildFile; fileRef = CE6960B1204FD54B0013A88F /* MeterSwitchOverlay.png */; };
 		CE6960B6204FD54B0013A88F /* MeterSwitchOverlay.png in Resources */ = {isa = PBXBuildFile; fileRef = CE6960B1204FD54B0013A88F /* MeterSwitchOverlay.png */; };
 		CE6960B7204FD54B0013A88F /* MeterSwitchOverlay.png in Resources */ = {isa = PBXBuildFile; fileRef = CE6960B1204FD54B0013A88F /* MeterSwitchOverlay.png */; };
+		CE760FCC20D7F7B5007C3174 /* ModeRadioSwitchGreyOut.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FCB20D7F7B5007C3174 /* ModeRadioSwitchGreyOut.png */; };
+		CE760FCD20D7F7B5007C3174 /* ModeRadioSwitchGreyOut.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FCB20D7F7B5007C3174 /* ModeRadioSwitchGreyOut.png */; };
+		CE760FCE20D7F7B5007C3174 /* ModeRadioSwitchGreyOut.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FCB20D7F7B5007C3174 /* ModeRadioSwitchGreyOut.png */; };
+		CE760FCF20D7F7B5007C3174 /* ModeRadioSwitchGreyOut.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FCB20D7F7B5007C3174 /* ModeRadioSwitchGreyOut.png */; };
+		CE760FD020D7F7B5007C3174 /* ModeRadioSwitchGreyOut.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FCB20D7F7B5007C3174 /* ModeRadioSwitchGreyOut.png */; };
+		CE760FD120D7F7B5007C3174 /* ModeRadioSwitchGreyOut.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FCB20D7F7B5007C3174 /* ModeRadioSwitchGreyOut.png */; };
+		CE760FD320D7F7BF007C3174 /* StreamMasterBG_RevD.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FD220D7F7BF007C3174 /* StreamMasterBG_RevD.png */; };
+		CE760FD420D7F7BF007C3174 /* StreamMasterBG_RevD.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FD220D7F7BF007C3174 /* StreamMasterBG_RevD.png */; };
+		CE760FD520D7F7BF007C3174 /* StreamMasterBG_RevD.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FD220D7F7BF007C3174 /* StreamMasterBG_RevD.png */; };
+		CE760FD620D7F7BF007C3174 /* StreamMasterBG_RevD.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FD220D7F7BF007C3174 /* StreamMasterBG_RevD.png */; };
+		CE760FD720D7F7BF007C3174 /* StreamMasterBG_RevD.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FD220D7F7BF007C3174 /* StreamMasterBG_RevD.png */; };
+		CE760FD820D7F7BF007C3174 /* StreamMasterBG_RevD.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FD220D7F7BF007C3174 /* StreamMasterBG_RevD.png */; };
+		CE760FDA20D7F7CB007C3174 /* StreamMasterKnob100.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FD920D7F7CB007C3174 /* StreamMasterKnob100.png */; };
+		CE760FDB20D7F7CB007C3174 /* StreamMasterKnob100.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FD920D7F7CB007C3174 /* StreamMasterKnob100.png */; };
+		CE760FDC20D7F7CB007C3174 /* StreamMasterKnob100.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FD920D7F7CB007C3174 /* StreamMasterKnob100.png */; };
+		CE760FDD20D7F7CB007C3174 /* StreamMasterKnob100.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FD920D7F7CB007C3174 /* StreamMasterKnob100.png */; };
+		CE760FDE20D7F7CB007C3174 /* StreamMasterKnob100.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FD920D7F7CB007C3174 /* StreamMasterKnob100.png */; };
+		CE760FDF20D7F7CB007C3174 /* StreamMasterKnob100.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FD920D7F7CB007C3174 /* StreamMasterKnob100.png */; };
+		CE760FE320D7FBA5007C3174 /* GrOverlay100Percent.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FE020D7FBA5007C3174 /* GrOverlay100Percent.png */; };
+		CE760FE420D7FBA5007C3174 /* GrOverlay100Percent.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FE020D7FBA5007C3174 /* GrOverlay100Percent.png */; };
+		CE760FE520D7FBA5007C3174 /* GrOverlay100Percent.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FE020D7FBA5007C3174 /* GrOverlay100Percent.png */; };
+		CE760FE620D7FBA5007C3174 /* GrOverlay100Percent.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FE020D7FBA5007C3174 /* GrOverlay100Percent.png */; };
+		CE760FE720D7FBA5007C3174 /* GrOverlay100Percent.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FE020D7FBA5007C3174 /* GrOverlay100Percent.png */; };
+		CE760FE820D7FBA5007C3174 /* GrOverlay100Percent.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FE020D7FBA5007C3174 /* GrOverlay100Percent.png */; };
+		CE760FE920D7FBA5007C3174 /* LoudnessOverlay100Percent.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FE120D7FBA5007C3174 /* LoudnessOverlay100Percent.png */; };
+		CE760FEA20D7FBA5007C3174 /* LoudnessOverlay100Percent.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FE120D7FBA5007C3174 /* LoudnessOverlay100Percent.png */; };
+		CE760FEB20D7FBA5007C3174 /* LoudnessOverlay100Percent.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FE120D7FBA5007C3174 /* LoudnessOverlay100Percent.png */; };
+		CE760FEC20D7FBA5007C3174 /* LoudnessOverlay100Percent.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FE120D7FBA5007C3174 /* LoudnessOverlay100Percent.png */; };
+		CE760FED20D7FBA5007C3174 /* LoudnessOverlay100Percent.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FE120D7FBA5007C3174 /* LoudnessOverlay100Percent.png */; };
+		CE760FEE20D7FBA5007C3174 /* LoudnessOverlay100Percent.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FE120D7FBA5007C3174 /* LoudnessOverlay100Percent.png */; };
+		CE760FEF20D7FBA5007C3174 /* Switch.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FE220D7FBA5007C3174 /* Switch.png */; };
+		CE760FF020D7FBA5007C3174 /* Switch.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FE220D7FBA5007C3174 /* Switch.png */; };
+		CE760FF120D7FBA5007C3174 /* Switch.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FE220D7FBA5007C3174 /* Switch.png */; };
+		CE760FF220D7FBA5007C3174 /* Switch.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FE220D7FBA5007C3174 /* Switch.png */; };
+		CE760FF320D7FBA5007C3174 /* Switch.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FE220D7FBA5007C3174 /* Switch.png */; };
+		CE760FF420D7FBA5007C3174 /* Switch.png in Resources */ = {isa = PBXBuildFile; fileRef = CE760FE220D7FBA5007C3174 /* Switch.png */; };
 		CED0C60B204DC8DE00C5C39F /* PLUG_IControlExtras.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CED0C609204DC8DE00C5C39F /* PLUG_IControlExtras.cpp */; };
 		CED0C60C204DC8DE00C5C39F /* PLUG_IControlExtras.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CED0C609204DC8DE00C5C39F /* PLUG_IControlExtras.cpp */; };
 		CED0C60D204DC8DE00C5C39F /* PLUG_IControlExtras.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CED0C609204DC8DE00C5C39F /* PLUG_IControlExtras.cpp */; };
@@ -736,7 +766,6 @@
 		CE35F0B52052E1460099F7B3 /* lice_text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lice_text.h; path = ../../WDL/lice/lice_text.h; sourceTree = "<group>"; };
 		CE35F0B62052E1460099F7B3 /* lice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lice.h; path = ../../WDL/lice/lice.h; sourceTree = "<group>"; };
 		CE35F25B2052E2ED0099F7B3 /* lice.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = lice.xcodeproj; path = ../../WDL/lice/lice.xcodeproj; sourceTree = "<group>"; };
-		CE36A8F6206A5950005124DF /* StreamMasterBG_RevB.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = StreamMasterBG_RevB.png; path = resources/img/StreamMasterBG_RevB.png; sourceTree = "<group>"; };
 		CE36A8FD206A595A005124DF /* ModeRadioSwitch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ModeRadioSwitch.png; path = resources/img/ModeRadioSwitch.png; sourceTree = "<group>"; };
 		CE397590204C709B008D8437 /* PLUG_LoudnessMeter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PLUG_LoudnessMeter.cpp; path = PLUG/PLUG_LoudnessMeter.cpp; sourceTree = "<group>"; };
 		CE397591204C709B008D8437 /* PLUG_LoudnessMeter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLUG_LoudnessMeter.h; path = PLUG/PLUG_LoudnessMeter.h; sourceTree = "<group>"; };
@@ -759,6 +788,12 @@
 		CE4EA14A204DCA360013CC4C /* PlatformSwitch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PlatformSwitch.png; path = resources/img/PlatformSwitch.png; sourceTree = "<group>"; };
 		CE4EA14C204DCA360013CC4C /* StreamMasterKnob.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = StreamMasterKnob.png; path = resources/img/StreamMasterKnob.png; sourceTree = "<group>"; };
 		CE6960B1204FD54B0013A88F /* MeterSwitchOverlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MeterSwitchOverlay.png; path = resources/img/MeterSwitchOverlay.png; sourceTree = "<group>"; };
+		CE760FCB20D7F7B5007C3174 /* ModeRadioSwitchGreyOut.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ModeRadioSwitchGreyOut.png; path = resources/img/ModeRadioSwitchGreyOut.png; sourceTree = "<group>"; };
+		CE760FD220D7F7BF007C3174 /* StreamMasterBG_RevD.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = StreamMasterBG_RevD.png; path = resources/img/StreamMasterBG_RevD.png; sourceTree = "<group>"; };
+		CE760FD920D7F7CB007C3174 /* StreamMasterKnob100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = StreamMasterKnob100.png; path = resources/img/StreamMasterKnob100.png; sourceTree = "<group>"; };
+		CE760FE020D7FBA5007C3174 /* GrOverlay100Percent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = GrOverlay100Percent.png; path = resources/img/GrOverlay100Percent.png; sourceTree = "<group>"; };
+		CE760FE120D7FBA5007C3174 /* LoudnessOverlay100Percent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LoudnessOverlay100Percent.png; path = resources/img/LoudnessOverlay100Percent.png; sourceTree = "<group>"; };
+		CE760FE220D7FBA5007C3174 /* Switch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Switch.png; path = resources/img/Switch.png; sourceTree = "<group>"; };
 		CED0C609204DC8DE00C5C39F /* PLUG_IControlExtras.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PLUG_IControlExtras.cpp; path = PLUG/PLUG_IControlExtras.cpp; sourceTree = "<group>"; };
 		CED0C60A204DC8DE00C5C39F /* PLUG_IControlExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PLUG_IControlExtras.h; path = PLUG/PLUG_IControlExtras.h; sourceTree = "<group>"; };
 		CEE9C846206A66A00021AA72 /* lice.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = lice.a; path = "../../WDL/lice/build-mac/Debug/lice.a"; sourceTree = "<group>"; };
@@ -1365,10 +1400,15 @@
 			children = (
 				CE4EA149204DCA360013CC4C /* ModeSwitch.png */,
 				CE36A8FD206A595A005124DF /* ModeRadioSwitch.png */,
-				CE36A8F6206A5950005124DF /* StreamMasterBG_RevB.png */,
 				CE6960B1204FD54B0013A88F /* MeterSwitchOverlay.png */,
 				CE4EA14A204DCA360013CC4C /* PlatformSwitch.png */,
 				CE4EA14C204DCA360013CC4C /* StreamMasterKnob.png */,
+				CE760FCB20D7F7B5007C3174 /* ModeRadioSwitchGreyOut.png */,
+				CE760FD220D7F7BF007C3174 /* StreamMasterBG_RevD.png */,
+				CE760FD920D7F7CB007C3174 /* StreamMasterKnob100.png */,
+				CE760FE020D7FBA5007C3174 /* GrOverlay100Percent.png */,
+				CE760FE120D7FBA5007C3174 /* LoudnessOverlay100Percent.png */,
+				CE760FE220D7FBA5007C3174 /* Switch.png */,
 			);
 			name = img;
 			sourceTree = "<group>";
@@ -1856,14 +1896,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE4EA154204DCA360013CC4C /* PlatformSwitch.png in Resources */,
-				CE36A8F8206A5950005124DF /* StreamMasterBG_RevB.png in Resources */,
 				CE4EA14E204DCA360013CC4C /* ModeSwitch.png in Resources */,
 				CE36A8FF206A595A005124DF /* ModeRadioSwitch.png in Resources */,
+				CE760FE420D7FBA5007C3174 /* GrOverlay100Percent.png in Resources */,
 				CE6960B3204FD54B0013A88F /* MeterSwitchOverlay.png in Resources */,
 				CE4D3DFC204C6E5600326E42 /* SimpleGateProcess.inl in Resources */,
 				CE4EA160204DCA360013CC4C /* StreamMasterKnob.png in Resources */,
+				CE760FEA20D7FBA5007C3174 /* LoudnessOverlay100Percent.png in Resources */,
 				CE4D3DE4204C6E5600326E42 /* SimpleCompProcess.inl in Resources */,
+				CE760FCD20D7F7B5007C3174 /* ModeRadioSwitchGreyOut.png in Resources */,
 				CE4D3E0C204C6E5600326E42 /* SimpleLimitProcess.inl in Resources */,
+				CE760FF020D7FBA5007C3174 /* Switch.png in Resources */,
+				CE760FDB20D7F7CB007C3174 /* StreamMasterKnob100.png in Resources */,
+				CE760FD420D7F7BF007C3174 /* StreamMasterBG_RevD.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1872,14 +1917,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE4EA156204DCA360013CC4C /* PlatformSwitch.png in Resources */,
-				CE36A8FA206A5950005124DF /* StreamMasterBG_RevB.png in Resources */,
 				CE4EA150204DCA360013CC4C /* ModeSwitch.png in Resources */,
 				CE36A901206A595A005124DF /* ModeRadioSwitch.png in Resources */,
+				CE760FE620D7FBA5007C3174 /* GrOverlay100Percent.png in Resources */,
 				CE6960B5204FD54B0013A88F /* MeterSwitchOverlay.png in Resources */,
 				CE4D3DFE204C6E5600326E42 /* SimpleGateProcess.inl in Resources */,
 				CE4EA162204DCA360013CC4C /* StreamMasterKnob.png in Resources */,
+				CE760FEC20D7FBA5007C3174 /* LoudnessOverlay100Percent.png in Resources */,
 				CE4D3DE6204C6E5600326E42 /* SimpleCompProcess.inl in Resources */,
+				CE760FCF20D7F7B5007C3174 /* ModeRadioSwitchGreyOut.png in Resources */,
 				CE4D3E0E204C6E5600326E42 /* SimpleLimitProcess.inl in Resources */,
+				CE760FF220D7FBA5007C3174 /* Switch.png in Resources */,
+				CE760FDD20D7F7CB007C3174 /* StreamMasterKnob100.png in Resources */,
+				CE760FD620D7F7BF007C3174 /* StreamMasterBG_RevD.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1888,14 +1938,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE4EA157204DCA360013CC4C /* PlatformSwitch.png in Resources */,
-				CE36A8FB206A5950005124DF /* StreamMasterBG_RevB.png in Resources */,
 				CE4EA151204DCA360013CC4C /* ModeSwitch.png in Resources */,
 				CE36A902206A595A005124DF /* ModeRadioSwitch.png in Resources */,
+				CE760FE720D7FBA5007C3174 /* GrOverlay100Percent.png in Resources */,
 				CE6960B6204FD54B0013A88F /* MeterSwitchOverlay.png in Resources */,
 				CE4D3DFF204C6E5600326E42 /* SimpleGateProcess.inl in Resources */,
 				CE4EA163204DCA360013CC4C /* StreamMasterKnob.png in Resources */,
+				CE760FED20D7FBA5007C3174 /* LoudnessOverlay100Percent.png in Resources */,
 				CE4D3DE7204C6E5600326E42 /* SimpleCompProcess.inl in Resources */,
+				CE760FD020D7F7B5007C3174 /* ModeRadioSwitchGreyOut.png in Resources */,
 				CE4D3E0F204C6E5600326E42 /* SimpleLimitProcess.inl in Resources */,
+				CE760FF320D7FBA5007C3174 /* Switch.png in Resources */,
+				CE760FDE20D7F7CB007C3174 /* StreamMasterKnob100.png in Resources */,
+				CE760FD720D7F7BF007C3174 /* StreamMasterBG_RevD.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1904,14 +1959,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE4EA155204DCA360013CC4C /* PlatformSwitch.png in Resources */,
-				CE36A8F9206A5950005124DF /* StreamMasterBG_RevB.png in Resources */,
 				CE4EA14F204DCA360013CC4C /* ModeSwitch.png in Resources */,
 				CE36A900206A595A005124DF /* ModeRadioSwitch.png in Resources */,
+				CE760FE520D7FBA5007C3174 /* GrOverlay100Percent.png in Resources */,
 				CE6960B4204FD54B0013A88F /* MeterSwitchOverlay.png in Resources */,
 				CE4D3DFD204C6E5600326E42 /* SimpleGateProcess.inl in Resources */,
 				CE4EA161204DCA360013CC4C /* StreamMasterKnob.png in Resources */,
+				CE760FEB20D7FBA5007C3174 /* LoudnessOverlay100Percent.png in Resources */,
 				CE4D3DE5204C6E5600326E42 /* SimpleCompProcess.inl in Resources */,
+				CE760FCE20D7F7B5007C3174 /* ModeRadioSwitchGreyOut.png in Resources */,
 				CE4D3E0D204C6E5600326E42 /* SimpleLimitProcess.inl in Resources */,
+				CE760FF120D7FBA5007C3174 /* Switch.png in Resources */,
+				CE760FDC20D7F7CB007C3174 /* StreamMasterKnob100.png in Resources */,
+				CE760FD520D7F7BF007C3174 /* StreamMasterBG_RevD.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1920,14 +1980,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE4EA158204DCA360013CC4C /* PlatformSwitch.png in Resources */,
-				CE36A8FC206A5950005124DF /* StreamMasterBG_RevB.png in Resources */,
 				CE4EA152204DCA360013CC4C /* ModeSwitch.png in Resources */,
 				CE36A903206A595A005124DF /* ModeRadioSwitch.png in Resources */,
+				CE760FE820D7FBA5007C3174 /* GrOverlay100Percent.png in Resources */,
 				CE6960B7204FD54B0013A88F /* MeterSwitchOverlay.png in Resources */,
 				CE4D3E00204C6E5600326E42 /* SimpleGateProcess.inl in Resources */,
 				CE4EA164204DCA360013CC4C /* StreamMasterKnob.png in Resources */,
+				CE760FEE20D7FBA5007C3174 /* LoudnessOverlay100Percent.png in Resources */,
 				CE4D3DE8204C6E5600326E42 /* SimpleCompProcess.inl in Resources */,
+				CE760FD120D7F7B5007C3174 /* ModeRadioSwitchGreyOut.png in Resources */,
 				CE4D3E10204C6E5600326E42 /* SimpleLimitProcess.inl in Resources */,
+				CE760FF420D7FBA5007C3174 /* Switch.png in Resources */,
+				CE760FDF20D7F7CB007C3174 /* StreamMasterKnob100.png in Resources */,
+				CE760FD820D7F7BF007C3174 /* StreamMasterBG_RevD.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1935,17 +2000,22 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE760FE320D7FBA5007C3174 /* GrOverlay100Percent.png in Resources */,
+				CE760FE920D7FBA5007C3174 /* LoudnessOverlay100Percent.png in Resources */,
 				CE36A8FE206A595A005124DF /* ModeRadioSwitch.png in Resources */,
-				CE36A8F7206A5950005124DF /* StreamMasterBG_RevB.png in Resources */,
+				CE760FEF20D7FBA5007C3174 /* Switch.png in Resources */,
 				CE4EA14D204DCA360013CC4C /* ModeSwitch.png in Resources */,
 				CE4D3DFB204C6E5600326E42 /* SimpleGateProcess.inl in Resources */,
+				CE760FD320D7F7BF007C3174 /* StreamMasterBG_RevD.png in Resources */,
 				4F78D88613B6382B0032E0F3 /* StreamMaster.icns in Resources */,
+				CE760FDA20D7F7CB007C3174 /* StreamMasterKnob100.png in Resources */,
 				CE4EA15F204DCA360013CC4C /* StreamMasterKnob.png in Resources */,
 				4F78D89913B639100032E0F3 /* InfoPlist.strings in Resources */,
 				CE6960B2204FD54B0013A88F /* MeterSwitchOverlay.png in Resources */,
 				CE4EA153204DCA360013CC4C /* PlatformSwitch.png in Resources */,
 				4F78D89A13B639100032E0F3 /* MainMenu.xib in Resources */,
 				CE4D3E0B204C6E5600326E42 /* SimpleLimitProcess.inl in Resources */,
+				CE760FCC20D7F7B5007C3174 /* ModeRadioSwitchGreyOut.png in Resources */,
 				CE4D3DE3204C6E5600326E42 /* SimpleCompProcess.inl in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
