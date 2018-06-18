@@ -155,6 +155,7 @@ void StreamMaster::UpdateAvailableControls(){
   tPeakingKnob->GrayOut(bIsMasteringKnobsDisabled);
   tAdjustKnob->GrayOut(bIsMasteringKnobsDisabled);
   tPeakingTextControl->Hide(bIsMasteringKnobsDisabled);
+  tAdjustTextControl->Hide(bIsMasteringKnobsDisabled);
   tPlatformSelector->GrayOut(bIsPlatformSwitchesDisabled);
   tPlatformSelectorClickable->Hide(bIsPlatformSwitchesDisabled);
   tPlatformSelectorClickableGreyOut->Hide(!bIsPlatformSwitchesDisabled);
