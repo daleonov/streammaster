@@ -1166,7 +1166,9 @@ int StreamMaster::UnserializeState(ByteChunk* pChunk, int nStartPos)
   nStartPos = pChunk->Get(&fSourceLufsIntegratedDb, nStartPos);
 
   // Setting a flag so we won't accidentally override it during the re-initialization
-  bJustRecalledSourceLufs = true;
+  // We imply that we have a valid recalled value if it's above the default startup one
+  bJustRecalledSourceLufs = (fSourceLufsIntegratedDb > PLUG_SOURCE_LUFS_INTEGRATED_DB_RESET + PLUG_EPSILON);
+
   /* Low (-inf) LUFS flag. Doesn't allow user to go into mastering mode
   unless plugin successfully got source LUFS reading first. */
   bLufsTooLow = !((fSourceLufsIntegratedDb > PLUG_LUFS_TOO_LOW) || PLUG_ALWAYS_ALLOW_MASTERING);
