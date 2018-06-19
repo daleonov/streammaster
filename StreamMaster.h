@@ -20,7 +20,7 @@
 
 // Set to false if you want to force user to let the plug learn
 // song loudness properly to allow him to go into mastering mode
-#define PLUG_ALWAYS_ALLOW_MASTERING true
+#define PLUG_ALWAYS_ALLOW_MASTERING false
 
 /********************************************************************
 Other application level macros dependencies:
@@ -131,8 +131,8 @@ use PLUG_KNOB_PEAK_DOUBLE() to convert them to linear gain*/
 #define PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET -0.
 
 // TODO: setting it to -INF would be smarter, but would need careful testing
-#define PLUG_LUFS_TOO_LOW -500.
 #define PLUG_EPSILON (std::numeric_limits<double>::epsilon())
+#define PLUG_LUFS_TOO_LOW (PLUG_SOURCE_LUFS_INTEGRATED_DB_RESET + PLUG_EPSILON)
 
 #ifdef _PLUG_VERSION_H 
 #define PLUG_VERSTION_TEXT \

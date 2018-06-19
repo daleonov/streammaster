@@ -189,6 +189,8 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
 
   TRACE;
 
+  //bJustRecalledSourceLufs = false;
+
   int i; /* For enum inits */
   IBitmap tBmp;
 
@@ -652,7 +654,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   // ###
   /* Low (-inf) LUFS flag. Doesn't allow user to go into mastering mode
   unless plugin successfully got source LUFS reading first. */
-  //bLufsTooLow = !((fSourceLufsIntegratedDb > PLUG_LUFS_TOO_LOW) || PLUG_ALWAYS_ALLOW_MASTERING);
+  bLufsTooLow = !((fSourceLufsIntegratedDb > PLUG_LUFS_TOO_LOW) || PLUG_ALWAYS_ALLOW_MASTERING);
 
   /* Calling UpdatePlatform() updates:
   fTargetLoudness
@@ -699,11 +701,8 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
 
   if(bIsBypassed){
     // True bypass
-    for (int frame = 0; frame < nFrames; ++frame, ++in1, ++in2, ++out1, ++out2)
-    {
-      *out1 = *in1;
-      *out2 = *in2;
-    }
+    std::memcpy(out1, in1, sizeof(double) * nFrames);
+    std::memcpy(out2, in2, sizeof(double) * nFrames);
   }
   else{
     // If plugin is active
@@ -752,11 +751,8 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
       case PLUG_OFF_MODE:
       // Off mode
       // Do nothing to the audio
-      for (int frame = 0; frame < nFrames; ++frame, ++in1, ++in2, ++out1, ++out2)
-      {
-        *out1 = *in1;
-        *out2 = *in2;
-      }
+      std::memcpy(out1, in1, sizeof(double) * nFrames);
+      std::memcpy(out2, in2, sizeof(double) * nFrames);
 
       break;
     } //switch
@@ -1034,7 +1030,9 @@ void StreamMaster::OnParamChange(int paramIdx)
           bNeedToRecallSourceLufs = false;
         }
         else{
-          if (bJustRecalledSourceLufs)
+          if ((bJustRecalledSourceLufs &&
+            (fSourceLufsIntegratedDb > PLUG_LUFS_TOO_LOW)) ||
+            PLUG_ALWAYS_ALLOW_MASTERING)
             /* 
             In case we just recalled LUFS value from a previously saved project,
             we don't want to override it. This flag is set in UnserializeState(). 
@@ -1057,9 +1055,7 @@ void StreamMaster::OnParamChange(int paramIdx)
         We check if source loudness is -oo, or equals to default value,
         or there's a debug flag that tells us to ignore that step
         */
-        if(((fSourceLufsIntegratedDb > PLUG_LUFS_TOO_LOW) &&
-          (fSourceLufsIntegratedDb > PLUG_SOURCE_LUFS_INTEGRATED_DB_RESET + PLUG_EPSILON))
-          || PLUG_ALWAYS_ALLOW_MASTERING){
+        if((fSourceLufsIntegratedDb > PLUG_LUFS_TOO_LOW) || PLUG_ALWAYS_ALLOW_MASTERING){
 
           bLufsTooLow = false; 
 
@@ -1167,7 +1163,8 @@ int StreamMaster::UnserializeState(ByteChunk* pChunk, int nStartPos)
 
   // Setting a flag so we won't accidentally override it during the re-initialization
   // We imply that we have a valid recalled value if it's above the default startup one
-  bJustRecalledSourceLufs = (fSourceLufsIntegratedDb > PLUG_SOURCE_LUFS_INTEGRATED_DB_RESET + PLUG_EPSILON);
+  //bJustRecalledSourceLufs |= (fSourceLufsIntegratedDb > PLUG_SOURCE_LUFS_INTEGRATED_DB_RESET + PLUG_EPSILON);
+  bJustRecalledSourceLufs = true;
 
   /* Low (-inf) LUFS flag. Doesn't allow user to go into mastering mode
   unless plugin successfully got source LUFS reading first. */
