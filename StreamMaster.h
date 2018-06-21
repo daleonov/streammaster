@@ -134,6 +134,7 @@ use PLUG_KNOB_PEAK_DOUBLE() to convert them to linear gain*/
 #define PLUG_EPSILON (std::numeric_limits<double>::epsilon())
 #define PLUG_LUFS_TOO_LOW (PLUG_SOURCE_LUFS_INTEGRATED_DB_RESET + PLUG_EPSILON)
 
+// Plug's info label
 #ifdef _PLUG_VERSION_H 
 #define PLUG_VERSTION_TEXT \
 "StreamMaster v%s\n\
@@ -141,10 +142,14 @@ by Daniel Leonov Plugs\n\
 danielleonovplugs.com\n\
 (%s@%s)"
 #else
+#define PLUG_VERSTION_TEXT \
 "StreamMaster v%s\n\
-by Daniel Leonov Plugs\n
+by Daniel Leonov Plugs\n\
 danielleonovplugs.com"
 #endif
+
+// Clickable area in the plug's info label will lead to this website
+#define PLUG_WEBSITE_LINK "https://danielleonovplugs.com"
 
 #define PLUG_OFF_STARTUP_MESSAGE \
 "\nPress Mode switch to start adjusting song's loudness"
@@ -297,8 +302,8 @@ enum ELayout
   /* Switches for Youtube-Spotify-etc. - end */
 
   // Text version label
-  kTextVersion_W = 128,
-  kTextVersion_H = 12,
+  kTextVersion_W = 160,
+  kTextVersion_H = 64,
   kTextVersion_X = 480,
   kTextVersion_Y = 15,
   kTextVersion_ColorMono = 110,
@@ -327,6 +332,14 @@ const IRECT tPlatformSwitchClickableIRect(
 	kPlatformSwitchClickable_X + kPlatformSwitchClickable_W,
 	kPlatformSwitchClickable_Y + kPlatformSwitchClickable_H * kPlatformSwitchClickable_TOTAL
 	);
+
+// This IRect only covers an area of the label that contains a link to plugin's website
+const IRECT tWebsiteLinkIRect(
+  kTextVersion_X,
+  kTextVersion_Y + 28,
+  kTextVersion_X + 144,
+  kTextVersion_Y + 42
+  );
 
 // Loudness stuff
 #define PLUG_PLATFORM_OPTIONS 5
@@ -438,6 +451,7 @@ private:
   IBitmapControl *tLoudnessLabelOverlay;
   IBitmapControl *tGrLabelOverlay;
   IBitmapControl *tPlatformSelectorClickableGreyOut;
+  IURLControl *tWebsiteLink;
   // Shared statistic variables
   double fMaxGainReductionPerFrame;
   double fMaxGainReductionPerSessionDb;

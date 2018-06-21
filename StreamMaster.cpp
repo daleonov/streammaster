@@ -580,6 +580,10 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
       )
     );
 
+  // Clickable area leading to a website
+  tWebsiteLink = new IURLControl(this, tWebsiteLinkIRect, PLUG_WEBSITE_LINK);
+  pGraphics->AttachControl(tWebsiteLink);
+
   // Guide message
   sModeString = new char[PLUG_MODE_TEXT_LABEL_STRING_SIZE];
   sprintf(sModeString, PLUG_OFF_STARTUP_MESSAGE);
@@ -1168,7 +1172,7 @@ int StreamMaster::UnserializeState(ByteChunk* pChunk, int nStartPos)
 
   /* Low (-inf) LUFS flag. Doesn't allow user to go into mastering mode
   unless plugin successfully got source LUFS reading first. */
-  bLufsTooLow = !((fSourceLufsIntegratedDb > PLUG_LUFS_TOO_LOW) || PLUG_ALWAYS_ALLOW_MASTERING);
+  bLufsTooLow = !(fSourceLufsIntegratedDb > PLUG_LUFS_TOO_LOW);
 
   /* Calling UpdatePlatform() updates:
   fTargetLoudness
