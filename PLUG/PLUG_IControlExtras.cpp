@@ -1,6 +1,5 @@
 #include "PLUG_IControlExtras.h"
 
-
 namespace Plug{
 
 ILevelMeteringBar::ILevelMeteringBar(
@@ -159,8 +158,8 @@ void ILevelMeteringBar::SetNotchValue(double fValue){
 int ILevelMeteringBar::_CalculateRectHeight(double fValue){
 	const double fMax = mPlug->GetParam(this->mParamIdx)->GetMax();
 	const double fMin = mPlug->GetParam(this->mParamIdx)->GetMin();
-	const double fBarRange = fabs(fMax - fMin);
-	const int nBarBgHeight = fabs(mBarRect.B - mBarRect.T);
+    const double fBarRange = fabs(fMax - fMin);
+    const int nBarBgHeight = abs(mBarRect.B - mBarRect.T);
 	double fRelativeValue;
 
 	if(fValue < fMin)

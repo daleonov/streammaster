@@ -558,8 +558,8 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
     sDisplayedVersion,
     PLUG_VERSTION_TEXT,
     VST3_VER_STR,
-    &sPlugVersionGitHead,
-    &sPlugVersionDate
+    (char*)sPlugVersionGitHead,
+    (char*)sPlugVersionDate
     );
   #else
   sprintf(
@@ -700,8 +700,7 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
   double* in2 = inputs[1];
   double* out1 = outputs[0];
   double* out2 = outputs[1];
-  double *afInterleavedSamples = new double[nFrames * 2];
-  double fTruePeakingLinear;
+  double *afInterleavedSamples;
 
   if(bIsBypassed){
     // True bypass
@@ -714,6 +713,7 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
       case PLUG_LEARN_MODE:
       // Learn mode
       // Feed in the audio into the LUFS meter, but not changing it
+      afInterleavedSamples = new double[nFrames * 2];
       for (int frame = 0, sample = 0; frame < nFrames; ++frame, ++in1, ++in2, ++out1, ++out2, sample += 2)
       {
         *out1 = *in1;
@@ -729,7 +729,8 @@ void StreamMaster::ProcessDoubleReplacing(double** inputs, double** outputs, int
       // Master mode
       // Process the audio, then feed it to the meter
       // Make sure unprocessed audio's loudness is stored in fSourceLufsIntegratedDb once
-      // after switching the mode and not changed until the mode in changed to "off"!
+        // after switching the mode and not changed until the mode in changed to "off"!
+      afInterleavedSamples = new double[nFrames * 2];
       for (int frame = 0, sample = 0; frame < nFrames; ++frame, ++in1, ++in2, ++out1, ++out2, sample += 2)
       {
         // Apply gain to the samples
@@ -847,7 +848,6 @@ void StreamMaster::OnParamChange(int paramIdx)
   unsigned int nIndex;
   char sPeakingString[PLUG_KNOB_TEXT_LABEL_STRING_SIZE];
   char sAdjustString[PLUG_KNOB_TEXT_LABEL_STRING_SIZE];
-  const double fMaxGainReductionPerFrameDb = LINEAR_TO_LOG(fMaxGainReductionPerFrame);
   PLUG_Mode tPlugNewMode;
   int nModeNumber, nConvertedModeNumber;
   double fNormalizedConvertedModeNumber;
@@ -891,7 +891,6 @@ void StreamMaster::OnParamChange(int paramIdx)
       sprintf(sPeakingString, "%5.2fdB", fPeaking);
       tPeakingTextControl->SetTextFromPlug(sPeakingString);
 
-      tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
       nIndex = GetParam(kPlatformSwitch)->Int();
       if (tPlugCurrentMode == PLUG_MASTER_MODE)
         UpdatePreMastering((PLUG_Target)nIndex);
@@ -905,7 +904,6 @@ void StreamMaster::OnParamChange(int paramIdx)
       sprintf(sAdjustString, "%+5.2fLUFS", fAdjust);
       tAdjustTextControl->SetTextFromPlug(sAdjustString);
 
-      tPlugNewMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
       nIndex = GetParam(kPlatformSwitch)->Int();
       if (tPlugCurrentMode == PLUG_MASTER_MODE)
         UpdatePreMastering((PLUG_Target)nIndex);
