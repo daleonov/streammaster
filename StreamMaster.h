@@ -204,6 +204,9 @@ char* sBypassString = "\nBypassed";
 const char sDbValueMinusInf[PLUG_DB_VALUE_MINUS_INF_LEN] = "-oo";
 const char sDbValuePlusInf[PLUG_DB_VALUE_PLUS_INF_LEN] = "+oo";
 
+#define PLUG_DR_METER_FILTER_DECAY 0.008
+#define PLUG_DR_METER_FILTER_ATTACK PLUG_DR_METER_FILTER_DECAY
+
 enum EParams
 {
   kBypassSwitch,

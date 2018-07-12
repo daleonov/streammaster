@@ -61,11 +61,24 @@ void StreamMaster::UpdateGui()
     UpdateTruePeak(fTruePeakingDb);
     // Dunamic range (PSR)
     // PSR = TP_short_term - LUFS_short_term
-    double fPsrDb = fTruePeakingShortTermDb - fLufsShortTerm;
+    double fCurrentPsrDb = fTruePeakingShortTermDb - fLufsShortTerm;
+    static double fPreviousPsrDb = 4.;
+    if(std::isnan(fCurrentPsrDb) || fCurrentPsrDb < 0.) fCurrentPsrDb = 0.;
+    double fDrMeterGainLinear, fCurrentDrMeterPeak;
+    // Applying a filter to meter's value
+    fDrMeterGainLinear = (fCurrentPsrDb < fPreviousPsrDb) ? \
+      PLUG_DR_METER_FILTER_DECAY : \
+      PLUG_DR_METER_FILTER_ATTACK;
+    fCurrentDrMeterPeak = \
+      fDrMeterGainLinear * fCurrentPsrDb + \
+      fPreviousPsrDb * (1.0 - fDrMeterGainLinear);
+
+    fPreviousPsrDb = fCurrentDrMeterPeak;
+
     // Displaying only worst dynamic range
     //if(fPsrDb < fLowestDynamicRangeDb){
     //  fLowestDynamicRangeDb = fPsrDb;
-      UpdateDynamicRange(fPsrDb);
+      UpdateDynamicRange(fCurrentDrMeterPeak);
     //}
   }
 }
@@ -107,7 +120,7 @@ void StreamMaster::UpdateDynamicRange(double fDynamicRangeDb){
 
   /* If the value is too high, it would be displayed as "+oo".
      It may be also "nan" during start up, in that case it's "+oo" as well. ###*/
-  if((fDynamicRangeDb > PLUG_DB_VALUE_TOO_HIGH) || std::isnan(fDynamicRangeDb)){
+  /*if((fDynamicRangeDb > PLUG_DB_VALUE_TOO_HIGH) || std::isnan(fDynamicRangeDb)){
     if(tDrTextControl != tDrResetTextControl){
       tDrWarningTextControl->Hide(true);
       tDrOkTextControl->Hide(true);
@@ -115,7 +128,7 @@ void StreamMaster::UpdateDynamicRange(double fDynamicRangeDb){
       tDrTextControl = tDrResetTextControl;
     }
     memcpy(sDrValue, sDbValuePlusInf, PLUG_DB_VALUE_PLUS_INF_LEN);
-  }
+  }*/
   else
     sprintf(sDrValue, "%3.1f", fDynamicRangeDb);
 
