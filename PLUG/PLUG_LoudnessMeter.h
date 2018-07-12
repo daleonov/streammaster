@@ -64,6 +64,12 @@ public:
 	*/
 	double GetTruePeaking();
 
+	/*
+	@brief True peaking, but moving value rather than integrated. 4x oversampling for fs < 96000 Hz, 2x for fs < 192000 Hz and 1x for 192000 Hz.
+	@retval Highest peak from last AddSamples() batch (linear, 1.0 = 0.0dB)
+	*/
+	double GetTruePeakingShortTerm();
+
 private:
 	double _fSampleRate = 44100.;
 	int _nChannels = 2;

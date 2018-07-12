@@ -83,3 +83,13 @@ double LoudnessMeter::GetTruePeaking(){
 	}
 	return fMaxPeakLinear;
 }
+
+double LoudnessMeter::GetTruePeakingShortTerm(){
+	double fMaxPeakLinear = 0., fCurrentPeakLinear, fCurrentPeakLinearAbs;
+	for (int i=0; i<_nChannels; i++){
+		ebur128_prev_true_peak(this->_tLoudnessMeterEbur128, i, &fCurrentPeakLinear);
+		fCurrentPeakLinearAbs = fabs(fCurrentPeakLinear);
+		if (fCurrentPeakLinearAbs > fMaxPeakLinear) fMaxPeakLinear = fCurrentPeakLinearAbs;
+	}
+	return fMaxPeakLinear;
+}

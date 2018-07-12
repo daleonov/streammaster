@@ -50,9 +50,11 @@ const IColor LOUDNESS_BAR_FG_ICOLOR(255, 0, 184, 67);
 
 const IColor PLUG_TP_LABEL_OK_COLOR(255, 0, 184, 67);
 const IColor PLUG_TP_LABEL_ALERT_COLOR(255, 255, 0, 49);
+const IColor PLUG_TP_LABEL_RESET_COLOR(255, 196, 196, 196);
 
 const IColor PLUG_DR_LABEL_OK_COLOR(255, 0, 184, 67);
 const IColor PLUG_DR_LABEL_WARNING_COLOR(255, 255, 255, 49);
+const IColor PLUG_DR_LABEL_RESET_COLOR(255, 196, 196, 196);
 
 /*
 Those are the lengths for classic "char[]" strings,
@@ -185,14 +187,22 @@ Please repeat learning cycle again. \n\
 char* sBypassString = "\nBypassed";
 
 #define PLUG_GUIDE_TEXT_ALIGNMENT kAlignNear
-#define PLUG_TP_TEXT_ALIGNMENT kAlignCenter
-#define PLUG_DR_TEXT_ALIGNMENT kAlignCenter
+#define PLUG_TP_TEXT_ALIGNMENT kAlignNear
+#define PLUG_DR_TEXT_ALIGNMENT kAlignNear
 
 #ifdef _WIN32
 #define PLUG_METER_TEXT_ALIGNMENT kAlignFar
 #elif defined(__APPLE__)
 #define PLUG_METER_TEXT_ALIGNMENT kAlignNear
 #endif
+
+#define PLUG_DB_VALUE_TOO_LOW -90.
+#define PLUG_DB_VALUE_TOO_HIGH 90.
+#define PLUG_DB_VALUE_STRING_SIZE 16
+#define PLUG_DB_VALUE_MINUS_INF_LEN ((size_t)4)
+#define PLUG_DB_VALUE_PLUS_INF_LEN ((size_t)4)
+const char sDbValueMinusInf[PLUG_DB_VALUE_MINUS_INF_LEN] = "-oo";
+const char sDbValuePlusInf[PLUG_DB_VALUE_PLUS_INF_LEN] = "+oo";
 
 enum EParams
 {
@@ -223,7 +233,7 @@ enum ELayout
   kLufsMeter_Y = 12,
 
   // GR meter
-  kGrMeter_X = kLufsMeter_X + 87,
+  kGrMeter_X = kLufsMeter_X + 90,
   kGrMeter_Y = kLufsMeter_Y,
   
   // Peaking knob
@@ -258,7 +268,7 @@ enum ELayout
   // LUFS Text reading
   kILoudnessTextControl_X = kLufsMeter_X,
   kILoudnessTextControl_Y = 554,
-  kILoudnessTextControl_W = 80,
+  kILoudnessTextControl_W = 90,
   kILoudnessTextControl_H = 40,
 
   // Gain reduction Text reading
@@ -328,17 +338,17 @@ enum ELayout
 };
 
 const IRECT PLUG_TP_LABEL_IRECT(
-	kLufsMeter_X,
-	kLufsMeter_Y+5,
+	kLufsMeter_X + 7,
+	kLufsMeter_Y + 5,
 	kLufsMeter_X + 74,
-	kLufsMeter_Y+20
+	kLufsMeter_Y + 20
 	);
 
 const IRECT PLUG_DR_LABEL_IRECT(
-  kLufsMeter_X,
-  kLufsMeter_Y+20,
+  kLufsMeter_X + 7,
+  kLufsMeter_Y + 20,
   kLufsMeter_X + 74,
-  kLufsMeter_Y+35
+  kLufsMeter_Y + 35
   );
 
 const IRECT tPlatformSwitchClickableIRect(
@@ -453,9 +463,11 @@ private:
   ITextControl *tModeTextControl;
   ITextControl *tTpAlertTextControl;
   ITextControl *tTpOkTextControl;
+  ITextControl *tTpResetTextControl;
   ITextControl *tTpTextControl;
   ITextControl *tDrWarningTextControl;
   ITextControl *tDrOkTextControl;
+  ITextControl *tDrResetTextControl;
   ITextControl *tDrTextControl;
   ISwitchControl *tBypassSwitch;
   ISwitchControl *tModeSwitch;
@@ -491,6 +503,7 @@ private:
   double fLimiterCeilingLinear;
   double fMasteringGainLinear;
   double fAdjustLufsDb;
+  double fLowestDynamicRangeDb;
   // Text guide message
   char* sModeString;
 

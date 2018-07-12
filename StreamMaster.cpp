@@ -1,5 +1,6 @@
 #include "StreamMaster.h"
 #include "IPlug_include_in_plug_src.h"
+#include <cmath>
 
 // Number of presets
 const int kNumPrograms = 1;
@@ -15,10 +16,21 @@ void StreamMaster::UpdateGui()
   double fMaxGainReductionPerFrameDb = 0.;
   double fLufs = tLoudnessMeter->GetLufs();
   double fLufsShortTerm = tLoudnessMeter->GetShortTermLufs();
-  double fTruePeakingDb;
+  double fTruePeakingDb, fTruePeakingShortTermDb;
+  char sLufsInt[PLUG_DB_VALUE_STRING_SIZE];
+  char sLufsShortTerm[PLUG_DB_VALUE_STRING_SIZE];
 
   // Text below LUFS meter bar
-  sprintf(sLoudnessString, "Int.: %4.1fLUFS\nShort: %4.1fLUFS", fLufs, fLufsShortTerm);
+  // If values are to low, they would be displayed as "-oo"
+  if((fLufs < PLUG_DB_VALUE_TOO_LOW) || std::isnan(fLufs))
+    memcpy(sLufsInt, sDbValueMinusInf, PLUG_DB_VALUE_MINUS_INF_LEN);
+  else
+    sprintf(sLufsInt, "%4.1f", fLufs);
+  if((fLufsShortTerm < PLUG_DB_VALUE_TOO_LOW) || std::isnan(fLufsShortTerm))
+    memcpy(sLufsShortTerm, sDbValueMinusInf, PLUG_DB_VALUE_MINUS_INF_LEN);
+  else
+    sprintf(sLufsShortTerm, "%4.1f", fLufsShortTerm);
+  sprintf(sLoudnessString, "Int.: %sLUFS\nShort: %sLUFS", sLufsInt, sLufsShortTerm);
   tLoudnessTextControl->SetTextFromPlug(sLoudnessString);
 
   // Updating LUFS bar values
@@ -45,16 +57,22 @@ void StreamMaster::UpdateGui()
   if(tPlugCurrentMode == PLUG_MASTER_MODE){
     // TP
     fTruePeakingDb = LINEAR_TO_LOG(tLoudnessMeter->GetTruePeaking());
+    fTruePeakingShortTermDb = LINEAR_TO_LOG(tLoudnessMeter->GetTruePeakingShortTerm());
     UpdateTruePeak(fTruePeakingDb);
     // Dunamic range (PSR)
-    // PSR = TP - LUFS_short_term
-    double fPsrDb = fTruePeakingDb - fLufsShortTerm;
-    UpdateDynamicRange(fPsrDb);
+    // PSR = TP_short_term - LUFS_short_term
+    double fPsrDb = fTruePeakingShortTermDb - fLufsShortTerm;
+    // Displaying only worst dynamic range
+    //if(fPsrDb < fLowestDynamicRangeDb){
+    //  fLowestDynamicRangeDb = fPsrDb;
+      UpdateDynamicRange(fPsrDb);
+    //}
   }
 }
 
 void StreamMaster::UpdateDynamicRange(double fDynamicRangeDb){
   static double fPreviousDynamicRangeDb = PLUG_DR_WARNING_VALUE_DB + 0.1;
+  char sDrValue[PLUG_DB_VALUE_STRING_SIZE];
   char sDrString[PLUG_DR_LABEL_STRING_SIZE];
   IText tDrLabel;
 
@@ -65,43 +83,93 @@ void StreamMaster::UpdateDynamicRange(double fDynamicRangeDb){
   */
 
   // If we crossed PSR threshold down, do the warning stuff
-  if ((fDynamicRangeDb <= PLUG_DR_WARNING_VALUE_DB) && (fPreviousDynamicRangeDb > PLUG_DR_WARNING_VALUE_DB)){
+  if(
+    (fDynamicRangeDb <= PLUG_DR_WARNING_VALUE_DB) &&
+    ((fPreviousDynamicRangeDb > PLUG_DR_WARNING_VALUE_DB) ||
+    tDrTextControl == tDrResetTextControl)
+    ){
     tDrWarningTextControl->Hide(false);
     tDrOkTextControl->Hide(true);
+    tDrResetTextControl->Hide(true);
     tDrTextControl = tDrWarningTextControl;
   }
   // If we crossed PSR threshold up, undo the warning stuff
-  if ((fDynamicRangeDb > PLUG_DR_WARNING_VALUE_DB) && (fPreviousDynamicRangeDb < PLUG_DR_WARNING_VALUE_DB)){
+  if(
+    (fDynamicRangeDb > PLUG_DR_WARNING_VALUE_DB) &&
+    ((fPreviousDynamicRangeDb < PLUG_DR_WARNING_VALUE_DB) ||
+    tDrTextControl == tDrResetTextControl)
+    ){
     tDrWarningTextControl->Hide(true);
     tDrOkTextControl->Hide(false);
+    tDrResetTextControl->Hide(true);
     tDrTextControl = tDrOkTextControl;
   }
 
+  /* If the value is too high, it would be displayed as "+oo".
+     It may be also "nan" during start up, in that case it's "+oo" as well. ###*/
+  if((fDynamicRangeDb > PLUG_DB_VALUE_TOO_HIGH) || std::isnan(fDynamicRangeDb)){
+    if(tDrTextControl != tDrResetTextControl){
+      tDrWarningTextControl->Hide(true);
+      tDrOkTextControl->Hide(true);
+      tDrResetTextControl->Hide(false);
+      tDrTextControl = tDrResetTextControl;
+    }
+    memcpy(sDrValue, sDbValuePlusInf, PLUG_DB_VALUE_PLUS_INF_LEN);
+  }
+  else
+    sprintf(sDrValue, "%3.1f", fDynamicRangeDb);
+
   fPreviousDynamicRangeDb = fDynamicRangeDb;
-  sprintf(sDrString, "PSR: %3.1fdB", fDynamicRangeDb);
+  sprintf(sDrString, "PSR: %sdB", sDrValue);
   tDrTextControl->SetTextFromPlug(sDrString);
 }
 
 void StreamMaster::UpdateTruePeak(double fTruePeakingDb){
   static double fPreviousTruePeakingDb=LINEAR_TO_LOG(0.);
+  char sTpValue[PLUG_DB_VALUE_STRING_SIZE];
   char sTpString[PLUG_TP_LABEL_STRING_SIZE];
   IText tTpLabel;
 
   // If we crossed TP threshold up, do some alert stuff
-  if ((fTruePeakingDb >= PLUG_TP_ALERT_VALUE_DB) && (fPreviousTruePeakingDb < PLUG_TP_ALERT_VALUE_DB)){
+  if(
+    (fTruePeakingDb >= PLUG_TP_ALERT_VALUE_DB) &&
+    ((fPreviousTruePeakingDb < PLUG_TP_ALERT_VALUE_DB) ||
+    tTpTextControl == tTpResetTextControl)
+    ){
     tTpOkTextControl->Hide(true);
     tTpAlertTextControl->Hide(false);
+    tTpResetTextControl->Hide(true);
     tTpTextControl = tTpAlertTextControl;
   }
 
   // If we crossed TP threshold down, undo the alert stuff
-  if ((fTruePeakingDb < PLUG_TP_ALERT_VALUE_DB) && (fPreviousTruePeakingDb > PLUG_TP_ALERT_VALUE_DB)){
+  if(
+    (fTruePeakingDb < PLUG_TP_ALERT_VALUE_DB) &&
+    ((fPreviousTruePeakingDb > PLUG_TP_ALERT_VALUE_DB) ||
+    tTpTextControl == tTpResetTextControl)
+    ){
     tTpAlertTextControl->Hide(true);
     tTpOkTextControl->Hide(false);
+    tTpResetTextControl->Hide(true);
     tTpTextControl = tTpOkTextControl;
   }
+
+  /* If the value is too low, it would be displayed as "-oo".
+     It may be also "nan" during start up, in that case it's "-oo" as well. */
+  if((fTruePeakingDb < PLUG_DB_VALUE_TOO_LOW) || std::isnan(fTruePeakingDb)){
+    if(tTpTextControl != tTpResetTextControl){
+      tTpAlertTextControl->Hide(true);
+      tTpOkTextControl->Hide(true);
+      tTpResetTextControl->Hide(false);
+      tTpTextControl = tTpResetTextControl;
+    }
+    memcpy(sTpValue, sDbValueMinusInf, PLUG_DB_VALUE_MINUS_INF_LEN);
+  }
+  else
+    sprintf(sTpValue, "%+4.1f", fTruePeakingDb);
+
   fPreviousTruePeakingDb = fTruePeakingDb;
-  sprintf(sTpString, "TP: %+4.1fdB", fTruePeakingDb);
+  sprintf(sTpString, "TP: %sdB", sTpValue);
   tTpTextControl->SetTextFromPlug(sTpString);
 }
 
@@ -220,7 +288,8 @@ void StreamMaster::UpdateSampleRate(){
 \brief We set up GUI and related processing classes here. 
 */
 StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
-  IPLUG_CTOR(kNumParams, kNumPrograms, instanceInfo)
+  IPLUG_CTOR(kNumParams, kNumPrograms, instanceInfo),
+  fLowestDynamicRangeDb(PLUG_DB_VALUE_TOO_HIGH)
   {
 
   TRACE;
@@ -360,8 +429,16 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
     PLUG_TP_LABEL_IRECT,
     &tTpAlertLabel,
     PLUG_TP_LABEL_DEFAULT_TEXT);
+  // for reset (default) state
+  IText tTpResetLabel = IText(tTpOkLabel);
+  tTpResetLabel.mColor = PLUG_TP_LABEL_RESET_COLOR;
+  tTpResetTextControl = new ITextControl(
+    this,
+    PLUG_TP_LABEL_IRECT,
+    &tTpResetLabel,
+    PLUG_TP_LABEL_DEFAULT_TEXT);
   // for current state
-  tTpTextControl = tTpOkTextControl;
+  tTpTextControl = tTpResetTextControl;
 
   // TP labels should be attached later, so they are sandwitched
   // between meter bars and meter reset buttons. Otherwise they
@@ -386,8 +463,16 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
     PLUG_DR_LABEL_IRECT,
     &tDrWarningLabel,
     PLUG_DR_LABEL_DEFAULT_TEXT);
+  // for reset state
+  IText tDrResetLabel = IText(tDrOkLabel);
+  tDrResetLabel.mColor = PLUG_DR_LABEL_RESET_COLOR;
+  tDrResetTextControl = new ITextControl(
+    this,
+    PLUG_DR_LABEL_IRECT,
+    &tDrResetLabel,
+    PLUG_DR_LABEL_DEFAULT_TEXT);
   // for current state
-  tDrTextControl = tDrOkTextControl;
+  tDrTextControl = tDrResetTextControl;
 
   // Bars
   // LUFS meter
@@ -437,12 +522,16 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   // Attaching TP and Dynamic range labels so they are below reset buttons
   pGraphics->AttachControl(tTpOkTextControl);
   pGraphics->AttachControl(tTpAlertTextControl);
-  tTpOkTextControl->Hide(false);
+  pGraphics->AttachControl(tTpResetTextControl);
+  tTpOkTextControl->Hide(true);
   tTpAlertTextControl->Hide(true);
+  tTpResetTextControl->Hide(false);
   pGraphics->AttachControl(tDrOkTextControl);
   pGraphics->AttachControl(tDrWarningTextControl);
-  tDrOkTextControl->Hide(false);
+  pGraphics->AttachControl(tDrResetTextControl);
+  tDrOkTextControl->Hide(true);
   tDrWarningTextControl->Hide(true);
+  tDrResetTextControl->Hide(false);
 
   // Reset buttons - same coordinates as the actual meter bar
   tBmp = pGraphics->LoadIBitmap(
@@ -943,6 +1032,11 @@ void StreamMaster::OnParamChange(int paramIdx)
       // Reset source LUFS if we were measuring it
       tPlugCurrentMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
       if (tPlugCurrentMode == PLUG_LEARN_MODE) fSourceLufsIntegratedDb = PLUG_SOURCE_LUFS_INTEGRATED_DB_RESET;
+      // Reset dynimic range meter ###
+      if(tPlugCurrentMode == PLUG_MASTER_MODE){
+        fLowestDynamicRangeDb = PLUG_DB_VALUE_TOO_HIGH;
+        UpdateDynamicRange(fLowestDynamicRangeDb);
+      }
       break;
 
     // Tweaked ceiling knob
