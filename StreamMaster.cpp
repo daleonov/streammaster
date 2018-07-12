@@ -14,10 +14,11 @@ void StreamMaster::UpdateGui()
   char sGrString[PLUG_METER_TEXT_LABEL_STRING_SIZE];
   double fMaxGainReductionPerFrameDb = 0.;
   double fLufs = tLoudnessMeter->GetLufs();
-  double fFastLufs = tLoudnessMeter->GetShortTermLufs();
+  double fLufsShortTerm = tLoudnessMeter->GetShortTermLufs();
+  double fTruePeakingDb;
 
   // Text below LUFS meter bar
-  sprintf(sLoudnessString, "Int.: %4.1fLUFS\nShort: %4.1fLUFS", fLufs, fFastLufs);
+  sprintf(sLoudnessString, "Int.: %4.1fLUFS\nShort: %4.1fLUFS", fLufs, fLufsShortTerm);
   tLoudnessTextControl->SetTextFromPlug(sLoudnessString);
 
   // Updating LUFS bar values
@@ -41,17 +42,51 @@ void StreamMaster::UpdateGui()
   tGrTextControl->SetTextFromPlug(sGrString);
 
   // True peaking text label
-  if(tPlugCurrentMode == PLUG_MASTER_MODE)
-    UpdateTruePeak();
+  if(tPlugCurrentMode == PLUG_MASTER_MODE){
+    // TP
+    fTruePeakingDb = LINEAR_TO_LOG(tLoudnessMeter->GetTruePeaking());
+    UpdateTruePeak(fTruePeakingDb);
+    // Dunamic range (PSR)
+    // PSR = TP - LUFS_short_term
+    double fPsrDb = fTruePeakingDb - fLufsShortTerm;
+    UpdateDynamicRange(fPsrDb);
+  }
 }
 
-void StreamMaster::UpdateTruePeak(){
+void StreamMaster::UpdateDynamicRange(double fDynamicRangeDb){
+  static double fPreviousDynamicRangeDb = PLUG_DR_WARNING_VALUE_DB + 0.1;
+  char sDrString[PLUG_DR_LABEL_STRING_SIZE];
+  IText tDrLabel;
+
+  /*
+  The higher the PSR value is (in log domain), the more dynamics the track has.
+  If PSR falls below a certain level (e.g. +8dB), it's considered not healthy,
+  so it should not be a full-on alert, just a friendly warning. 
+  */
+
+  // If we crossed PSR threshold down, do the warning stuff
+  if ((fDynamicRangeDb <= PLUG_DR_WARNING_VALUE_DB) && (fPreviousDynamicRangeDb > PLUG_DR_WARNING_VALUE_DB)){
+    tDrWarningTextControl->Hide(false);
+    tDrOkTextControl->Hide(true);
+    tDrTextControl = tDrWarningTextControl;
+  }
+  // If we crossed PSR threshold up, undo the warning stuff
+  if ((fDynamicRangeDb > PLUG_DR_WARNING_VALUE_DB) && (fPreviousDynamicRangeDb < PLUG_DR_WARNING_VALUE_DB)){
+    tDrWarningTextControl->Hide(true);
+    tDrOkTextControl->Hide(false);
+    tDrTextControl = tDrOkTextControl;
+  }
+
+  fPreviousDynamicRangeDb = fDynamicRangeDb;
+  sprintf(sDrString, "PSR: %3.1fdB", fDynamicRangeDb);
+  tDrTextControl->SetTextFromPlug(sDrString);
+}
+
+void StreamMaster::UpdateTruePeak(double fTruePeakingDb){
   static double fPreviousTruePeakingDb=LINEAR_TO_LOG(0.);
-  double fTruePeakingDb;
   char sTpString[PLUG_TP_LABEL_STRING_SIZE];
   IText tTpLabel;
 
-  fTruePeakingDb = LINEAR_TO_LOG(tLoudnessMeter->GetTruePeaking());
   // If we crossed TP threshold up, do some alert stuff
   if ((fTruePeakingDb >= PLUG_TP_ALERT_VALUE_DB) && (fPreviousTruePeakingDb < PLUG_TP_ALERT_VALUE_DB)){
     tTpOkTextControl->Hide(true);
@@ -165,6 +200,7 @@ void StreamMaster::UpdateAvailableControls(){
   tLoudnessTextControl->Hide(bIsLoudnessMeteringDisabled);
   tGrTextControl->Hide(bIsGrMeteringDisabled);
   tTpTextControl->Hide(bIsTpMeteringDisabled);
+  tDrTextControl->Hide(bIsTpMeteringDisabled);
 }
 
 /*
@@ -331,6 +367,28 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   // between meter bars and meter reset buttons. Otherwise they
   // may get in the way of clicking. 
 
+
+  // Dynamic range label - similar to true peaking label
+  IText tDrOkLabel = IText(PLUG_DR_LABEL_STRING_SIZE);
+  tDrOkLabel.mColor = PLUG_DR_LABEL_OK_COLOR;
+  tDrOkLabel.mSize = PLUG_DR_LABEL_FONT_SIZE;
+  tDrOkLabel.mAlign = tDrOkLabel.PLUG_DR_TEXT_ALIGNMENT;
+  tDrOkTextControl = new ITextControl(
+    this,
+    PLUG_DR_LABEL_IRECT,
+    &tDrOkLabel,
+    PLUG_DR_LABEL_DEFAULT_TEXT);
+  // for warning state
+  IText tDrWarningLabel = IText(tDrOkLabel);
+  tDrWarningLabel.mColor = PLUG_DR_LABEL_WARNING_COLOR;
+  tDrWarningTextControl = new ITextControl(
+    this,
+    PLUG_DR_LABEL_IRECT,
+    &tDrWarningLabel,
+    PLUG_DR_LABEL_DEFAULT_TEXT);
+  // for current state
+  tDrTextControl = tDrOkTextControl;
+
   // Bars
   // LUFS meter
   tILevelMeteringBar = new Plug::ILevelMeteringBar(
@@ -376,11 +434,15 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   tGrLabelOverlay = new IBitmapControl(this, kGrLabelOverlay_X, kGrLabelOverlay_Y, &tBmp);
   pGraphics->AttachControl(tGrLabelOverlay);
 
-  // Attaching TP labels so they are below reset buttons
+  // Attaching TP and Dynamic range labels so they are below reset buttons
   pGraphics->AttachControl(tTpOkTextControl);
   pGraphics->AttachControl(tTpAlertTextControl);
   tTpOkTextControl->Hide(false);
   tTpAlertTextControl->Hide(true);
+  pGraphics->AttachControl(tDrOkTextControl);
+  pGraphics->AttachControl(tDrWarningTextControl);
+  tDrOkTextControl->Hide(false);
+  tDrWarningTextControl->Hide(true);
 
   // Reset buttons - same coordinates as the actual meter bar
   tBmp = pGraphics->LoadIBitmap(
