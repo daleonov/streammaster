@@ -67,7 +67,6 @@ void StreamMaster::UpdateGui()
     */
     tPeakingBuffer->Add(fTruePeakingShortTermDb);
     fTruePeakingOfWindowDb = tPeakingBuffer->GetMax();
-    //fTruePeakingOfWindowDb = fTruePeakingShortTermDb;
 
     double fCurrentPsrDb = fTruePeakingOfWindowDb - fLufsShortTerm;
     UpdateDynamicRange(fCurrentPsrDb);
@@ -1053,8 +1052,9 @@ void StreamMaster::OnParamChange(int paramIdx)
       // Reset source LUFS if we were measuring it
       tPlugCurrentMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
       if (tPlugCurrentMode == PLUG_LEARN_MODE) fSourceLufsIntegratedDb = PLUG_SOURCE_LUFS_INTEGRATED_DB_RESET;
-      // Reset dynimic range meter ###
+      // Reset dynimic range meter
       if(tPlugCurrentMode == PLUG_MASTER_MODE){
+        tPeakingBuffer->Clear();
         fLowestDynamicRangeDb = PLUG_DB_VALUE_TOO_HIGH;
         UpdateDynamicRange(fLowestDynamicRangeDb);
       }
