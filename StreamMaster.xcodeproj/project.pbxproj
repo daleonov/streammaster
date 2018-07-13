@@ -263,6 +263,14 @@
 		4FF016F8134E14E2001447BA /* ptrlist.h in Headers */ = {isa = PBXBuildFile; fileRef = 4FF016F5134E14E2001447BA /* ptrlist.h */; };
 		4FF016F9134E14E2001447BA /* wdlstring.h in Headers */ = {isa = PBXBuildFile; fileRef = 4FF016F6134E14E2001447BA /* wdlstring.h */; };
 		4FF0171A134E153A001447BA /* heapbuf.h in Headers */ = {isa = PBXBuildFile; fileRef = 4FF01719134E153A001447BA /* heapbuf.h */; };
+		CE34946D20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE34946B20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp */; };
+		CE34946E20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE34946B20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp */; };
+		CE34946F20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE34946B20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp */; };
+		CE34947020F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE34946B20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp */; };
+		CE34947120F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE34946B20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp */; };
+		CE34947220F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE34946B20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp */; };
+		CE34947320F8B3CA000DB2F0 /* DLPG_PeakingBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = CE34946C20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.h */; };
+		CE34947420F8B3CA000DB2F0 /* DLPG_PeakingBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = CE34946C20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.h */; };
 		CE35F0B72052E1460099F7B3 /* lice_bezier.h in Headers */ = {isa = PBXBuildFile; fileRef = CE35F0AF2052E1450099F7B3 /* lice_bezier.h */; };
 		CE35F0B82052E1460099F7B3 /* lice_combine.h in Headers */ = {isa = PBXBuildFile; fileRef = CE35F0B02052E1450099F7B3 /* lice_combine.h */; };
 		CE35F0B92052E1460099F7B3 /* lice_extended.h in Headers */ = {isa = PBXBuildFile; fileRef = CE35F0B12052E1460099F7B3 /* lice_extended.h */; };
@@ -757,6 +765,8 @@
 		52FBBED00D0CF139001C8B8A /* StreamMaster.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; path = StreamMaster.cpp; sourceTree = "<group>"; tabWidth = 2; usesTabs = 0; };
 		52FBBED20D0CF13D001C8B8A /* StreamMaster.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = StreamMaster.h; sourceTree = "<group>"; tabWidth = 2; usesTabs = 0; };
 		52FBBED30D0CF143001C8B8A /* resource.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = resource.h; sourceTree = "<group>"; tabWidth = 2; usesTabs = 0; };
+		CE34946B20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DLPG_PeakingBuffer.cpp; path = PLUG/DLPG_PeakingBuffer.cpp; sourceTree = "<group>"; };
+		CE34946C20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DLPG_PeakingBuffer.h; path = PLUG/DLPG_PeakingBuffer.h; sourceTree = "<group>"; };
 		CE35F0AF2052E1450099F7B3 /* lice_bezier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lice_bezier.h; path = ../../WDL/lice/lice_bezier.h; sourceTree = "<group>"; };
 		CE35F0B02052E1450099F7B3 /* lice_combine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lice_combine.h; path = ../../WDL/lice/lice_combine.h; sourceTree = "<group>"; };
 		CE35F0B12052E1460099F7B3 /* lice_extended.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lice_extended.h; path = ../../WDL/lice/lice_extended.h; sourceTree = "<group>"; };
@@ -1524,6 +1534,8 @@
 			children = (
 				CED0C609204DC8DE00C5C39F /* PLUG_IControlExtras.cpp */,
 				CED0C60A204DC8DE00C5C39F /* PLUG_IControlExtras.h */,
+				CE34946B20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp */,
+				CE34946C20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.h */,
 				CE397590204C709B008D8437 /* PLUG_LoudnessMeter.cpp */,
 				CE397591204C709B008D8437 /* PLUG_LoudnessMeter.h */,
 				52FBBED30D0CF143001C8B8A /* resource.h */,
@@ -1573,6 +1585,7 @@
 				4FD16D2D13B6353C001D0217 /* swell-internal.h in Headers */,
 				4FD16D3213B6355A001D0217 /* swell-types.h in Headers */,
 				4F78D8D913B63B5D0032E0F3 /* aeffect.h in Headers */,
+				CE34947420F8B3CA000DB2F0 /* DLPG_PeakingBuffer.h in Headers */,
 				CE4D3DFA204C6E5600326E42 /* SimpleGate.h in Headers */,
 				CE4D3E0A204C6E5600326E42 /* SimpleLimit.h in Headers */,
 				4F78D8DA13B63B5D0032E0F3 /* aeffectx.h in Headers */,
@@ -1628,6 +1641,7 @@
 				CE4D3DF1204C6E5600326E42 /* SimpleGain.h in Headers */,
 				4F78DA7713B640050032E0F3 /* resource.h in Headers */,
 				4F78DA7813B640050032E0F3 /* StreamMaster.h in Headers */,
+				CE34947320F8B3CA000DB2F0 /* DLPG_PeakingBuffer.h in Headers */,
 				CE4D3DE1204C6E5600326E42 /* SimpleComp.h in Headers */,
 				4F78DA8A13B640050032E0F3 /* mutex.h in Headers */,
 				CE397598204C709B008D8437 /* PLUG_LoudnessMeter.h in Headers */,
@@ -2081,6 +2095,7 @@
 				CE4D3E04204C6E5600326E42 /* SimpleLimit.cpp in Sources */,
 				CE4D3DDC204C6E5600326E42 /* SimpleComp.cpp in Sources */,
 				4F78D9C813B63BA50032E0F3 /* IParam.cpp in Sources */,
+				CE34946E20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp in Sources */,
 				4F78D9C913B63BA50032E0F3 /* IControl.cpp in Sources */,
 				CE4D3DEA204C6E5600326E42 /* SimpleEnvelope.cpp in Sources */,
 				4F78D9F313B63C6A0032E0F3 /* IPlugVST.cpp in Sources */,
@@ -2098,6 +2113,7 @@
 				4F78D94513B63BA50032E0F3 /* IPlugBase.cpp in Sources */,
 				CE4D3E06204C6E5600326E42 /* SimpleLimit.cpp in Sources */,
 				4F78D94713B63BA50032E0F3 /* IPlugStructs.cpp in Sources */,
+				CE34947020F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp in Sources */,
 				4F78D94B13B63BA50032E0F3 /* Hosts.cpp in Sources */,
 				CE4D3DC0204C6DF700326E42 /* ebur128.c in Sources */,
 				4F78D94D13B63BA50032E0F3 /* IGraphicsMac.mm in Sources */,
@@ -2137,6 +2153,7 @@
 				CE4D3DDF204C6E5600326E42 /* SimpleComp.cpp in Sources */,
 				4F7F5C5613E95EC8002918FD /* IGraphicsCarbon.cpp in Sources */,
 				CE4D3DED204C6E5600326E42 /* SimpleEnvelope.cpp in Sources */,
+				CE34947120F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp in Sources */,
 				4F7F5C5713E95EC8002918FD /* IGraphicsCocoa.mm in Sources */,
 				CE4D3DF7204C6E5600326E42 /* SimpleGate.cpp in Sources */,
 				4F7F5C5813E95EC8002918FD /* Log.cpp in Sources */,
@@ -2191,6 +2208,7 @@
 				CE4D3DBF204C6DF700326E42 /* ebur128.c in Sources */,
 				4F9828CE140A9EB700F3FCC1 /* vstinitiids.cpp in Sources */,
 				4F9828CF140A9EB700F3FCC1 /* vstnoteexpressiontypes.cpp in Sources */,
+				CE34946F20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp in Sources */,
 				4F9828D0140A9EB700F3FCC1 /* vstparameters.cpp in Sources */,
 				4F9828D1140A9EB700F3FCC1 /* vstpresetfile.cpp in Sources */,
 				CE4D3E05204C6E5600326E42 /* SimpleLimit.cpp in Sources */,
@@ -2225,6 +2243,7 @@
 				4FB600231567CB0A0020189A /* IParam.cpp in Sources */,
 				4FB600241567CB0A0020189A /* IControl.cpp in Sources */,
 				CE397597204C709B008D8437 /* PLUG_LoudnessMeter.cpp in Sources */,
+				CE34947220F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp in Sources */,
 				4FB600251567CB0A0020189A /* IBitmapMonoText.cpp in Sources */,
 				4FB600261567CB0A0020189A /* AAX_Exports.cpp in Sources */,
 				4FB600271567CB0A0020189A /* IPlugAAX.cpp in Sources */,
@@ -2257,6 +2276,7 @@
 				4F78D90B13B63BA50032E0F3 /* IPlugBase.cpp in Sources */,
 				4F78D90C13B63BA50032E0F3 /* IPlugStructs.cpp in Sources */,
 				CE397592204C709B008D8437 /* PLUG_LoudnessMeter.cpp in Sources */,
+				CE34946D20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp in Sources */,
 				4F78D90D13B63BA50032E0F3 /* Hosts.cpp in Sources */,
 				4F78D90F13B63BA50032E0F3 /* IGraphicsMac.mm in Sources */,
 				CE4D3DE9204C6E5600326E42 /* SimpleEnvelope.cpp in Sources */,
