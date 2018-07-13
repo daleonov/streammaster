@@ -22,6 +22,7 @@ void PeakingBuffer::Clear(double fClearValue){
 	for(int i = 0; i < nSize; i++)
 		afBuffer[i] = fClearValue;
 	fInitClearValue = fClearValue;
+	bIsFull = false;
 }
 
 void PeakingBuffer::Add(double fValue){
