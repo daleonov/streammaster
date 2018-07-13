@@ -5,6 +5,7 @@
 #include "IControl.h"
 #include "PLUG_LoudnessMeter.h"
 #include "PLUG_IControlExtras.h"
+#include "DLPG_PeakingBuffer.h"
 #include "resource.h"
 #include "lib_chunkware/SimpleLimit.h"
 
@@ -206,6 +207,7 @@ const char sDbValuePlusInf[PLUG_DB_VALUE_PLUS_INF_LEN] = "+oo";
 
 #define PLUG_DR_METER_FILTER_DECAY 0.008
 #define PLUG_DR_METER_FILTER_ATTACK PLUG_DR_METER_FILTER_DECAY
+#define PLUG_DR_METER_WINDOW_SECONDS 3.
 
 enum EParams
 {
@@ -457,6 +459,8 @@ private:
   // Limiter and loudness meter
   chunkware_simple::SimpleLimit* tLimiter;
   Plug::LoudnessMeter* tLoudnessMeter;
+  // TP and dynamic range stuff
+  DLPG::PeakingBuffer *tPeakingBuffer;
   // IPlug GUI stuff
   IGraphics* pGraphics;
   ITextControl *tLoudnessTextControl;

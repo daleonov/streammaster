@@ -16,10 +16,9 @@ void StreamMaster::UpdateGui()
   double fMaxGainReductionPerFrameDb = 0.;
   double fLufs = tLoudnessMeter->GetLufs();
   double fLufsShortTerm = tLoudnessMeter->GetShortTermLufs();
-  double fTruePeakingDb, fTruePeakingShortTermDb;
+  double fTruePeakingDb, fTruePeakingShortTermDb, fTruePeakingOfWindowDb;
   char sLufsInt[PLUG_DB_VALUE_STRING_SIZE];
   char sLufsShortTerm[PLUG_DB_VALUE_STRING_SIZE];
-
   // Text below LUFS meter bar
   // If values are to low, they would be displayed as "-oo"
   if((fLufs < PLUG_DB_VALUE_TOO_LOW) || std::isnan(fLufs))
@@ -58,28 +57,20 @@ void StreamMaster::UpdateGui()
     // TP
     fTruePeakingDb = LINEAR_TO_LOG(tLoudnessMeter->GetTruePeaking());
     fTruePeakingShortTermDb = LINEAR_TO_LOG(tLoudnessMeter->GetTruePeakingShortTerm());
+
     UpdateTruePeak(fTruePeakingDb);
-    // Dunamic range (PSR)
-    // PSR = TP_short_term - LUFS_short_term
-    double fCurrentPsrDb = fTruePeakingShortTermDb - fLufsShortTerm;
-    static double fPreviousPsrDb = 4.;
-    if(std::isnan(fCurrentPsrDb) || fCurrentPsrDb < 0.) fCurrentPsrDb = 0.;
-    double fDrMeterGainLinear, fCurrentDrMeterPeak;
-    // Applying a filter to meter's value
-    fDrMeterGainLinear = (fCurrentPsrDb < fPreviousPsrDb) ? \
-      PLUG_DR_METER_FILTER_DECAY : \
-      PLUG_DR_METER_FILTER_ATTACK;
-    fCurrentDrMeterPeak = \
-      fDrMeterGainLinear * fCurrentPsrDb + \
-      fPreviousPsrDb * (1.0 - fDrMeterGainLinear);
+    /* 
+    Dynamic range (PSR)
+    PSR = TP_short_term - LUFS_short_term
+    Both parameters have to have the same window (3s). LUFS short term has a
+    correct window as it is, but we have to do extra stuff with TP.
+    */
+    tPeakingBuffer->Add(fTruePeakingShortTermDb);
+    fTruePeakingOfWindowDb = tPeakingBuffer->GetMax();
+    //fTruePeakingOfWindowDb = fTruePeakingShortTermDb;
 
-    fPreviousPsrDb = fCurrentDrMeterPeak;
-
-    // Displaying only worst dynamic range
-    //if(fPsrDb < fLowestDynamicRangeDb){
-    //  fLowestDynamicRangeDb = fPsrDb;
-      UpdateDynamicRange(fCurrentDrMeterPeak);
-    //}
+    double fCurrentPsrDb = fTruePeakingOfWindowDb - fLufsShortTerm;
+    UpdateDynamicRange(fCurrentPsrDb);
   }
 }
 
@@ -295,6 +286,14 @@ void StreamMaster::UpdateSampleRate(){
 
   // Loudness meter has sample rate in Hz, unsigned long
   tLoudnessMeter->SetSampleRate((unsigned long)fCurrentSampleRate);
+
+  // TP buffer
+
+  tPeakingBuffer->Resize(
+    PLUG_DR_METER_WINDOW_SECONDS,
+    fCurrentSampleRate,
+    GetBlockSize()
+    );
 }
 
 /*
@@ -836,6 +835,15 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   if(tPlugCurrentMode == PLUG_MASTER_MODE)
     UpdatePlatform((PLUG_Target)nCurrentTargetIndex);
   */
+  // Set up TP buffer for PSR calculation
+  tPeakingBuffer = new DLPG::PeakingBuffer(0, PLUG_DB_VALUE_TOO_LOW);
+  
+  tPeakingBuffer->Resize(
+    PLUG_DR_METER_WINDOW_SECONDS,
+    GetSampleRate(),
+    GetBlockSize()
+    );
+
   // *** General plugin shenanigans
   // Presets displayed in the plugin's hosts
   // We have only one preset
