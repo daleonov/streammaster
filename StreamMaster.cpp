@@ -109,8 +109,12 @@ void StreamMaster::UpdateDynamicRange(double fDynamicRangeDb){
   }
 
   /* If the value is too high, it would be displayed as "+oo".
-     It may be also "nan" during start up, in that case it's "+oo" as well. ###*/
-  /*if((fDynamicRangeDb > PLUG_DB_VALUE_TOO_HIGH) || std::isnan(fDynamicRangeDb)){
+     It may be also "nan" during start up, in that case it's "+oo" as well. */
+  if(
+    (fDynamicRangeDb > PLUG_DB_VALUE_TOO_HIGH) ||
+    (fDynamicRangeDb < PLUG_DB_VALUE_TOO_LOW) ||
+    std::isnan(fDynamicRangeDb)
+    ){
     if(tDrTextControl != tDrResetTextControl){
       tDrWarningTextControl->Hide(true);
       tDrOkTextControl->Hide(true);
@@ -118,7 +122,7 @@ void StreamMaster::UpdateDynamicRange(double fDynamicRangeDb){
       tDrTextControl = tDrResetTextControl;
     }
     memcpy(sDrValue, sDbValuePlusInf, PLUG_DB_VALUE_PLUS_INF_LEN);
-  }*/
+  }
   else
     sprintf(sDrValue, "%3.1f", fDynamicRangeDb);
 
@@ -1055,8 +1059,6 @@ void StreamMaster::OnParamChange(int paramIdx)
       // Reset dynimic range meter
       if(tPlugCurrentMode == PLUG_MASTER_MODE){
         tPeakingBuffer->Clear();
-        fLowestDynamicRangeDb = PLUG_DB_VALUE_TOO_HIGH;
-        UpdateDynamicRange(fLowestDynamicRangeDb);
       }
       break;
 
