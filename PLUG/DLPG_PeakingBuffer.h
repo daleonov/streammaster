@@ -58,6 +58,7 @@ private:
 	double* afBuffer;
 	int nSize;
 	int nHeadIndex;
+	bool bIsFull;
 	static double fInitClearValue;
 };
 
