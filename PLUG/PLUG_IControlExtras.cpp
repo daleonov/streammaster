@@ -12,8 +12,7 @@ ILevelMeteringBar::ILevelMeteringBar(
 		const IColor *ptLevelBarColor,
 		const IColor *ptNotchColor,
 		const IColor *ptAboveNotchColor
-		)
-: IPanelControl(pPlug, pR, &PLUG_DEFAULT_BG_ICOLOR)
+		):IControl(pPlug, pR, paramIdx)
 {
 	this->x = x;
 	this->y = y;
@@ -22,10 +21,14 @@ ILevelMeteringBar::ILevelMeteringBar(
 	this->fNotchValue = METERING_BAR_DEFAULT_NOTCH_VALUE;
 	this->fCurrentValue = mPlug->GetParam(paramIdx)->GetDefault();
 	// There is no operator "=" for IRECT, so copying it explicitely
-	memcpy(&this->mBarRect, &pR, sizeof(pR));
+	this->mBarRect.L = pR.L - x;
+	this->mBarRect.T = pR.T - y;
+	this->mBarRect.R = pR.R - x;
+	this->mBarRect.B = pR.B - y;
 	this->ptLevelBarColor = new IColor(*ptLevelBarColor);
 	this->ptNotchColor = new IColor(*ptNotchColor);
 	this->bIsReversed = bIsReversed;
+	this->bIsMouseDown = false;
 }
 ILevelMeteringBar::~ILevelMeteringBar(){
 	delete (this->ptLevelBarColor);
@@ -140,6 +143,13 @@ bool ILevelMeteringBar::Draw(IGraphics* pGraphics){
 	pGraphics->FillIRect(ptNotchColor, &tNotchRectOption2);
 	#endif
 
+	// Highlight the bar when clicked
+	if(bIsMouseDown){
+		pGraphics->FillIRect(&METERING_BAR_ONMOUSEDOWN_ICOLOR, &tBgRect);
+	}
+
+	SetDirty(false);
+
 	return true;
 }
 
@@ -155,11 +165,15 @@ void ILevelMeteringBar::SetNotchValue(double fValue){
 	Redraw();
 }
 
+double ILevelMeteringBar::GetNotchValue(){
+	return this->fNotchValue;
+}
+
 int ILevelMeteringBar::_CalculateRectHeight(double fValue){
 	const double fMax = mPlug->GetParam(this->mParamIdx)->GetMax();
 	const double fMin = mPlug->GetParam(this->mParamIdx)->GetMin();
-    const double fBarRange = fabs(fMax - fMin);
-    const int nBarBgHeight = abs(mBarRect.B - mBarRect.T);
+	const double fBarRange = fabs(fMax - fMin);
+	const int nBarBgHeight = abs(mBarRect.B - mBarRect.T);
 	double fRelativeValue;
 
 	if(fValue < fMin)
@@ -169,5 +183,15 @@ int ILevelMeteringBar::_CalculateRectHeight(double fValue){
 
 	int nLevelBarHeight = floor((fRelativeValue / fBarRange) * nBarBgHeight);
 	return nLevelBarHeight;
+}
+
+void ILevelMeteringBar::OnMouseDown(int x, int y, IMouseMod* pMod){
+  bIsMouseDown = true;
+  SetDirty(true);
+}
+
+void ILevelMeteringBar::OnMouseUp(int x, int y, IMouseMod* pMod){
+  bIsMouseDown = false;
+  SetDirty(false);
 }
 } //namespace Plug

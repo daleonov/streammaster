@@ -14,6 +14,7 @@ const IColor PLUG_BAR_OVERLOAD_COLOR(255, 255, 0, 49);
 const IColor METERING_BAR_DEFAULT_BG_ICOLOR(255, 61, 61, 61);
 const IColor METERING_BAR_DEFAULT_FG_ICOLOR(255, 100, 255, 100);
 const IColor METERING_BAR_DEFAULT_NOTCH_ICOLOR(255, 0, 96, 0);
+const IColor METERING_BAR_ONMOUSEDOWN_ICOLOR(30, 255, 255, 255);
 #define METERING_BAR_ABOVE_NOTCH_ICOLOR PLUG_BAR_OVERLOAD_COLOR
 
 #define METERING_BAR_DEFAULT_SIZE_IRECT IRECT(0, 0, 74, 492)
@@ -63,7 +64,7 @@ namespace Plug{
 @param pR IRECT representing the bar's size. Relative coordinates. 
 @param paramIdx Unique ID of the control
 */
-class ILevelMeteringBar : public IPanelControl
+class ILevelMeteringBar : public IControl
 {
 private:
 	int mParamIdx;
@@ -73,6 +74,7 @@ private:
 	int x;
 	int y;
 	bool bIsReversed;
+	bool bIsMouseDown;
 	IColor *ptLevelBarColor;
 	IColor *ptNotchColor;
 	IColor *ptAboveNotchColor;
@@ -97,6 +99,9 @@ public:
 
 	~ILevelMeteringBar();
 
+	void OnMouseDown(int x, int y, IMouseMod* pMod);
+	void OnMouseUp(int x, int y, IMouseMod* pMod);
+
 	/*
 	@param Graphic part. Sizes and colours are based on macros defined in the header. 
 	*/
@@ -112,6 +117,7 @@ public:
 	@brief Value of the notch. Notch can be used to mark target, peak, zero level etc. 
 	*/
 	void SetNotchValue(double fValue);
+	double GetNotchValue();
 
 };
 

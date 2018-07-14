@@ -115,7 +115,6 @@ use PLUG_KNOB_PEAK_DOUBLE() to convert them to linear gain*/
 
 #define PLUG_METERING_BAR_W 74
 #define PLUG_METERING_BAR_H 537
-#define PLUG_METERING_BAR_IRECT IRECT(0, 0, PLUG_METERING_BAR_W, PLUG_METERING_BAR_H)
 
 #define PLUG_TP_ALERT_VALUE_DB -0.
 #define PLUG_DR_WARNING_VALUE_DB 8.
@@ -341,6 +340,20 @@ enum ELayout
   kGrLabelOverlay_X = kGrMeter_X + 35,
   kGrLabelOverlay_Y = 383,
 };
+
+const IRECT PLUG_LUFS_METERING_BAR_IRECT(
+  kLufsMeter_X,
+  kLufsMeter_Y,
+  kLufsMeter_X + PLUG_METERING_BAR_W,
+  kLufsMeter_Y + PLUG_METERING_BAR_H
+  );
+
+const IRECT PLUG_GR_METERING_BAR_IRECT(
+  kGrMeter_X,
+  kGrMeter_Y,
+  kGrMeter_X + PLUG_METERING_BAR_W,
+  kGrMeter_Y + PLUG_METERING_BAR_H
+  );
 
 const IRECT PLUG_TP_LABEL_IRECT(
 	kLufsMeter_X + 7,

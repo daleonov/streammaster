@@ -495,7 +495,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
     this,
     kLufsMeter_X,
     kLufsMeter_Y,
-    PLUG_METERING_BAR_IRECT,
+    PLUG_LUFS_METERING_BAR_IRECT,
     kILevelMeteringBar,
     false,
     &LOUDNESS_BAR_FG_ICOLOR
@@ -508,7 +508,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
     this,
     kGrMeter_X,
     kGrMeter_Y,
-    PLUG_METERING_BAR_IRECT,
+    PLUG_GR_METERING_BAR_IRECT,
     kIGrMeteringBar,
     true,
     &GR_BAR_DEFAULT_FG_ICOLOR,
@@ -1001,12 +1001,10 @@ void StreamMaster::UpdatePreMastering(PLUG_Target mPlatform){
 @param mPlatform Target platfrom chosen by user
 */
 void StreamMaster::UpdatePlatform(PLUG_Target mPlatform){
+  double fAdjust = PLUG_KNOB_ADJUST_ROUND(GetParam(kAdjust)->Value());
   fTargetLoudness = PLUG_GET_TARGET_LOUDNESS((int)mPlatform);
   // Update the notch on the LUFS meter
-  tILevelMeteringBar->SetNotchValue(fTargetLoudness);
-  // Reset gain reduction meter bar
-  tIGrMeteringBar->SetValue(PLUG_MAX_GAIN_REDUCTION_PER_FRAME_DB_RESET);
-  tIGrMeteringBar->SetNotchValue(PLUG_MAX_GAIN_REDUCTION_PER_SESSION_DB_RESET);
+  tILevelMeteringBar->SetNotchValue(fTargetLoudness + fAdjust);
 
   if (tPlugCurrentMode == PLUG_MASTER_MODE)
     UpdatePreMastering((PLUG_Target)mPlatform);
@@ -1086,6 +1084,7 @@ void StreamMaster::OnParamChange(int paramIdx)
       nIndex = GetParam(kPlatformSwitch)->Int();
       if (tPlugCurrentMode == PLUG_MASTER_MODE)
         UpdatePreMastering((PLUG_Target)nIndex);
+        tILevelMeteringBar->SetNotchValue(PLUG_GET_TARGET_LOUDNESS(nIndex) + fAdjust);
       break;
 
     // Changed target platform via rotary switch
