@@ -34,16 +34,24 @@ void StreamMaster::UpdateGui()
 
   // Updating LUFS bar values
   tILevelMeteringBar->SetValue(fLufs);
-
+  double fGrMeterGainLinear, fGrMeterCurrentPeakDb;
+  static double fGrMeterPreviousPeakDb = 0.;
   // Updating gain reduction bar values
   if (tPlugCurrentMode == PLUG_MASTER_MODE){
     fMaxGainReductionPerFrameDb = LINEAR_TO_LOG(fMaxGainReductionPerFrame);
     // ("<" because gain reduction is negative in log domain)
-    // "MaxGainReductionPerSession" is displayed as a notch on a GR bar
-    if (fMaxGainReductionPerFrameDb < fMaxGainReductionPerSessionDb)
+    if (fMaxGainReductionPerFrameDb < fMaxGainReductionPerSessionDb){
       fMaxGainReductionPerSessionDb = fMaxGainReductionPerFrameDb;
-    tIGrMeteringBar->SetValue(fMaxGainReductionPerFrameDb);
-    tIGrMeteringBar->SetNotchValue(fMaxGainReductionPerSessionDb);
+      tIGrMeteringBar->SetNotchValue(fMaxGainReductionPerSessionDb);
+    }
+    // Filter GR meter values so it won't flash too fast
+    fGrMeterGainLinear = \
+      (fMaxGainReductionPerFrameDb > fGrMeterPreviousPeakDb ? PLUG_GR_METER_DECAY : PLUG_GR_METER_ATTACK);
+    fGrMeterCurrentPeakDb = \
+      fMaxGainReductionPerFrameDb * fGrMeterGainLinear + \
+      fGrMeterPreviousPeakDb * (1.0 - fGrMeterGainLinear);
+    fGrMeterPreviousPeakDb = fGrMeterCurrentPeakDb;
+    tIGrMeteringBar->SetValue(fGrMeterCurrentPeakDb);
   }
 
   // Text below Gain reduction bar
@@ -1054,8 +1062,9 @@ void StreamMaster::OnParamChange(int paramIdx)
       tLoudnessMeter->SetNumberOfChannels(PLUG_DEFAULT_CHANNEL_NUMBER); 
       UpdateSampleRate();
       // Set notch on LUFS meter
+      fAdjust = PLUG_KNOB_ADJUST_ROUND(GetParam(kAdjust)->Value());
       tILevelMeteringBar->SetValue(PLUG_SOURCE_LUFS_INTEGRATED_DB_RESET);
-      tILevelMeteringBar->SetNotchValue(fTargetLufsIntegratedDb);
+      tILevelMeteringBar->SetNotchValue(fTargetLufsIntegratedDb + fAdjust);
       // Reset source LUFS if we were measuring it
       tPlugCurrentMode = PLUG_CONVERT_SWITCH_VALUE_TO_PLUG_MODE(kModeSwitch);
       if (tPlugCurrentMode == PLUG_LEARN_MODE) fSourceLufsIntegratedDb = PLUG_SOURCE_LUFS_INTEGRATED_DB_RESET;
