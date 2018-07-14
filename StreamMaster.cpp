@@ -847,6 +847,11 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
     GetBlockSize()
     );
 
+  // Knob gearing
+  tPeakingKnob->SetGearing(PLUG_PEAKING_KNOB_GEARING);
+  tPlatformSelector->SetGearing(PLUG_PLATFORM_SELECTOR_GEARING);
+  tAdjustKnob->SetGearing(PLUG_ADJUST_KNOB_GEARING);
+
   // *** General plugin shenanigans
   // Presets displayed in the plugin's hosts
   // We have only one preset
