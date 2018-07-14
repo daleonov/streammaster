@@ -59,6 +59,9 @@
     <ClCompile Include="lib-jiixyj-ebur128\ebur128.c">
       <Filter>Ebur128</Filter>
     </ClCompile>
+    <ClCompile Include="PLUG\DLPG_PeakingBuffer.cpp">
+      <Filter>PLUG</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StreamMaster.h" />

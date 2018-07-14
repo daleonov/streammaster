@@ -26,6 +26,9 @@
     <ClCompile Include="PLUG\PLUG_IControlExtras.cpp">
       <Filter>Plug</Filter>
     </ClCompile>
+    <ClCompile Include="PLUG\DLPG_PeakingBuffer.cpp">
+      <Filter>Plug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StreamMaster.h" />

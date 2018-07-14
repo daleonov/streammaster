@@ -369,6 +369,7 @@ if exist "%programfiles(x86)%" (copy /y "$(TargetPath)" "$(VST3_64_PATH)\StreamM
     <ClCompile Include="lib_chunkware\SimpleEnvelope.cpp" />
     <ClCompile Include="lib_chunkware\SimpleGate.cpp" />
     <ClCompile Include="lib_chunkware\SimpleLimit.cpp" />
+    <ClCompile Include="PLUG\DLPG_PeakingBuffer.cpp" />
     <ClCompile Include="PLUG\PLUG_IControlExtras.cpp" />
     <ClCompile Include="PLUG\PLUG_LoudnessMeter.cpp" />
     <ClCompile Include="StreamMaster.cpp" />
