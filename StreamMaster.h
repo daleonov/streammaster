@@ -75,11 +75,13 @@ strings you want them to fit
 #define PLUG_METER_TEXT_LABEL_FONT_SIZE 12
 #define PLUG_GUIDE_TEXT_LABEL_FONT_SIZE 14
 #define PLUG_VERSION_TEXT_LABEL_FONT_SIZE 14
+#define DLPG_BUGREPORT_LABEL_FONT_SIZE 12
 #elif defined(__APPLE__)
 #define PLUG_KNOB_TEXT_LABEL_FONT_SIZE 13
 #define PLUG_METER_TEXT_LABEL_FONT_SIZE 13
 #define PLUG_GUIDE_TEXT_LABEL_FONT_SIZE 15
 #define PLUG_VERSION_TEXT_LABEL_FONT_SIZE 15
+#define DLPG_BUGREPORT_LABEL_FONT_SIZE 13
 #endif
 #define PLUG_TP_LABEL_FONT_SIZE PLUG_METER_TEXT_LABEL_FONT_SIZE
 #define PLUG_DR_LABEL_FONT_SIZE PLUG_METER_TEXT_LABEL_FONT_SIZE
@@ -348,6 +350,10 @@ enum ELayout
 
   kGrLabelOverlay_X = kGrMeter_X + 35,
   kGrLabelOverlay_Y = 383,
+
+  // Bugreport link
+  kBugreporLabelX = 31,
+  kBugreporLabelY = kHeight - 21,
 };
 
 const IRECT PLUG_LUFS_METERING_BAR_IRECT(
@@ -455,6 +461,32 @@ doesn't work well for VST2 and AU, hence this macro.
 
 #define PLUG_CONVERT_PLUG_MODE_TO_SWITCH_VALUE(m) (m-1)
 
+// Bugreport link
+#define DLPG_FEEDBACK_URL_LENGTH 256
+#define DLPG_BUGREPORT_LABEL_STRING_SIZE 16
+#define DLPG_BUGREPORT_LABEL_COLOR_MONO 80
+#define DLPG_BUGREPORT_LABEL_W 67
+#define DLPG_BUGREPORT_LABEL_H 16
+#define DLPG_BUGREPORT_LABEL_TEXT "Report a bug"
+const IColor tBugreportLabelColor(
+  255,
+  DLPG_BUGREPORT_LABEL_COLOR_MONO,
+  DLPG_BUGREPORT_LABEL_COLOR_MONO,
+  DLPG_BUGREPORT_LABEL_COLOR_MONO
+  );
+const IRECT tBugreportLabelIrect(
+  kBugreporLabelX,
+  kBugreporLabelY,
+  kBugreporLabelX + DLPG_BUGREPORT_LABEL_W,
+  kBugreporLabelY + DLPG_BUGREPORT_LABEL_H
+  );
+const IRECT tFeedbackLinkIRect(
+  15,
+  tBugreportLabelIrect.T - 2,
+  tBugreportLabelIrect.R,
+  GUI_HEIGHT - 3
+  );
+
 class StreamMaster : public IPlug{
 public:
   StreamMaster(IPlugInstanceInfo instanceInfo);
@@ -535,7 +567,10 @@ private:
   double fLowestDynamicRangeDb;
   // Text guide message
   char* sModeString;
-
+  // Feedback URL generator
+  void MakeFeedbackUrl(char* sDest);
+  char sFeedbackUrl[DLPG_FEEDBACK_URL_LENGTH];
+  IURLControl *tFeedbackLink;
 }; //class StreamMaster
 
 #endif

@@ -1,6 +1,7 @@
 #include "StreamMaster.h"
 #include "IPlug_include_in_plug_src.h"
 #include <cmath>
+#include "DLPG_FeedbackSender.h"
 
 // Number of presets
 const int kNumPrograms = 1;
@@ -762,6 +763,24 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   sModeString = new char[PLUG_MODE_TEXT_LABEL_STRING_SIZE];
   sprintf(sModeString, PLUG_OFF_STARTUP_MESSAGE);
   tModeTextControl->SetTextFromPlug(sModeString);
+
+  // Bugreport link
+  static IText tBugreportLabel = IText(DLPG_BUGREPORT_LABEL_STRING_SIZE);
+  tBugreportLabel.mColor = tBugreportLabelColor;
+  tBugreportLabel.mSize = DLPG_BUGREPORT_LABEL_FONT_SIZE;
+  tBugreportLabel.mAlign = tBugreportLabel.kAlignNear;
+  pGraphics->AttachControl(
+    new ITextControl(
+      this,
+      tBugreportLabelIrect,
+      &tBugreportLabel,
+      DLPG_BUGREPORT_LABEL_TEXT
+      )
+    );
+  // Clickable area for bugreports
+  MakeFeedbackUrl(sFeedbackUrl);
+  tFeedbackLink = new IURLControl(this, tFeedbackLinkIRect, sFeedbackUrl);
+  pGraphics->AttachControl(tFeedbackLink);
 
   // Finally - feed all the controls to IPlug's graphics gizmo
   AttachGraphics(pGraphics);
