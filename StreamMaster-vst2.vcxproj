@@ -126,11 +126,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>build-win\vst2\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)lib-jiixyj-ebur128\;$(ProjectDir)PLUG\;$(ProjectDir)lib-jiixyj-ebur128\queue</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)lib-jiixyj-ebur128\;$(ProjectDir)PLUG\;$(ProjectDir)lib-jiixyj-ebur128\queue;$(ProjectDir)..\Common\DLPG\</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>build-win\vst2\$(Platform)\$(Configuration)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)lib-jiixyj-ebur128\;$(ProjectDir)PLUG\;$(ProjectDir)lib-jiixyj-ebur128\queue</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)lib-jiixyj-ebur128\;$(ProjectDir)PLUG\;$(ProjectDir)lib-jiixyj-ebur128\queue;$(ProjectDir)..\Common\DLPG\</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Tracer|Win32'">
     <OutDir>build-win\vst2\$(Platform)\bin\</OutDir>

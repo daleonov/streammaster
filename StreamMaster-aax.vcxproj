@@ -108,10 +108,10 @@
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Tracer|x64'">false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)PLUG;$(ProjectDir)lib-jiixyj-ebur128;$(ProjectDir)lib_chunkware;$(ProjectDir)lib-jiixyj-ebur128\queue</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)PLUG;$(ProjectDir)lib-jiixyj-ebur128;$(ProjectDir)lib_chunkware;$(ProjectDir)lib-jiixyj-ebur128\queue;$(ProjectDir)..\Common\DLPG\</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)PLUG;$(ProjectDir)lib-jiixyj-ebur128;$(ProjectDir)lib_chunkware;$(ProjectDir)lib-jiixyj-ebur128\queue</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)PLUG;$(ProjectDir)lib-jiixyj-ebur128;$(ProjectDir)lib_chunkware;$(ProjectDir)lib-jiixyj-ebur128\queue;$(ProjectDir)..\Common\DLPG\</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <PreBuildEvent>

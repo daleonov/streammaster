@@ -300,12 +300,16 @@ void StreamMaster::UpdateSampleRate(){
   tLoudnessMeter->SetSampleRate((unsigned long)fCurrentSampleRate);
 
   // TP buffer
-
   tPeakingBuffer->Resize(
     PLUG_DR_METER_WINDOW_SECONDS,
     fCurrentSampleRate,
     GetBlockSize()
     );
+
+  // Update sample rate in feedback link
+  MakeFeedbackUrl(sFeedbackUrl);
+  tFeedbackLink = new IURLControl(this, tFeedbackLinkIRect, sFeedbackUrl);
+  pGraphics->AttachControl(tFeedbackLink);
 }
 
 /*
