@@ -91,8 +91,8 @@ instrument determined by PLUG _IS _INST
 #endif
 
 // vst3 stuff
-#define MFR_URL "danielleonovplugs.com"
-#define MFR_EMAIL "daleonov@yandex.ru"
+#define MFR_URL "https://danielleonovplugs.com"
+#define MFR_EMAIL "contact@danielleonovplugs.com"
 #define EFFECT_TYPE_VST3 "Fx"
 
 /* "Fx|Analyzer"", "Fx|Delay", "Fx|Distortion", "Fx|Dynamics", "Fx|EQ", "Fx|Filter",

@@ -1,6 +1,6 @@
 [Setup]
 AppName=StreamMaster
-AppVersion=1.0.0
+AppVersion=2.0.0
 DefaultDirName={pf}\StreamMaster
 DefaultGroupName=StreamMaster
 Compression=lzma2
