@@ -352,8 +352,13 @@ enum ELayout
   kGrLabelOverlay_Y = 383,
 
   // Bugreport link
+
   kBugreporLabelX = 31,
+  #ifdef _WIN32
   kBugreporLabelY = kHeight - 21,
+  #elif defined(__APPLE__)
+  kBugreporLabelY = kHeight - 20,
+  #endif
 };
 
 const IRECT PLUG_LUFS_METERING_BAR_IRECT(

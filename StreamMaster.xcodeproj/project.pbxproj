@@ -263,6 +263,8 @@
 		4FF016F8134E14E2001447BA /* ptrlist.h in Headers */ = {isa = PBXBuildFile; fileRef = 4FF016F5134E14E2001447BA /* ptrlist.h */; };
 		4FF016F9134E14E2001447BA /* wdlstring.h in Headers */ = {isa = PBXBuildFile; fileRef = 4FF016F6134E14E2001447BA /* wdlstring.h */; };
 		4FF0171A134E153A001447BA /* heapbuf.h in Headers */ = {isa = PBXBuildFile; fileRef = 4FF01719134E153A001447BA /* heapbuf.h */; };
+		CE1D42EB2133F9D00010DEF5 /* DLPG_FeedbackSender.h in Headers */ = {isa = PBXBuildFile; fileRef = CE1D42EA2133F9D00010DEF5 /* DLPG_FeedbackSender.h */; };
+		CE1D42EC2133F9D00010DEF5 /* DLPG_FeedbackSender.h in Headers */ = {isa = PBXBuildFile; fileRef = CE1D42EA2133F9D00010DEF5 /* DLPG_FeedbackSender.h */; };
 		CE34946D20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE34946B20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp */; };
 		CE34946E20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE34946B20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp */; };
 		CE34946F20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE34946B20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp */; };
@@ -765,6 +767,7 @@
 		52FBBED00D0CF139001C8B8A /* StreamMaster.cpp */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.cpp.cpp; path = StreamMaster.cpp; sourceTree = "<group>"; tabWidth = 2; usesTabs = 0; };
 		52FBBED20D0CF13D001C8B8A /* StreamMaster.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = StreamMaster.h; sourceTree = "<group>"; tabWidth = 2; usesTabs = 0; };
 		52FBBED30D0CF143001C8B8A /* resource.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.h; path = resource.h; sourceTree = "<group>"; tabWidth = 2; usesTabs = 0; };
+		CE1D42EA2133F9D00010DEF5 /* DLPG_FeedbackSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DLPG_FeedbackSender.h; path = ../common/DLPG/DLPG_FeedbackSender.h; sourceTree = "<group>"; };
 		CE34946B20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DLPG_PeakingBuffer.cpp; path = PLUG/DLPG_PeakingBuffer.cpp; sourceTree = "<group>"; };
 		CE34946C20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DLPG_PeakingBuffer.h; path = PLUG/DLPG_PeakingBuffer.h; sourceTree = "<group>"; };
 		CE35F0AF2052E1450099F7B3 /* lice_bezier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lice_bezier.h; path = ../../WDL/lice/lice_bezier.h; sourceTree = "<group>"; };
@@ -1538,6 +1541,7 @@
 				CE34946C20F8B3CA000DB2F0 /* DLPG_PeakingBuffer.h */,
 				CE397590204C709B008D8437 /* PLUG_LoudnessMeter.cpp */,
 				CE397591204C709B008D8437 /* PLUG_LoudnessMeter.h */,
+				CE1D42EA2133F9D00010DEF5 /* DLPG_FeedbackSender.h */,
 				52FBBED30D0CF143001C8B8A /* resource.h */,
 				52FBBED20D0CF13D001C8B8A /* StreamMaster.h */,
 				52FBBED00D0CF139001C8B8A /* StreamMaster.cpp */,
@@ -1579,6 +1583,7 @@
 				CE35F0B72052E1460099F7B3 /* lice_bezier.h in Headers */,
 				4FF016F9134E14E2001447BA /* wdlstring.h in Headers */,
 				4FD16D1913B634E5001D0217 /* swell.h in Headers */,
+				CE1D42EC2133F9D00010DEF5 /* DLPG_FeedbackSender.h in Headers */,
 				4FD16D2413B6351C001D0217 /* swell-functions.h in Headers */,
 				CE35F0BA2052E1460099F7B3 /* lice_gl_ctx.h in Headers */,
 				CE4D3E02204C6E5600326E42 /* SimpleHeader.h in Headers */,
@@ -1668,6 +1673,7 @@
 				4F78DA9E13B640050032E0F3 /* IGraphicsCocoa.h in Headers */,
 				CE4D3E09204C6E5600326E42 /* SimpleLimit.h in Headers */,
 				4F78DA9F13B640050032E0F3 /* Log.h in Headers */,
+				CE1D42EB2133F9D00010DEF5 /* DLPG_FeedbackSender.h in Headers */,
 				4F78DAA013B640050032E0F3 /* IPopupMenu.h in Headers */,
 				4F78DAA113B640050032E0F3 /* IPlugStructs.h in Headers */,
 				4F78DAA213B640050032E0F3 /* IPlug_Prefix.pch in Headers */,
