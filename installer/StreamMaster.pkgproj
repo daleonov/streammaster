@@ -25,7 +25,7 @@
 									<key>GID</key>
 									<integer>80</integer>
 									<key>PATH</key>
-									<string>/Applications/StreamMaster.app</string>
+									<string>/Applications/SubKicker.app</string>
 									<key>PATH_TYPE</key>
 									<integer>0</integer>
 									<key>PERMISSIONS</key>
@@ -478,7 +478,7 @@
 				<key>CONCLUSION_ACTION</key>
 				<integer>0</integer>
 				<key>IDENTIFIER</key>
-				<string>com.DanielLeonov.app.pkg.StreamMaster</string>
+				<string>com.DanielLeonovPlugs.app.pkg.SubKicker</string>
 				<key>NAME</key>
 				<string>Application</string>
 				<key>OVERWRITE_PERMISSIONS</key>
@@ -570,7 +570,7 @@
 															<key>GID</key>
 															<integer>80</integer>
 															<key>PATH</key>
-															<string>/Library/Audio/Plug-Ins/VST/StreamMaster.vst</string>
+															<string>/Library/Audio/Plug-Ins/VST/SubKicker.vst</string>
 															<key>PATH_TYPE</key>
 															<integer>0</integer>
 															<key>PERMISSIONS</key>
@@ -1014,7 +1014,7 @@
 				<key>CONCLUSION_ACTION</key>
 				<integer>0</integer>
 				<key>IDENTIFIER</key>
-				<string>com.DanielLeonov.vst.pkg.StreamMaster</string>
+				<string>com.DanielLeonovPlugs.vst.pkg.SubKicker</string>
 				<key>LOCATION</key>
 				<integer>0</integer>
 				<key>NAME</key>
@@ -1110,7 +1110,7 @@
 															<key>GID</key>
 															<integer>80</integer>
 															<key>PATH</key>
-															<string>/Library/Audio/Plug-Ins/VST3/StreamMaster.vst3</string>
+															<string>/Library/Audio/Plug-Ins/VST3/SubKicker.vst3</string>
 															<key>PATH_TYPE</key>
 															<integer>0</integer>
 															<key>PERMISSIONS</key>
@@ -1554,7 +1554,7 @@
 				<key>CONCLUSION_ACTION</key>
 				<integer>0</integer>
 				<key>IDENTIFIER</key>
-				<string>com.DanielLeonov.vst3.pkg.StreamMaster</string>
+				<string>com.DanielLeonovPlugs.vst3.pkg.SubKicker</string>
 				<key>LOCATION</key>
 				<integer>0</integer>
 				<key>NAME</key>
@@ -1650,7 +1650,7 @@
 															<key>GID</key>
 															<integer>80</integer>
 															<key>PATH</key>
-															<string>/Library/Audio/Plug-Ins/Components/StreamMaster.component</string>
+															<string>/Library/Audio/Plug-Ins/Components/SubKicker.component</string>
 															<key>PATH_TYPE</key>
 															<integer>0</integer>
 															<key>PERMISSIONS</key>
@@ -2094,7 +2094,7 @@
 				<key>CONCLUSION_ACTION</key>
 				<integer>0</integer>
 				<key>IDENTIFIER</key>
-				<string>com.DanielLeonov.au.pkg.StreamMaster</string>
+				<string>com.DanielLeonovPlugs.au.pkg.SubKicker</string>
 				<key>LOCATION</key>
 				<integer>0</integer>
 				<key>NAME</key>
@@ -2173,7 +2173,7 @@
 															<key>GID</key>
 															<integer>80</integer>
 															<key>PATH</key>
-															<string>/Library/Application Support/Digidesign/Plug-Ins/StreamMaster.dpm</string>
+															<string>/Library/Application Support/Digidesign/Plug-Ins/SubKicker.dpm</string>
 															<key>PATH_TYPE</key>
 															<integer>0</integer>
 															<key>PERMISSIONS</key>
@@ -2617,7 +2617,7 @@
 				<key>CONCLUSION_ACTION</key>
 				<integer>0</integer>
 				<key>IDENTIFIER</key>
-				<string>com.DanielLeonov.rtas.pkg.StreamMaster</string>
+				<string>com.DanielLeonovPlugs.rtas.pkg.SubKicker</string>
 				<key>LOCATION</key>
 				<integer>0</integer>
 				<key>NAME</key>
@@ -2699,7 +2699,7 @@
 																	<key>GID</key>
 																	<integer>80</integer>
 																	<key>PATH</key>
-																	<string>/Library/Application Support/Avid/Audio/Plug-Ins/StreamMaster.aaxplugin</string>
+																	<string>/Library/Application Support/Avid/Audio/Plug-Ins/SubKicker.aaxplugin</string>
 																	<key>PATH_TYPE</key>
 																	<integer>0</integer>
 																	<key>PERMISSIONS</key>
@@ -3157,7 +3157,7 @@
 				<key>CONCLUSION_ACTION</key>
 				<integer>0</integer>
 				<key>IDENTIFIER</key>
-				<string>com.DanielLeonov.aax.pkg.StreamMaster</string>
+				<string>com.DanielLeonovPlugs.aax.pkg.SubKicker</string>
 				<key>LOCATION</key>
 				<integer>0</integer>
 				<key>NAME</key>
@@ -3203,7 +3203,7 @@
 				<key>BACKGROUND_PATH</key>
 				<dict>
 					<key>PATH</key>
-					<string>StreamMaster-installer-bg.png</string>
+					<string>SubKicker-installer-bg.png</string>
 					<key>PATH_TYPE</key>
 					<integer>1</integer>
 				</dict>
@@ -3496,7 +3496,7 @@
 						<key>LANGUAGE</key>
 						<string>English</string>
 						<key>VALUE</key>
-						<string>StreamMaster</string>
+						<string>SubKicker</string>
 					</dict>
 				</array>
 			</dict>
@@ -3685,7 +3685,7 @@
 				</dict>
 			</array>
 			<key>NAME</key>
-			<string>StreamMaster Installer</string>
+			<string>SubKicker Installer</string>
 		</dict>
 	</dict>
 	<key>TYPE</key>
