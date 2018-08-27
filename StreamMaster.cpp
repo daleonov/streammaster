@@ -1,7 +1,7 @@
 #include "StreamMaster.h"
 #include "IPlug_include_in_plug_src.h"
-#include <cmath>
 #include "DLPG_FeedbackSender.h"
+#include <cmath>
 
 // Number of presets
 const int kNumPrograms = 1;
@@ -424,6 +424,9 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   for (i=0; i<PLUG_PLATFORM_OPTIONS; i++)
     GetParam(kPlatformSwitch)->SetDisplayText(i, asTargetNames[i]);
 
+  GetParam(kPlatformSwitch)->SetShape(1.);
+  GetParam(kPlatformSwitchClickable)->SetShape(1.);
+
   // GR and LUFS overlay switches for resetting  
   GetParam(kIGrContactControl)->InitBool("[GR meter reset]", 0, "");
   GetParam(kILufsContactControl)->InitBool("[Loudness meter reset]", 0, "");
@@ -762,7 +765,7 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
   // Clickable area leading to a website
   tWebsiteLink = new IURLControl(this, tWebsiteLinkIRect, PLUG_WEBSITE_LINK);
   pGraphics->AttachControl(tWebsiteLink);
-
+  
   // Guide message
   sModeString = new char[PLUG_MODE_TEXT_LABEL_STRING_SIZE];
   sprintf(sModeString, PLUG_OFF_STARTUP_MESSAGE);
@@ -779,8 +782,8 @@ StreamMaster::StreamMaster(IPlugInstanceInfo instanceInfo):
       tBugreportLabelIrect,
       &tBugreportLabel,
       DLPG_BUGREPORT_LABEL_TEXT
-      )
-    );
+    )
+  );
   // Clickable area for bugreports
   MakeFeedbackUrl(sFeedbackUrl);
   tFeedbackLink = new IURLControl(this, tFeedbackLinkIRect, sFeedbackUrl);
@@ -1061,7 +1064,7 @@ void StreamMaster::OnParamChange(int paramIdx)
   int nModeNumber, nConvertedModeNumber;
   double fNormalizedConvertedModeNumber;
   static bool bPlatformSwitchClickableSentMe = false;
-  static bool bPlatformSwitchRotarySentMe = false;
+  static bool bPlatformSwitchRotarySentMe = true;
   char* psMessageToDisplay;
 
   // General control handling
@@ -1133,26 +1136,19 @@ void StreamMaster::OnParamChange(int paramIdx)
       Since rotary and clickable controls are bonded with each other,
       we have to notify the other control of the change, but make sure
       it doesn't cause an infinite loop between them (hence use two flags).
-      Plus VST and AU needs slightly different implementation to work properly.
       */
       nConvertedModeNumber = PLUG_REVERSE_PLATFORM_SWITCH_VALUE(nCurrentTargetIndex);
+      fNormalizedConvertedModeNumber = GetParam(kPlatformSwitch)->GetNormalized(nConvertedModeNumber);
 
-      #if defined(VST_API) || defined(AU_API)
-      // VST2 and AU
-      fNormalizedConvertedModeNumber = PLUG_NORMALIZE_PLATFORM_SWITCH_VALUE(nCurrentTargetIndex);
-      bPlatformSwitchClickableSentMe = false;
-      #else
-      // VST3
-      fNormalizedConvertedModeNumber = GetParam(kPlatformSwitch)->GetNormalized();
-      #endif
-      bPlatformSwitchRotarySentMe = true;
       if(bPlatformSwitchClickableSentMe){
         bPlatformSwitchClickableSentMe = false;
         break;
       }
       else{
-        GetGUI()->SetParameterFromPlug(kPlatformSwitchClickable, nConvertedModeNumber, false);
-        InformHostOfParamChange(kPlatformSwitchClickable, 1.-fNormalizedConvertedModeNumber);
+        bPlatformSwitchRotarySentMe = true;
+        GetGUI()->SetParameterFromPlug(kPlatformSwitchClickable, fNormalizedConvertedModeNumber, true);
+        InformHostOfParamChange(kPlatformSwitchClickable, fNormalizedConvertedModeNumber);
+        tPlatformSelectorClickable->SetDirty(true);
       }
 
       // Update all related values
@@ -1173,27 +1169,20 @@ void StreamMaster::OnParamChange(int paramIdx)
       Since rotary and clickable controls are bonded with each other,
       we have to notify the other control of the change, but make sure
       it doesn't cause an infinite loop between them (hence use two flags).
-      Plus VST2 and AU needs slightly different implementation to work properly.
       */
       nModeNumber = GetParam(kPlatformSwitchClickable)->Int();
       nConvertedModeNumber = PLUG_REVERSE_PLATFORM_SWITCH_VALUE(nModeNumber);
+      fNormalizedConvertedModeNumber = GetParam(kPlatformSwitchClickable)->GetNormalized(nConvertedModeNumber);
 
-      #if defined(VST_API) || defined(AU_API)
-      // VST2 and AU
-      fNormalizedConvertedModeNumber = PLUG_NORMALIZE_PLATFORM_SWITCH_VALUE(nModeNumber);
-      bPlatformSwitchRotarySentMe = false;
-      #else
-      // VST3
-      fNormalizedConvertedModeNumber = GetParam(kPlatformSwitchClickable)->GetNormalized();
-      #endif
-      bPlatformSwitchClickableSentMe = true;
       if(bPlatformSwitchRotarySentMe){
         bPlatformSwitchRotarySentMe = false;
         break;
       }
       else{
-        GetGUI()->SetParameterFromPlug(kPlatformSwitch, nConvertedModeNumber, false);
-        InformHostOfParamChange(kPlatformSwitch, 1.-fNormalizedConvertedModeNumber);
+        bPlatformSwitchClickableSentMe = true;
+        GetGUI()->SetParameterFromPlug(kPlatformSwitch, fNormalizedConvertedModeNumber, true);
+        InformHostOfParamChange(kPlatformSwitch, fNormalizedConvertedModeNumber);
+        tPlatformSelector->SetDirty(true);
       }
       // This is a global value used by other methods. Careful with it!
       nCurrentTargetIndex = nConvertedModeNumber;
